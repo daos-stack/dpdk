@@ -1,0 +1,1634 @@
+diff --git a/.gitignore b/.gitignore
+index 6df5ba068..13edb903c 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -12,3 +12,4 @@ GPATH
+ GRTAGS
+ tags
+ TAGS
++/build/
+diff --git a/config/common_spdk b/config/common_spdk
+new file mode 100644
+index 000000000..5334c7e5e
+--- /dev/null
++++ b/config/common_spdk
+@@ -0,0 +1,825 @@
++# SPDX-License-Identifier: BSD-3-Clause
++# Copyright(c) 2010-2017 Intel Corporation
++
++#
++# define executive environment
++# RTE_EXEC_ENV values are the directories in mk/exec-env/
++#
++#CONFIG_RTE_EXEC_ENV=
++
++#
++# define the architecture we compile for.
++# RTE_ARCH values are the directories in mk/arch/
++#
++#CONFIG_RTE_ARCH=
++
++#
++# machine can define specific variables or action for a specific board
++# RTE_MACHINE values are the directories in mk/machine/
++#
++#CONFIG_RTE_MACHINE=
++
++#
++# The compiler we use.
++# RTE_TOOLCHAIN values are the directories in mk/toolchain/
++#
++#CONFIG_RTE_TOOLCHAIN=
++
++#
++# Use intrinsics or assembly code for key routines
++#
++#CONFIG_RTE_FORCE_INTRINSICS=n
++
++#
++# Machine forces strict alignment constraints.
++#
++#CONFIG_RTE_ARCH_STRICT_ALIGN=n
++
++#
++# Compile to share library
++#
++#CONFIG_RTE_BUILD_SHARED_LIB=n
++
++#
++# Use newest code breaking previous ABI
++#
++#CONFIG_RTE_NEXT_ABI=y
++
++#
++# Major ABI to overwrite library specific LIBABIVER
++#
++#CONFIG_RTE_MAJOR_ABI=
++
++#
++# Machine's cache line size
++#
++#CONFIG_RTE_CACHE_LINE_SIZE=64
++
++#
++# Compile Environment Abstraction Layer
++#
++#CONFIG_RTE_LIBRTE_EAL=y
++#CONFIG_RTE_MAX_LCORE=128
++#CONFIG_RTE_MAX_NUMA_NODES=8
++#CONFIG_RTE_MAX_MEMSEG=256
++#CONFIG_RTE_MAX_MEMZONE=2560
++#CONFIG_RTE_MAX_TAILQ=32
++#CONFIG_RTE_ENABLE_ASSERT=n
++#CONFIG_RTE_LOG_DP_LEVEL=RTE_LOG_INFO
++#CONFIG_RTE_LOG_HISTORY=256
++#CONFIG_RTE_BACKTRACE=y
++#CONFIG_RTE_LIBEAL_USE_HPET=n
++#CONFIG_RTE_EAL_ALLOW_INV_SOCKET_ID=n
++#CONFIG_RTE_EAL_ALWAYS_PANIC_ON_ERROR=n
++CONFIG_RTE_EAL_IGB_UIO=n
++#CONFIG_RTE_EAL_VFIO=n
++#CONFIG_RTE_MAX_VFIO_GROUPS=64
++#CONFIG_RTE_MALLOC_DEBUG=n
++#CONFIG_RTE_EAL_NUMA_AWARE_HUGEPAGES=n
++
++#
++# Recognize/ignore the AVX/AVX512 CPU flags for performance/power testing.
++# AVX512 is marked as experimental for now, will enable it after enough
++# field test and possible optimization.
++#
++#CONFIG_RTE_ENABLE_AVX=y
++#CONFIG_RTE_ENABLE_AVX512=n
++
++# Default driver path (or "" to disable)
++#CONFIG_RTE_EAL_PMD_PATH=""
++
++#
++# Compile Environment Abstraction Layer to support Vmware TSC map
++#
++#CONFIG_RTE_LIBRTE_EAL_VMWARE_TSC_MAP_SUPPORT=y
++
++#
++# Compile the PCI library
++#
++#CONFIG_RTE_LIBRTE_PCI=y
++
++#
++# Compile the argument parser library
++#
++CONFIG_RTE_LIBRTE_KVARGS=n
++
++#
++# Compile generic ethernet library
++#
++#CONFIG_RTE_LIBRTE_ETHER=y
++#CONFIG_RTE_LIBRTE_ETHDEV_DEBUG=n
++#CONFIG_RTE_MAX_ETHPORTS=32
++#CONFIG_RTE_MAX_QUEUES_PER_PORT=1024
++#CONFIG_RTE_LIBRTE_IEEE1588=n
++#CONFIG_RTE_ETHDEV_QUEUE_STAT_CNTRS=16
++#CONFIG_RTE_ETHDEV_RXTX_CALLBACKS=y
++#CONFIG_RTE_ETHDEV_PROFILE_ITT_WASTED_RX_ITERATIONS=n
++
++#
++# Turn off Tx preparation stage
++#
++# Warning: rte_eth_tx_prepare() can be safely disabled only if using a
++# driver which do not implement any Tx preparation.
++#
++#CONFIG_RTE_ETHDEV_TX_PREPARE_NOOP=n
++
++#
++# Compile PCI bus driver
++#
++#CONFIG_RTE_LIBRTE_PCI_BUS=y
++
++#
++# Compile the vdev bus
++#
++#CONFIG_RTE_LIBRTE_VDEV_BUS=y
++
++#
++# Compile ARK PMD
++#
++CONFIG_RTE_LIBRTE_ARK_PMD=n
++#CONFIG_RTE_LIBRTE_ARK_PAD_TX=y
++#CONFIG_RTE_LIBRTE_ARK_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_ARK_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_ARK_DEBUG_STATS=n
++#CONFIG_RTE_LIBRTE_ARK_DEBUG_TRACE=n
++
++#
++# Compile burst-oriented Broadcom PMD driver
++#
++CONFIG_RTE_LIBRTE_BNX2X_PMD=n
++#CONFIG_RTE_LIBRTE_BNX2X_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_BNX2X_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_BNX2X_MF_SUPPORT=n
++#CONFIG_RTE_LIBRTE_BNX2X_DEBUG_PERIODIC=n
++
++#
++# Compile burst-oriented Broadcom BNXT PMD driver
++#
++CONFIG_RTE_LIBRTE_BNXT_PMD=n
++
++#
++# Compile burst-oriented Chelsio Terminator (CXGBE) PMD
++#
++CONFIG_RTE_LIBRTE_CXGBE_PMD=n
++#CONFIG_RTE_LIBRTE_CXGBE_DEBUG=n
++#CONFIG_RTE_LIBRTE_CXGBE_DEBUG_REG=n
++#CONFIG_RTE_LIBRTE_CXGBE_DEBUG_MBOX=n
++#CONFIG_RTE_LIBRTE_CXGBE_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_CXGBE_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_CXGBE_TPUT=y
++
++# NXP DPAA Bus
++CONFIG_RTE_LIBRTE_DPAA_BUS=n
++#CONFIG_RTE_LIBRTE_DPAA_MEMPOOL=n
++#CONFIG_RTE_LIBRTE_DPAA_PMD=n
++
++#
++# Compile NXP DPAA2 FSL-MC Bus
++#
++CONFIG_RTE_LIBRTE_FSLMC_BUS=n
++
++#
++# Compile Support Libraries for NXP DPAA2
++#
++#CONFIG_RTE_LIBRTE_DPAA2_MEMPOOL=n
++#CONFIG_RTE_LIBRTE_DPAA2_USE_PHYS_IOVA=y
++
++#
++# Compile burst-oriented NXP DPAA2 PMD driver
++#
++#CONFIG_RTE_LIBRTE_DPAA2_PMD=n
++#CONFIG_RTE_LIBRTE_DPAA2_DEBUG_INIT=n
++#CONFIG_RTE_LIBRTE_DPAA2_DEBUG_DRIVER=n
++#CONFIG_RTE_LIBRTE_DPAA2_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_DPAA2_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_DPAA2_DEBUG_TX_FREE=n
++
++#
++# Compile burst-oriented Amazon ENA PMD driver
++#
++CONFIG_RTE_LIBRTE_ENA_PMD=n
++#CONFIG_RTE_LIBRTE_ENA_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_ENA_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_ENA_DEBUG_TX_FREE=n
++#CONFIG_RTE_LIBRTE_ENA_COM_DEBUG=n
++
++#
++# Compile burst-oriented Cisco ENIC PMD driver
++#
++CONFIG_RTE_LIBRTE_ENIC_PMD=n
++
++#
++# Compile burst-oriented IGB & EM PMD drivers
++#
++CONFIG_RTE_LIBRTE_EM_PMD=n
++CONFIG_RTE_LIBRTE_IGB_PMD=n
++#CONFIG_RTE_LIBRTE_E1000_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_E1000_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_E1000_DEBUG_TX_FREE=n
++#CONFIG_RTE_LIBRTE_E1000_PF_DISABLE_STRIP_CRC=n
++
++#
++# Compile burst-oriented IXGBE PMD driver
++#
++CONFIG_RTE_LIBRTE_IXGBE_PMD=n
++#CONFIG_RTE_LIBRTE_IXGBE_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_IXGBE_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_IXGBE_DEBUG_TX_FREE=n
++#CONFIG_RTE_LIBRTE_IXGBE_PF_DISABLE_STRIP_CRC=n
++#CONFIG_RTE_IXGBE_INC_VECTOR=y
++#CONFIG_RTE_LIBRTE_IXGBE_BYPASS=n
++
++#
++# Compile burst-oriented I40E PMD driver
++#
++CONFIG_RTE_LIBRTE_I40E_PMD=n
++#CONFIG_RTE_LIBRTE_I40E_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_I40E_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_I40E_DEBUG_TX_FREE=n
++#CONFIG_RTE_LIBRTE_I40E_RX_ALLOW_BULK_ALLOC=y
++#CONFIG_RTE_LIBRTE_I40E_INC_VECTOR=y
++#CONFIG_RTE_LIBRTE_I40E_16BYTE_RX_DESC=n
++#CONFIG_RTE_LIBRTE_I40E_QUEUE_NUM_PER_PF=64
++#CONFIG_RTE_LIBRTE_I40E_QUEUE_NUM_PER_VM=4
++# interval up to 8160 us, aligned to 2 (or default value)
++#CONFIG_RTE_LIBRTE_I40E_ITR_INTERVAL=-1
++
++#
++# Compile burst-oriented FM10K PMD
++#
++CONFIG_RTE_LIBRTE_FM10K_PMD=n
++#CONFIG_RTE_LIBRTE_FM10K_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_FM10K_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_FM10K_DEBUG_TX_FREE=n
++#CONFIG_RTE_LIBRTE_FM10K_RX_OLFLAGS_ENABLE=y
++#CONFIG_RTE_LIBRTE_FM10K_INC_VECTOR=y
++
++#
++# Compile burst-oriented AVF PMD driver
++#
++CONFIG_RTE_LIBRTE_AVF_PMD=n
++#CONFIG_RTE_LIBRTE_AVF_INC_VECTOR=y
++#CONFIG_RTE_LIBRTE_AVF_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_AVF_DEBUG_TX_FREE=n
++#CONFIG_RTE_LIBRTE_AVF_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_AVF_16BYTE_RX_DESC=n
++
++#
++# Compile burst-oriented Mellanox ConnectX-3 (MLX4) PMD
++#
++#CONFIG_RTE_LIBRTE_MLX4_PMD=n
++#CONFIG_RTE_LIBRTE_MLX4_DEBUG=n
++#CONFIG_RTE_LIBRTE_MLX4_DLOPEN_DEPS=n
++#CONFIG_RTE_LIBRTE_MLX4_TX_MP_CACHE=8
++
++#
++# Compile burst-oriented Mellanox ConnectX-4 & ConnectX-5 (MLX5) PMD
++#
++#CONFIG_RTE_LIBRTE_MLX5_PMD=n
++#CONFIG_RTE_LIBRTE_MLX5_DEBUG=n
++#CONFIG_RTE_LIBRTE_MLX5_DLOPEN_DEPS=n
++#CONFIG_RTE_LIBRTE_MLX5_TX_MP_CACHE=8
++
++#
++# Compile burst-oriented Netronome NFP PMD driver
++#
++CONFIG_RTE_LIBRTE_NFP_PMD=n
++#CONFIG_RTE_LIBRTE_NFP_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_NFP_DEBUG_RX=n
++
++# QLogic 10G/25G/40G/50G/100G PMD
++#
++CONFIG_RTE_LIBRTE_QEDE_PMD=n
++#CONFIG_RTE_LIBRTE_QEDE_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_QEDE_DEBUG_RX=n
++#Provides abs path/name of the firmware file.
++#Empty string denotes driver will use default firmware
++#CONFIG_RTE_LIBRTE_QEDE_FW=""
++
++#
++# Compile burst-oriented Solarflare libefx-based PMD
++#
++CONFIG_RTE_LIBRTE_SFC_EFX_PMD=n
++#CONFIG_RTE_LIBRTE_SFC_EFX_DEBUG=n
++
++#
++# Compile software PMD backed by SZEDATA2 device
++#
++#CONFIG_RTE_LIBRTE_PMD_SZEDATA2=n
++#
++# Defines firmware type address space.
++# See documentation for supported values.
++# Other values raise compile time error.
++#CONFIG_RTE_LIBRTE_PMD_SZEDATA2_AS=0
++
++#
++# Compile burst-oriented Cavium Thunderx NICVF PMD driver
++#
++CONFIG_RTE_LIBRTE_THUNDERX_NICVF_PMD=n
++#CONFIG_RTE_LIBRTE_THUNDERX_NICVF_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_THUNDERX_NICVF_DEBUG_TX=n
++
++#
++# Compile burst-oriented Cavium LiquidIO PMD driver
++#
++CONFIG_RTE_LIBRTE_LIO_PMD=n
++#CONFIG_RTE_LIBRTE_LIO_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_LIO_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_LIO_DEBUG_MBOX=n
++#CONFIG_RTE_LIBRTE_LIO_DEBUG_REGS=n
++
++#
++# Compile burst-oriented Cavium OCTEONTX network PMD driver
++#
++CONFIG_RTE_LIBRTE_OCTEONTX_PMD=n
++
++#
++# Compile WRS accelerated virtual port (AVP) guest PMD driver
++#
++CONFIG_RTE_LIBRTE_AVP_PMD=n
++#CONFIG_RTE_LIBRTE_AVP_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_AVP_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_AVP_DEBUG_BUFFERS=n
++
++#
++# Compile burst-oriented VIRTIO PMD driver
++#
++CONFIG_RTE_LIBRTE_VIRTIO_PMD=n
++#CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_DUMP=n
++
++#
++# Compile virtio device emulation inside virtio PMD driver
++#
++CONFIG_RTE_VIRTIO_USER=n
++
++#
++# Compile burst-oriented VMXNET3 PMD driver
++#
++CONFIG_RTE_LIBRTE_VMXNET3_PMD=n
++#CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_TX_FREE=n
++
++#
++# Compile software PMD backed by AF_PACKET sockets (Linux only)
++#
++CONFIG_RTE_LIBRTE_PMD_AF_PACKET=n
++
++#
++# Compile link bonding PMD library
++#
++CONFIG_RTE_LIBRTE_PMD_BOND=n
++#CONFIG_RTE_LIBRTE_BOND_DEBUG_ALB=n
++#CONFIG_RTE_LIBRTE_BOND_DEBUG_ALB_L1=n
++
++#
++# Compile fail-safe PMD
++#
++CONFIG_RTE_LIBRTE_PMD_FAILSAFE=n
++
++#
++# Compile Marvell PMD driver
++#
++#CONFIG_RTE_LIBRTE_MRVL_PMD=n
++
++#
++# Compile virtual device driver for NetVSC on Hyper-V/Azure
++#
++CONFIG_RTE_LIBRTE_VDEV_NETVSC_PMD=n
++
++#
++# Compile null PMD
++#
++CONFIG_RTE_LIBRTE_PMD_NULL=n
++
++#
++# Compile software PMD backed by PCAP files
++#
++#CONFIG_RTE_LIBRTE_PMD_PCAP=n
++
++#
++# Compile example software rings based PMD
++#
++CONFIG_RTE_LIBRTE_PMD_RING=n
++#CONFIG_RTE_PMD_RING_MAX_RX_RINGS=16
++#CONFIG_RTE_PMD_RING_MAX_TX_RINGS=16
++
++#
++# Compile SOFTNIC PMD
++#
++#CONFIG_RTE_LIBRTE_PMD_SOFTNIC=y
++
++#
++# Compile the TAP PMD
++# It is enabled by default for Linux only.
++#
++CONFIG_RTE_LIBRTE_PMD_TAP=n
++
++#
++# Do prefetch of packet data within PMD driver receive function
++#
++#CONFIG_RTE_PMD_PACKET_PREFETCH=y
++
++# Compile generic wireless base band device library
++# EXPERIMENTAL: API may change without prior notice
++#
++CONFIG_RTE_LIBRTE_BBDEV=n
++#CONFIG_RTE_BBDEV_MAX_DEVS=128
++
++#
++# Compile PMD for NULL bbdev device
++#
++#CONFIG_RTE_LIBRTE_PMD_BBDEV_NULL=y
++
++#
++# Compile PMD for turbo software bbdev device
++#
++#CONFIG_RTE_LIBRTE_PMD_BBDEV_TURBO_SW=n
++
++#
++# Compile generic crypto device library
++#
++CONFIG_RTE_LIBRTE_CRYPTODEV=n
++#CONFIG_RTE_LIBRTE_CRYPTODEV_DEBUG=n
++#CONFIG_RTE_CRYPTO_MAX_DEVS=64
++
++#
++# Compile PMD for ARMv8 Crypto device
++#
++#CONFIG_RTE_LIBRTE_PMD_ARMV8_CRYPTO=n
++#CONFIG_RTE_LIBRTE_PMD_ARMV8_CRYPTO_DEBUG=n
++
++#
++# Compile NXP DPAA2 crypto sec driver for CAAM HW
++#
++#CONFIG_RTE_LIBRTE_PMD_DPAA2_SEC=n
++#CONFIG_RTE_LIBRTE_DPAA2_SEC_DEBUG_INIT=n
++#CONFIG_RTE_LIBRTE_DPAA2_SEC_DEBUG_DRIVER=n
++#CONFIG_RTE_LIBRTE_DPAA2_SEC_DEBUG_RX=n
++
++#
++# NXP DPAA caam - crypto driver
++#
++#CONFIG_RTE_LIBRTE_PMD_DPAA_SEC=n
++#CONFIG_RTE_LIBRTE_DPAA_SEC_DEBUG_INIT=n
++#CONFIG_RTE_LIBRTE_DPAA_SEC_DEBUG_DRIVER=n
++#CONFIG_RTE_LIBRTE_DPAA_SEC_DEBUG_RX=n
++
++#
++# Compile PMD for QuickAssist based devices
++#
++#CONFIG_RTE_LIBRTE_PMD_QAT=n
++#CONFIG_RTE_LIBRTE_PMD_QAT_DEBUG_INIT=n
++#CONFIG_RTE_LIBRTE_PMD_QAT_DEBUG_TX=n
++#CONFIG_RTE_LIBRTE_PMD_QAT_DEBUG_RX=n
++#CONFIG_RTE_LIBRTE_PMD_QAT_DEBUG_DRIVER=n
++#
++# Number of sessions to create in the session memory pool
++# on a single QuickAssist device.
++#
++#CONFIG_RTE_QAT_PMD_MAX_NB_SESSIONS=2048
++
++#
++# Compile PMD for AESNI backed device
++#
++#CONFIG_RTE_LIBRTE_PMD_AESNI_MB=n
++#CONFIG_RTE_LIBRTE_PMD_AESNI_MB_DEBUG=n
++
++#
++# Compile PMD for Software backed device
++#
++#CONFIG_RTE_LIBRTE_PMD_OPENSSL=n
++#CONFIG_RTE_LIBRTE_PMD_OPENSSL_DEBUG=n
++
++#
++# Compile PMD for AESNI GCM device
++#
++#CONFIG_RTE_LIBRTE_PMD_AESNI_GCM=n
++#CONFIG_RTE_LIBRTE_PMD_AESNI_GCM_DEBUG=n
++
++#
++# Compile PMD for SNOW 3G device
++#
++#CONFIG_RTE_LIBRTE_PMD_SNOW3G=n
++#CONFIG_RTE_LIBRTE_PMD_SNOW3G_DEBUG=n
++
++#
++# Compile PMD for KASUMI device
++#
++#CONFIG_RTE_LIBRTE_PMD_KASUMI=n
++#CONFIG_RTE_LIBRTE_PMD_KASUMI_DEBUG=n
++
++#
++# Compile PMD for ZUC device
++#
++#CONFIG_RTE_LIBRTE_PMD_ZUC=n
++#CONFIG_RTE_LIBRTE_PMD_ZUC_DEBUG=n
++
++#
++# Compile PMD for Crypto Scheduler device
++#
++#CONFIG_RTE_LIBRTE_PMD_CRYPTO_SCHEDULER=y
++#CONFIG_RTE_LIBRTE_PMD_CRYPTO_SCHEDULER_DEBUG=n
++
++#
++# Compile PMD for NULL Crypto device
++#
++#CONFIG_RTE_LIBRTE_PMD_NULL_CRYPTO=y
++
++#
++# Compile PMD for Marvell Crypto device
++#
++#CONFIG_RTE_LIBRTE_PMD_MRVL_CRYPTO=n
++#CONFIG_RTE_LIBRTE_PMD_MRVL_CRYPTO_DEBUG=n
++
++#
++# Compile generic security library
++#
++CONFIG_RTE_LIBRTE_SECURITY=n
++
++#
++# Compile generic event device library
++#
++CONFIG_RTE_LIBRTE_EVENTDEV=n
++#CONFIG_RTE_LIBRTE_EVENTDEV_DEBUG=n
++#CONFIG_RTE_EVENT_MAX_DEVS=16
++#CONFIG_RTE_EVENT_MAX_QUEUES_PER_DEV=64
++
++#
++# Compile PMD for skeleton event device
++#
++CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV=n
++#CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV_DEBUG=n
++
++#
++# Compile PMD for software event device
++#
++CONFIG_RTE_LIBRTE_PMD_SW_EVENTDEV=n
++
++#
++# Compile PMD for octeontx sso event device
++#
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX_SSOVF=n
++
++#
++# Compile PMD for OPDL event device
++#
++#CONFIG_RTE_LIBRTE_PMD_OPDL_EVENTDEV=y
++
++#
++# Compile PMD for NXP DPAA event device
++#
++#CONFIG_RTE_LIBRTE_PMD_DPAA_EVENTDEV=n
++
++#
++# Compile PMD for NXP DPAA2 event device
++#
++#CONFIG_RTE_LIBRTE_PMD_DPAA2_EVENTDEV=n
++
++#
++# Compile raw device support
++# EXPERIMENTAL: API may change without prior notice
++#
++CONFIG_RTE_LIBRTE_RAWDEV=n
++#CONFIG_RTE_RAWDEV_MAX_DEVS=10
++#CONFIG_RTE_LIBRTE_PMD_SKELETON_RAWDEV=y
++
++#
++# Compile librte_ring
++#
++#CONFIG_RTE_LIBRTE_RING=y
++#CONFIG_RTE_RING_USE_C11_MEM_MODEL=n
++
++#
++# Compile librte_mempool
++#
++#CONFIG_RTE_LIBRTE_MEMPOOL=y
++#CONFIG_RTE_MEMPOOL_CACHE_MAX_SIZE=512
++#CONFIG_RTE_LIBRTE_MEMPOOL_DEBUG=n
++
++#
++# Compile Mempool drivers
++#
++#CONFIG_RTE_DRIVER_MEMPOOL_RING=y
++CONFIG_RTE_DRIVER_MEMPOOL_STACK=n
++
++#
++# Compile PMD for octeontx fpa mempool device
++#
++CONFIG_RTE_LIBRTE_OCTEONTX_MEMPOOL=n
++
++#
++# Compile librte_mbuf
++#
++#CONFIG_RTE_LIBRTE_MBUF=y
++#CONFIG_RTE_LIBRTE_MBUF_DEBUG=n
++#CONFIG_RTE_MBUF_DEFAULT_MEMPOOL_OPS="ring_mp_mc"
++#CONFIG_RTE_MBUF_REFCNT_ATOMIC=y
++#CONFIG_RTE_PKTMBUF_HEADROOM=128
++
++#
++# Compile librte_timer
++#
++CONFIG_RTE_LIBRTE_TIMER=n
++#CONFIG_RTE_LIBRTE_TIMER_DEBUG=n
++
++#
++# Compile librte_cfgfile
++#
++CONFIG_RTE_LIBRTE_CFGFILE=n
++
++#
++# Compile librte_cmdline
++#
++CONFIG_RTE_LIBRTE_CMDLINE=n
++#CONFIG_RTE_LIBRTE_CMDLINE_DEBUG=n
++
++#
++# Compile librte_hash
++#
++CONFIG_RTE_LIBRTE_HASH=n
++#CONFIG_RTE_LIBRTE_HASH_DEBUG=n
++
++#
++# Compile librte_efd
++#
++CONFIG_RTE_LIBRTE_EFD=n
++
++#
++# Compile librte_member
++#
++CONFIG_RTE_LIBRTE_MEMBER=n
++
++#
++# Compile librte_jobstats
++#
++CONFIG_RTE_LIBRTE_JOBSTATS=n
++
++#
++# Compile the device metrics library
++#
++CONFIG_RTE_LIBRTE_METRICS=n
++
++#
++# Compile the bitrate statistics library
++#
++CONFIG_RTE_LIBRTE_BITRATE=n
++
++#
++# Compile the latency statistics library
++#
++CONFIG_RTE_LIBRTE_LATENCY_STATS=n
++
++#
++# Compile librte_lpm
++#
++CONFIG_RTE_LIBRTE_LPM=n
++#CONFIG_RTE_LIBRTE_LPM_DEBUG=n
++
++#
++# Compile librte_acl
++#
++CONFIG_RTE_LIBRTE_ACL=n
++#CONFIG_RTE_LIBRTE_ACL_DEBUG=n
++
++#
++# Compile librte_power
++#
++CONFIG_RTE_LIBRTE_POWER=n
++#CONFIG_RTE_LIBRTE_POWER_DEBUG=n
++#CONFIG_RTE_MAX_LCORE_FREQS=64
++
++#
++# Compile librte_net
++#
++#CONFIG_RTE_LIBRTE_NET=y
++
++#
++# Compile librte_ip_frag
++#
++CONFIG_RTE_LIBRTE_IP_FRAG=n
++#CONFIG_RTE_LIBRTE_IP_FRAG_DEBUG=n
++#CONFIG_RTE_LIBRTE_IP_FRAG_MAX_FRAG=4
++#CONFIG_RTE_LIBRTE_IP_FRAG_TBL_STAT=n
++
++#
++# Compile GRO library
++#
++CONFIG_RTE_LIBRTE_GRO=n
++
++#
++# Compile GSO library
++#
++CONFIG_RTE_LIBRTE_GSO=n
++
++#
++# Compile librte_meter
++#
++CONFIG_RTE_LIBRTE_METER=n
++
++#
++# Compile librte_classify
++#
++CONFIG_RTE_LIBRTE_FLOW_CLASSIFY=n
++
++#
++# Compile librte_sched
++#
++CONFIG_RTE_LIBRTE_SCHED=n
++#CONFIG_RTE_SCHED_DEBUG=n
++#CONFIG_RTE_SCHED_RED=n
++#CONFIG_RTE_SCHED_COLLECT_STATS=n
++#CONFIG_RTE_SCHED_SUBPORT_TC_OV=n
++#CONFIG_RTE_SCHED_PORT_N_GRINDERS=8
++#CONFIG_RTE_SCHED_VECTOR=n
++
++#
++# Compile the distributor library
++#
++CONFIG_RTE_LIBRTE_DISTRIBUTOR=n
++
++#
++# Compile the reorder library
++#
++CONFIG_RTE_LIBRTE_REORDER=n
++
++#
++# Compile librte_port
++#
++CONFIG_RTE_LIBRTE_PORT=n
++#CONFIG_RTE_PORT_STATS_COLLECT=n
++#CONFIG_RTE_PORT_PCAP=n
++
++#
++# Compile librte_table
++#
++CONFIG_RTE_LIBRTE_TABLE=n
++#CONFIG_RTE_TABLE_STATS_COLLECT=n
++
++#
++# Compile librte_pipeline
++#
++CONFIG_RTE_LIBRTE_PIPELINE=n
++#CONFIG_RTE_PIPELINE_STATS_COLLECT=n
++
++#
++# Compile librte_kni
++#
++CONFIG_RTE_LIBRTE_KNI=n
++CONFIG_RTE_LIBRTE_PMD_KNI=n
++CONFIG_RTE_KNI_KMOD=n
++#CONFIG_RTE_KNI_KMOD_ETHTOOL=n
++#CONFIG_RTE_KNI_PREEMPT_DEFAULT=y
++
++#
++# Compile the pdump library
++#
++CONFIG_RTE_LIBRTE_PDUMP=n
++
++#
++# Compile vhost user library
++#
++CONFIG_RTE_LIBRTE_VHOST=n
++#CONFIG_RTE_LIBRTE_VHOST_NUMA=n
++#CONFIG_RTE_LIBRTE_VHOST_DEBUG=n
++
++#
++# Compile vhost PMD
++# To compile, CONFIG_RTE_LIBRTE_VHOST should be enabled.
++#
++CONFIG_RTE_LIBRTE_PMD_VHOST=n
++
++#
++# Compile the test application
++#
++CONFIG_RTE_APP_TEST=n
++#CONFIG_RTE_APP_TEST_RESOURCE_TAR=n
++
++#
++# Compile the procinfo application
++#
++CONFIG_RTE_PROC_INFO=n
++
++#
++# Compile the PMD test application
++#
++CONFIG_RTE_TEST_PMD=n
++#CONFIG_RTE_TEST_PMD_RECORD_CORE_CYCLES=n
++#CONFIG_RTE_TEST_PMD_RECORD_BURST_STATS=n
++
++#
++# Compile the bbdev test application
++#
++#CONFIG_RTE_TEST_BBDEV=y
++
++#
++# Compile the crypto performance application
++#
++CONFIG_RTE_APP_CRYPTO_PERF=n
++
++#
++# Compile the eventdev application
++#
++CONFIG_RTE_APP_EVENTDEV=n
+diff --git a/config/defconfig_spdk-bsdapp-clang b/config/defconfig_spdk-bsdapp-clang
+new file mode 100644
+index 000000000..e9ad75da8
+--- /dev/null
++++ b/config/defconfig_spdk-bsdapp-clang
+@@ -0,0 +1,44 @@
++#   BSD LICENSE
++#
++#   Copyright(c) 2017 Intel Corporation. All rights reserved.
++#   All rights reserved.
++#
++#   Redistribution and use in source and binary forms, with or without
++#   modification, are permitted provided that the following conditions
++#   are met:
++#
++#     * Redistributions of source code must retain the above copyright
++#       notice, this list of conditions and the following disclaimer.
++#     * Redistributions in binary form must reproduce the above copyright
++#       notice, this list of conditions and the following disclaimer in
++#       the documentation and/or other materials provided with the
++#       distribution.
++#     * Neither the name of Intel Corporation nor the names of its
++#       contributors may be used to endorse or promote products derived
++#       from this software without specific prior written permission.
++#
++#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++#   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++#   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++#   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++#   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++#   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++#   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++#   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++#   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++#   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++#   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++#
++
++#include "common_bsdapp"
++#include "common_spdk"
++
++CONFIG_RTE_MACHINE="native"
++
++CONFIG_RTE_ARCH="x86_64"
++CONFIG_RTE_ARCH_X86_64=y
++CONFIG_RTE_ARCH_X86=y
++CONFIG_RTE_ARCH_64=y
++
++CONFIG_RTE_TOOLCHAIN="clang"
++CONFIG_RTE_TOOLCHAIN_CLANG=y
+diff --git a/config/defconfig_spdk-bsdapp-gcc b/config/defconfig_spdk-bsdapp-gcc
+new file mode 100644
+index 000000000..c8743dbaf
+--- /dev/null
++++ b/config/defconfig_spdk-bsdapp-gcc
+@@ -0,0 +1,44 @@
++#   BSD LICENSE
++#
++#   Copyright(c) 2017 Intel Corporation. All rights reserved.
++#   All rights reserved.
++#
++#   Redistribution and use in source and binary forms, with or without
++#   modification, are permitted provided that the following conditions
++#   are met:
++#
++#     * Redistributions of source code must retain the above copyright
++#       notice, this list of conditions and the following disclaimer.
++#     * Redistributions in binary form must reproduce the above copyright
++#       notice, this list of conditions and the following disclaimer in
++#       the documentation and/or other materials provided with the
++#       distribution.
++#     * Neither the name of Intel Corporation nor the names of its
++#       contributors may be used to endorse or promote products derived
++#       from this software without specific prior written permission.
++#
++#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++#   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++#   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++#   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++#   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++#   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++#   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++#   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++#   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++#   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++#   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++#
++
++#include "common_bsdapp"
++#include "common_spdk"
++
++CONFIG_RTE_MACHINE="native"
++
++CONFIG_RTE_ARCH="x86_64"
++CONFIG_RTE_ARCH_X86_64=y
++CONFIG_RTE_ARCH_X86=y
++CONFIG_RTE_ARCH_64=y
++
++CONFIG_RTE_TOOLCHAIN="gcc"
++CONFIG_RTE_TOOLCHAIN_GCC=y
+diff --git a/config/defconfig_spdk-linuxapp-clang b/config/defconfig_spdk-linuxapp-clang
+new file mode 100644
+index 000000000..bf8e02b59
+--- /dev/null
++++ b/config/defconfig_spdk-linuxapp-clang
+@@ -0,0 +1,44 @@
++#   BSD LICENSE
++#
++#   Copyright(c) 2017 Intel Corporation. All rights reserved.
++#   All rights reserved.
++#
++#   Redistribution and use in source and binary forms, with or without
++#   modification, are permitted provided that the following conditions
++#   are met:
++#
++#     * Redistributions of source code must retain the above copyright
++#       notice, this list of conditions and the following disclaimer.
++#     * Redistributions in binary form must reproduce the above copyright
++#       notice, this list of conditions and the following disclaimer in
++#       the documentation and/or other materials provided with the
++#       distribution.
++#     * Neither the name of Intel Corporation nor the names of its
++#       contributors may be used to endorse or promote products derived
++#       from this software without specific prior written permission.
++#
++#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++#   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++#   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++#   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++#   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++#   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++#   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++#   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++#   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++#   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++#   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++#
++
++#include "common_linuxapp"
++#include "common_spdk"
++
++CONFIG_RTE_MACHINE="native"
++
++CONFIG_RTE_ARCH="x86_64"
++CONFIG_RTE_ARCH_X86_64=y
++CONFIG_RTE_ARCH_X86=y
++CONFIG_RTE_ARCH_64=y
++
++CONFIG_RTE_TOOLCHAIN="clang"
++CONFIG_RTE_TOOLCHAIN_CLANG=y
+diff --git a/config/defconfig_spdk-linuxapp-gcc b/config/defconfig_spdk-linuxapp-gcc
+new file mode 100644
+index 000000000..f9f756c63
+--- /dev/null
++++ b/config/defconfig_spdk-linuxapp-gcc
+@@ -0,0 +1,44 @@
++#   BSD LICENSE
++#
++#   Copyright(c) 2017 Intel Corporation. All rights reserved.
++#   All rights reserved.
++#
++#   Redistribution and use in source and binary forms, with or without
++#   modification, are permitted provided that the following conditions
++#   are met:
++#
++#     * Redistributions of source code must retain the above copyright
++#       notice, this list of conditions and the following disclaimer.
++#     * Redistributions in binary form must reproduce the above copyright
++#       notice, this list of conditions and the following disclaimer in
++#       the documentation and/or other materials provided with the
++#       distribution.
++#     * Neither the name of Intel Corporation nor the names of its
++#       contributors may be used to endorse or promote products derived
++#       from this software without specific prior written permission.
++#
++#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++#   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++#   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++#   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++#   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++#   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++#   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++#   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++#   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++#   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++#   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++#
++
++#include "common_linuxapp"
++#include "common_spdk"
++
++CONFIG_RTE_MACHINE="native"
++
++CONFIG_RTE_ARCH="x86_64"
++CONFIG_RTE_ARCH_X86_64=y
++CONFIG_RTE_ARCH_X86=y
++CONFIG_RTE_ARCH_64=y
++
++CONFIG_RTE_TOOLCHAIN="gcc"
++CONFIG_RTE_TOOLCHAIN_GCC=y
+diff --git a/drivers/bus/pci/linux/pci_uio.c b/drivers/bus/pci/linux/pci_uio.c
+index d423e4bb0..2957a5fde 100644
+--- a/drivers/bus/pci/linux/pci_uio.c
++++ b/drivers/bus/pci/linux/pci_uio.c
+@@ -293,7 +293,7 @@ pci_uio_map_resource_by_index(struct rte_pci_device *dev, int res_idx,
+ 
+ 	/* update devname for mmap  */
+ 	snprintf(devname, sizeof(devname),
+-			"%s/" PCI_PRI_FMT "/resource%d",
++			"%s/" PCI_PRI_FMT "/resource%d_wc",
+ 			rte_pci_get_sysfs_path(),
+ 			loc->domain, loc->bus, loc->devid,
+ 			loc->function, res_idx);
+@@ -307,13 +307,22 @@ pci_uio_map_resource_by_index(struct rte_pci_device *dev, int res_idx,
+ 	}
+ 
+ 	/*
+-	 * open resource file, to mmap it
++	 * open prefetchable resource file first, try to mmap it
+ 	 */
+ 	fd = open(devname, O_RDWR);
+ 	if (fd < 0) {
+-		RTE_LOG(ERR, EAL, "Cannot open %s: %s\n",
+-				devname, strerror(errno));
+-		goto error;
++		snprintf(devname, sizeof(devname),
++				"%s/" PCI_PRI_FMT "/resource%d",
++				rte_pci_get_sysfs_path(),
++				loc->domain, loc->bus, loc->devid,
++				loc->function, res_idx);
++		/* then try to map resource file */
++		fd = open(devname, O_RDWR);
++		if (fd < 0) {
++			RTE_LOG(ERR, EAL, "Cannot open %s: %s\n",
++					devname, strerror(errno));
++			goto error;
++		}
+ 	}
+ 
+ 	/* try mapping somewhere close to the end of hugepages */
+diff --git a/lib/librte_compat/rte_compat.h b/lib/librte_compat/rte_compat.h
+index 92ff28faf..3ffaa9e6d 100644
+--- a/lib/librte_compat/rte_compat.h
++++ b/lib/librte_compat/rte_compat.h
+@@ -78,10 +78,7 @@
+ 
+ #ifndef ALLOW_EXPERIMENTAL_API
+ 
+-#define __rte_experimental \
+-__attribute__((deprecated("Symbol is not yet part of stable ABI"), \
+-section(".text.experimental")))
+-
++#define __rte_experimental  __attribute__((deprecated)) __attribute__((section(".text.experimental")))
+ #else
+ 
+ #define __rte_experimental \
+diff --git a/lib/librte_eal/bsdapp/contigmem/contigmem.c b/lib/librte_eal/bsdapp/contigmem/contigmem.c
+index 1715b5dc5..79c982357 100644
+--- a/lib/librte_eal/bsdapp/contigmem/contigmem.c
++++ b/lib/librte_eal/bsdapp/contigmem/contigmem.c
+@@ -22,37 +22,24 @@ __FBSDID("$FreeBSD$");
+ 
+ #include <vm/vm.h>
+ #include <vm/pmap.h>
+-#include <vm/vm_param.h>
+ #include <vm/vm_object.h>
+ #include <vm/vm_page.h>
+ #include <vm/vm_pager.h>
+-#include <vm/vm_phys.h>
+-
+-struct contigmem_buffer {
+-	void           *addr;
+-	int             refcnt;
+-	struct mtx      mtx;
+-};
+-
+-struct contigmem_vm_handle {
+-	int             buffer_index;
+-};
+ 
+ static int              contigmem_load(void);
+ static int              contigmem_unload(void);
+ static int              contigmem_physaddr(SYSCTL_HANDLER_ARGS);
+ 
++static d_mmap_t         contigmem_mmap;
+ static d_mmap_single_t  contigmem_mmap_single;
+ static d_open_t         contigmem_open;
+-static d_close_t        contigmem_close;
+ 
+ static int              contigmem_num_buffers = RTE_CONTIGMEM_DEFAULT_NUM_BUFS;
+ static int64_t          contigmem_buffer_size = RTE_CONTIGMEM_DEFAULT_BUF_SIZE;
+ 
+ static eventhandler_tag contigmem_eh_tag;
+-static struct contigmem_buffer contigmem_buffers[RTE_CONTIGMEM_MAX_NUM_BUFS];
++static void            *contigmem_buffers[RTE_CONTIGMEM_MAX_NUM_BUFS];
+ static struct cdev     *contigmem_cdev = NULL;
+-static int              contigmem_refcnt;
+ 
+ TUNABLE_INT("hw.contigmem.num_buffers", &contigmem_num_buffers);
+ TUNABLE_QUAD("hw.contigmem.buffer_size", &contigmem_buffer_size);
+@@ -63,8 +50,6 @@ SYSCTL_INT(_hw_contigmem, OID_AUTO, num_buffers, CTLFLAG_RD,
+ 	&contigmem_num_buffers, 0, "Number of contigmem buffers allocated");
+ SYSCTL_QUAD(_hw_contigmem, OID_AUTO, buffer_size, CTLFLAG_RD,
+ 	&contigmem_buffer_size, 0, "Size of each contiguous buffer");
+-SYSCTL_INT(_hw_contigmem, OID_AUTO, num_references, CTLFLAG_RD,
+-	&contigmem_refcnt, 0, "Number of references to contigmem");
+ 
+ static SYSCTL_NODE(_hw_contigmem, OID_AUTO, physaddr, CTLFLAG_RD, 0,
+ 	"physaddr");
+@@ -101,10 +86,9 @@ MODULE_VERSION(contigmem, 1);
+ static struct cdevsw contigmem_ops = {
+ 	.d_name         = "contigmem",
+ 	.d_version      = D_VERSION,
+-	.d_flags        = D_TRACKCLOSE,
++	.d_mmap         = contigmem_mmap,
+ 	.d_mmap_single  = contigmem_mmap_single,
+ 	.d_open         = contigmem_open,
+-	.d_close        = contigmem_close,
+ };
+ 
+ static int
+@@ -112,7 +96,6 @@ contigmem_load()
+ {
+ 	char index_string[8], description[32];
+ 	int  i, error = 0;
+-	void *addr;
+ 
+ 	if (contigmem_num_buffers > RTE_CONTIGMEM_MAX_NUM_BUFS) {
+ 		printf("%d buffers requested is greater than %d allowed\n",
+@@ -130,20 +113,18 @@ contigmem_load()
+ 	}
+ 
+ 	for (i = 0; i < contigmem_num_buffers; i++) {
+-		addr = contigmalloc(contigmem_buffer_size, M_CONTIGMEM, M_ZERO,
+-			0, BUS_SPACE_MAXADDR, contigmem_buffer_size, 0);
+-		if (addr == NULL) {
++		contigmem_buffers[i] =
++				contigmalloc(contigmem_buffer_size, M_CONTIGMEM, M_ZERO, 0,
++			BUS_SPACE_MAXADDR, contigmem_buffer_size, 0);
++
++		if (contigmem_buffers[i] == NULL) {
+ 			printf("contigmalloc failed for buffer %d\n", i);
+ 			error = ENOMEM;
+ 			goto error;
+ 		}
+ 
+-		printf("%2u: virt=%p phys=%p\n", i, addr,
+-			(void *)pmap_kextract((vm_offset_t)addr));
+-
+-		mtx_init(&contigmem_buffers[i].mtx, "contigmem", NULL, MTX_DEF);
+-		contigmem_buffers[i].addr = addr;
+-		contigmem_buffers[i].refcnt = 0;
++		printf("%2u: virt=%p phys=%p\n", i, contigmem_buffers[i],
++				(void *)pmap_kextract((vm_offset_t)contigmem_buffers[i]));
+ 
+ 		snprintf(index_string, sizeof(index_string), "%d", i);
+ 		snprintf(description, sizeof(description),
+@@ -161,13 +142,10 @@ contigmem_load()
+ 	return 0;
+ 
+ error:
+-	for (i = 0; i < contigmem_num_buffers; i++) {
+-		if (contigmem_buffers[i].addr != NULL)
+-			contigfree(contigmem_buffers[i].addr,
+-				contigmem_buffer_size, M_CONTIGMEM);
+-		if (mtx_initialized(&contigmem_buffers[i].mtx))
+-			mtx_destroy(&contigmem_buffers[i].mtx);
+-	}
++	for (i = 0; i < contigmem_num_buffers; i++)
++		if (contigmem_buffers[i] != NULL)
++			contigfree(contigmem_buffers[i], contigmem_buffer_size,
++					M_CONTIGMEM);
+ 
+ 	return error;
+ }
+@@ -177,22 +155,16 @@ contigmem_unload()
+ {
+ 	int i;
+ 
+-	if (contigmem_refcnt > 0)
+-		return EBUSY;
+-
+ 	if (contigmem_cdev != NULL)
+ 		destroy_dev(contigmem_cdev);
+ 
+ 	if (contigmem_eh_tag != NULL)
+ 		EVENTHANDLER_DEREGISTER(process_exit, contigmem_eh_tag);
+ 
+-	for (i = 0; i < RTE_CONTIGMEM_MAX_NUM_BUFS; i++) {
+-		if (contigmem_buffers[i].addr != NULL)
+-			contigfree(contigmem_buffers[i].addr,
+-				contigmem_buffer_size, M_CONTIGMEM);
+-		if (mtx_initialized(&contigmem_buffers[i].mtx))
+-			mtx_destroy(&contigmem_buffers[i].mtx);
+-	}
++	for (i = 0; i < RTE_CONTIGMEM_MAX_NUM_BUFS; i++)
++		if (contigmem_buffers[i] != NULL)
++			contigfree(contigmem_buffers[i], contigmem_buffer_size,
++					M_CONTIGMEM);
+ 
+ 	return 0;
+ }
+@@ -203,7 +175,7 @@ contigmem_physaddr(SYSCTL_HANDLER_ARGS)
+ 	uint64_t	physaddr;
+ 	int		index = (int)(uintptr_t)arg1;
+ 
+-	physaddr = (uint64_t)vtophys(contigmem_buffers[index].addr);
++	physaddr = (uint64_t)vtophys(contigmem_buffers[index]);
+ 	return sysctl_handle_64(oidp, &physaddr, 0, req);
+ }
+ 
+@@ -211,121 +183,22 @@ static int
+ contigmem_open(struct cdev *cdev, int fflags, int devtype,
+ 		struct thread *td)
+ {
+-
+-	atomic_add_int(&contigmem_refcnt, 1);
+-
+-	return 0;
+-}
+-
+-static int
+-contigmem_close(struct cdev *cdev, int fflags, int devtype,
+-		struct thread *td)
+-{
+-
+-	atomic_subtract_int(&contigmem_refcnt, 1);
+-
+ 	return 0;
+ }
+ 
+ static int
+-contigmem_cdev_pager_ctor(void *handle, vm_ooffset_t size, vm_prot_t prot,
+-		vm_ooffset_t foff, struct ucred *cred, u_short *color)
++contigmem_mmap(struct cdev *cdev, vm_ooffset_t offset, vm_paddr_t *paddr,
++		int prot, vm_memattr_t *memattr)
+ {
+-	struct contigmem_vm_handle *vmh = handle;
+-	struct contigmem_buffer *buf;
+-
+-	buf = &contigmem_buffers[vmh->buffer_index];
+-
+-	atomic_add_int(&contigmem_refcnt, 1);
+-
+-	mtx_lock(&buf->mtx);
+-	if (buf->refcnt == 0)
+-		memset(buf->addr, 0, contigmem_buffer_size);
+-	buf->refcnt++;
+-	mtx_unlock(&buf->mtx);
+ 
++	*paddr = offset;
+ 	return 0;
+ }
+ 
+-static void
+-contigmem_cdev_pager_dtor(void *handle)
+-{
+-	struct contigmem_vm_handle *vmh = handle;
+-	struct contigmem_buffer *buf;
+-
+-	buf = &contigmem_buffers[vmh->buffer_index];
+-
+-	mtx_lock(&buf->mtx);
+-	buf->refcnt--;
+-	mtx_unlock(&buf->mtx);
+-
+-	free(vmh, M_CONTIGMEM);
+-
+-	atomic_subtract_int(&contigmem_refcnt, 1);
+-}
+-
+-static int
+-contigmem_cdev_pager_fault(vm_object_t object, vm_ooffset_t offset, int prot,
+-		vm_page_t *mres)
+-{
+-	vm_paddr_t paddr;
+-	vm_page_t m_paddr, page;
+-	vm_memattr_t memattr, memattr1;
+-
+-	memattr = object->memattr;
+-
+-	VM_OBJECT_WUNLOCK(object);
+-
+-	paddr = offset;
+-
+-	m_paddr = vm_phys_paddr_to_vm_page(paddr);
+-	if (m_paddr != NULL) {
+-		memattr1 = pmap_page_get_memattr(m_paddr);
+-		if (memattr1 != memattr)
+-			memattr = memattr1;
+-	}
+-
+-	if (((*mres)->flags & PG_FICTITIOUS) != 0) {
+-		/*
+-		 * If the passed in result page is a fake page, update it with
+-		 * the new physical address.
+-		 */
+-		page = *mres;
+-		VM_OBJECT_WLOCK(object);
+-		vm_page_updatefake(page, paddr, memattr);
+-	} else {
+-		vm_page_t mret;
+-		/*
+-		 * Replace the passed in reqpage page with our own fake page and
+-		 * free up the original page.
+-		 */
+-		page = vm_page_getfake(paddr, memattr);
+-		VM_OBJECT_WLOCK(object);
+-		mret = vm_page_replace(page, object, (*mres)->pindex);
+-		KASSERT(mret == *mres,
+-		    ("invalid page replacement, old=%p, ret=%p", *mres, mret));
+-		vm_page_lock(mret);
+-		vm_page_free(mret);
+-		vm_page_unlock(mret);
+-		*mres = page;
+-	}
+-
+-	page->valid = VM_PAGE_BITS_ALL;
+-
+-	return VM_PAGER_OK;
+-}
+-
+-static struct cdev_pager_ops contigmem_cdev_pager_ops = {
+-	.cdev_pg_ctor = contigmem_cdev_pager_ctor,
+-	.cdev_pg_dtor = contigmem_cdev_pager_dtor,
+-	.cdev_pg_fault = contigmem_cdev_pager_fault,
+-};
+-
+ static int
+ contigmem_mmap_single(struct cdev *cdev, vm_ooffset_t *offset, vm_size_t size,
+ 		struct vm_object **obj, int nprot)
+ {
+-	struct contigmem_vm_handle *vmh;
+ 	uint64_t buffer_index;
+ 
+ 	/*
+@@ -337,17 +210,10 @@ contigmem_mmap_single(struct cdev *cdev, vm_ooffset_t *offset, vm_size_t size,
+ 	if (buffer_index >= contigmem_num_buffers)
+ 		return EINVAL;
+ 
+-	if (size > contigmem_buffer_size)
+-		return EINVAL;
+-
+-	vmh = malloc(sizeof(*vmh), M_CONTIGMEM, M_NOWAIT | M_ZERO);
+-	if (vmh == NULL)
+-		return ENOMEM;
+-	vmh->buffer_index = buffer_index;
+-
+-	*offset = (vm_ooffset_t)vtophys(contigmem_buffers[buffer_index].addr);
+-	*obj = cdev_pager_allocate(vmh, OBJT_DEVICE, &contigmem_cdev_pager_ops,
+-			size, nprot, *offset, curthread->td_ucred);
++	memset(contigmem_buffers[buffer_index], 0, contigmem_buffer_size);
++	*offset = (vm_ooffset_t)vtophys(contigmem_buffers[buffer_index]);
++	*obj = vm_pager_allocate(OBJT_DEVICE, cdev, size, nprot, *offset,
++			curthread->td_ucred);
+ 
+ 	return 0;
+ }
+diff --git a/lib/librte_eal/common/eal_common_options.c b/lib/librte_eal/common/eal_common_options.c
+index 9f2f8d25a..cadb3936c 100644
+--- a/lib/librte_eal/common/eal_common_options.c
++++ b/lib/librte_eal/common/eal_common_options.c
+@@ -73,6 +73,7 @@ eal_long_options[] = {
+ 	{OPT_VDEV,              1, NULL, OPT_VDEV_NUM             },
+ 	{OPT_VFIO_INTR,         1, NULL, OPT_VFIO_INTR_NUM        },
+ 	{OPT_VMWARE_TSC_MAP,    0, NULL, OPT_VMWARE_TSC_MAP_NUM   },
++	{OPT_SINGLE_FILE_SEGMENTS, 0, NULL, OPT_SINGLE_FILE_SEGMENTS_NUM},
+ 	{0,                     0, NULL, 0                        }
+ };
+ 
+@@ -1160,6 +1161,9 @@ eal_parse_common_option(int opt, const char *optarg,
+ 
+ 		core_parsed = LCORE_OPT_MAP;
+ 		break;
++	case OPT_SINGLE_FILE_SEGMENTS_NUM:
++		conf->single_file_segments = 1;
++		break;
+ 
+ 	/* don't know what to do, leave this to caller */
+ 	default:
+diff --git a/lib/librte_eal/common/eal_internal_cfg.h b/lib/librte_eal/common/eal_internal_cfg.h
+index 1169fcc3d..f4fc353c4 100644
+--- a/lib/librte_eal/common/eal_internal_cfg.h
++++ b/lib/librte_eal/common/eal_internal_cfg.h
+@@ -47,6 +47,9 @@ struct internal_config {
+ 	volatile unsigned force_sockets;
+ 	volatile uint64_t socket_mem[RTE_MAX_NUMA_NODES]; /**< amount of memory per socket */
+ 	uintptr_t base_virtaddr;          /**< base address to try and reserve memory from */
++	volatile unsigned single_file_segments;
++	/**< true if storing all pages within single files (per-page-size,
++	 * per-node). */
+ 	volatile int syslog_facility;	  /**< facility passed to openlog() */
+ 	/** default interrupt mode for VFIO */
+ 	volatile enum rte_intr_mode vfio_intr_mode;
+diff --git a/lib/librte_eal/common/eal_options.h b/lib/librte_eal/common/eal_options.h
+index e86c71142..a4b80d59f 100644
+--- a/lib/librte_eal/common/eal_options.h
++++ b/lib/librte_eal/common/eal_options.h
+@@ -55,6 +55,8 @@ enum {
+ 	OPT_VFIO_INTR_NUM,
+ #define OPT_VMWARE_TSC_MAP    "vmware-tsc-map"
+ 	OPT_VMWARE_TSC_MAP_NUM,
++#define OPT_SINGLE_FILE_SEGMENTS    "single-file-segments"
++	OPT_SINGLE_FILE_SEGMENTS_NUM,
+ 	OPT_LONG_MAX_NUM
+ };
+ 
+diff --git a/lib/librte_eal/linuxapp/eal/eal.c b/lib/librte_eal/linuxapp/eal/eal.c
+index 38306bf5c..a5a489f92 100644
+--- a/lib/librte_eal/linuxapp/eal/eal.c
++++ b/lib/librte_eal/linuxapp/eal/eal.c
+@@ -348,6 +348,7 @@ eal_usage(const char *prgname)
+ 	       "  --"OPT_BASE_VIRTADDR"     Base virtual address\n"
+ 	       "  --"OPT_CREATE_UIO_DEV"    Create /dev/uioX (usually done by hotplug)\n"
+ 	       "  --"OPT_VFIO_INTR"         Interrupt mode for VFIO (legacy|msi|msix)\n"
++	       "  --"OPT_SINGLE_FILE_SEGMENTS" Put all hugepage memory in single files\n"
+ 	       "\n");
+ 	/* Allow the application to print its usage message too if hook is set */
+ 	if ( rte_application_usage_hook ) {
+@@ -725,7 +726,7 @@ rte_eal_init(int argc, char **argv)
+ 	int i, fctret, ret;
+ 	pthread_t thread_id;
+ 	static rte_atomic32_t run_once = RTE_ATOMIC32_INIT(0);
+-	const char *logid;
++	char *logid;
+ 	char cpuset[RTE_CPU_AFFINITY_STR_LEN];
+ 	char thread_name[RTE_MAX_THREAD_NAME_LEN];
+ 
+@@ -744,6 +745,12 @@ rte_eal_init(int argc, char **argv)
+ 
+ 	logid = strrchr(argv[0], '/');
+ 	logid = strdup(logid ? logid + 1: argv[0]);
++	if (!logid) {
++		rte_eal_init_alert("Cannot allocate memory for logid\n");
++		rte_errno = ENOMEM;
++		rte_atomic32_clear(&run_once);
++		return -1;
++	}
+ 
+ 	thread_id = pthread_self();
+ 
+@@ -755,6 +762,7 @@ rte_eal_init(int argc, char **argv)
+ 	if (rte_eal_cpu_init() < 0) {
+ 		rte_eal_init_alert("Cannot detect lcores.");
+ 		rte_errno = ENOTSUP;
++		free(logid);
+ 		return -1;
+ 	}
+ 
+@@ -763,6 +771,7 @@ rte_eal_init(int argc, char **argv)
+ 		rte_eal_init_alert("Invalid 'command line' arguments.");
+ 		rte_errno = EINVAL;
+ 		rte_atomic32_clear(&run_once);
++		free(logid);
+ 		return -1;
+ 	}
+ 
+@@ -804,6 +813,7 @@ rte_eal_init(int argc, char **argv)
+ 		rte_eal_init_alert("Cannot get hugepage information.");
+ 		rte_errno = EACCES;
+ 		rte_atomic32_clear(&run_once);
++		free(logid);
+ 		return -1;
+ 	}
+ 
+@@ -831,8 +841,10 @@ rte_eal_init(int argc, char **argv)
+ 		rte_eal_init_alert("Cannot init logging.");
+ 		rte_errno = ENOMEM;
+ 		rte_atomic32_clear(&run_once);
++		free(logid);
+ 		return -1;
+ 	}
++	free(logid);
+ 
+ 	if (rte_mp_channel_init() < 0) {
+ 		rte_eal_init_alert("failed to init mp channel\n");
+diff --git a/lib/librte_eal/linuxapp/eal/eal_memory.c b/lib/librte_eal/linuxapp/eal/eal_memory.c
+index 38853b753..bcb0b7d20 100644
+--- a/lib/librte_eal/linuxapp/eal/eal_memory.c
++++ b/lib/librte_eal/linuxapp/eal/eal_memory.c
+@@ -1028,6 +1028,113 @@ rte_eal_hugepage_init(void)
+ 		return 0;
+ 	}
+ 
++	/* allocate single hugetlbfs file on the master numa node */
++	if (internal_config.single_file_segments) {
++		struct hugepage_info *hpi = NULL;
++		size_t vma_len;
++		char filepath[PATH_MAX];
++#ifdef RTE_EAL_NUMA_AWARE_HUGEPAGES
++		unsigned node_id = rte_lcore_to_socket_id(rte_get_master_lcore());
++		int oldpolicy;
++		struct bitmask *oldmask = numa_allocate_nodemask();
++		bool have_numa = true;
++
++		if (numa_available() != 0) {
++			RTE_LOG(DEBUG, EAL, "NUMA is not supported.\n");
++			have_numa = false;
++		} else {
++			RTE_LOG(DEBUG, EAL, "Trying to obtain current memory policy.\n");
++			if (get_mempolicy(&oldpolicy, oldmask->maskp,
++					  oldmask->size + 1, 0, 0) < 0) {
++				RTE_LOG(ERR, EAL,
++					"Failed to get current mempolicy: %s. "
++					"Assuming MPOL_DEFAULT.\n", strerror(errno));
++				oldpolicy = MPOL_DEFAULT;
++			}
++
++			RTE_LOG(DEBUG, EAL,
++				"Setting policy MPOL_PREFERRED for socket %d\n",
++				node_id);
++			numa_set_preferred(node_id);
++		}
++#endif
++
++		if (internal_config.memory == 0 && internal_config.force_sockets == 0)
++			internal_config.memory = eal_get_hugepage_mem_size();
++
++		/* choose optimal hugetlbfs for the mapping */
++		for (i = 0; i < (int) internal_config.num_hugepage_sizes; i++) {
++			hpi = &internal_config.hugepage_info[i];
++			if (hpi->hugepage_sz <= internal_config.memory &&
++				hpi->num_pages[0] * hpi->hugepage_sz >=
++				internal_config.memory)
++				break;
++
++			hpi = NULL;
++		}
++
++		if (hpi == NULL) {
++			RTE_LOG(ERR, EAL,
++				"Cannot find a single hugetlbfs with %"PRIu64" MB free mem.\n",
++				internal_config.memory);
++			return -1;
++		}
++
++		eal_get_hugefile_path(filepath, sizeof(filepath), hpi->hugedir, 0);
++		filepath[sizeof(filepath) - 1] = '\0';
++
++		/* try to create hugepage file */
++		int fd = open(filepath, O_CREAT | O_RDWR, 0600);
++		if (fd < 0) {
++			RTE_LOG(DEBUG, EAL, "%s(): open failed: %s\n", __func__,
++					strerror(errno));
++			return -1;
++		}
++
++		/* length needs to be manually aligned for future munmap */
++		vma_len = RTE_ALIGN_CEIL(internal_config.memory, hpi->hugepage_sz);
++		addr = get_virtual_area(&vma_len, hpi->hugepage_sz);
++		if (addr == NULL) {
++			RTE_LOG(ERR, EAL,
++				"Cannot reserve virtually-contiguous %"PRIu64" MB.\n",
++				internal_config.memory);
++			return -1;
++		}
++
++		addr = mmap(addr, vma_len, PROT_READ | PROT_WRITE,
++				MAP_SHARED | MAP_POPULATE, fd, 0);
++		if (addr == MAP_FAILED) {
++			RTE_LOG(ERR, EAL, "%s: mmap() failed: %s\n", __func__,
++					strerror(errno));
++			return -1;
++		}
++
++#ifdef RTE_EAL_NUMA_AWARE_HUGEPAGES
++		if (have_numa) {
++			RTE_LOG(DEBUG, EAL,
++				"Restoring previous memory policy: %d\n", oldpolicy);
++			if (oldpolicy == MPOL_DEFAULT) {
++				numa_set_localalloc();
++			} else if (set_mempolicy(oldpolicy, oldmask->maskp,
++						 oldmask->size + 1) < 0) {
++				RTE_LOG(ERR, EAL, "Failed to restore mempolicy: %s\n",
++					strerror(errno));
++				numa_set_localalloc();
++			}
++		}
++		numa_free_cpumask(oldmask);
++#endif
++		if (rte_eal_iova_mode() == RTE_IOVA_VA)
++			mcfg->memseg[0].iova = (uintptr_t)addr;
++		else
++			mcfg->memseg[0].iova = RTE_BAD_IOVA;
++		mcfg->memseg[0].addr = addr;
++		mcfg->memseg[0].hugepage_sz = hpi->hugepage_sz;
++		mcfg->memseg[0].len = vma_len;
++		mcfg->memseg[0].socket_id = node_id;
++		return 0;
++	}
++
+ 	/* calculate total number of hugepages available. at this point we haven't
+ 	 * yet started sorting them so they all are on socket 0 */
+ 	for (i = 0; i < (int) internal_config.num_hugepage_sizes; i++) {
