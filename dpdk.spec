@@ -33,11 +33,11 @@
 
 Name: dpdk
 Version: 18.02
-Release: 1%{dist}
+Release: 2%{dist}
 Packager: packaging@6wind.com
 URL: http://dpdk.org
 Source: http://dpdk.org/browse/dpdk/snapshot/dpdk-%{version}.tar.gz
-Patch1: dpdk-92924b207.patch
+Patch1: dpdk-b354dddee.patch
 
 Summary: Data Plane Development Kit core
 Group: System Environment/Libraries
@@ -214,6 +214,10 @@ make install O=%{target} DESTDIR=%{buildroot} \
 /sbin/depmod
 
 %changelog
+* Fri Apr 05 2019 Brian J. Murrell <brian.murrell@intel.com> - 0:18.02-2
+- Fix patch name to reflect our current spdk is actually at b354dddee
+  not 92924b207
+
 * Thu Apr 04 2019 Brian J. Murrell <brian.murrell@intel.com> - 0:18.02-1
 - Initial RPM release
 - Specialized build for use with spdk

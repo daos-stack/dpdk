@@ -1,6 +1,6 @@
 NAME        := dpdk
 VERSION     := 18.02
-RELEASE     := 1
+RELEASE     := 2
 DIST        := $(shell rpm --eval %{dist})
 SRPM        := _topdir/SRPMS/$(NAME)-$(VERSION)-$(RELEASE)$(DIST).src.rpm
 RPMS        := _topdir/RPMS/x86_64/$(NAME)-$(VERSION)-$(RELEASE)$(DIST).x86_64.rpm           \
@@ -10,7 +10,7 @@ SPEC        := $(NAME).spec
 SRC_EXT     := gz
 SOURCE      := http://dpdk.org/browse/dpdk/snapshot/dpdk-$(VERSION).tar.$(SRC_EXT)
 SOURCES     := _topdir/SOURCES/$(NAME)-$(VERSION).tar.$(SRC_EXT) \
-	       _topdir/SOURCES/$(NAME)-92924b207.patch
+	       _topdir/SOURCES/$(NAME)-b354dddee.patch
 TARGETS      := $(RPMS) $(SRPM)
 
 all: $(TARGETS)
