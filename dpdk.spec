@@ -33,7 +33,7 @@
 
 Name: dpdk
 Version: 18.02
-Release: 2%{dist}
+Release: 3%{?dist}
 Packager: packaging@6wind.com
 URL: http://dpdk.org
 Source: http://dpdk.org/browse/dpdk/snapshot/dpdk-%{version}.tar.gz
@@ -58,7 +58,13 @@ ExclusiveArch: i686 x86_64 aarch64
 #BuildRequires: kernel-devel, kernel-headers, libpcap-devel
 #BuildRequires: doxygen, python-sphinx, inkscape
 #BuildRequires: texlive-collection-latexextra
-BuildRequires: numactl-devel
+%if (0%{?rhel} >= 7)
+BuildRequires:  numactl-devel
+%else
+%if (0%{?suse_version} > 1315)
+BuildRequires:  libnuma-devel
+%endif
+%endif
 
 %description
 DPDK core includes kernel modules, core libraries and tools.
@@ -214,6 +220,10 @@ make install O=%{target} DESTDIR=%{buildroot} \
 /sbin/depmod
 
 %changelog
+* Fri Apr 05 2019 Brian J. Murrell <brian.murrell@intel.com> - 0:18.02-3
+- dist macro should be conditionally substituted with ?
+- Support SLES 12.3
+
 * Fri Apr 05 2019 Brian J. Murrell <brian.murrell@intel.com> - 0:18.02-2
 - Fix patch name to reflect our current spdk is actually at b354dddee
   not 92924b207
