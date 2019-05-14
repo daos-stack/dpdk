@@ -61,7 +61,7 @@ ExclusiveArch: i686 x86_64 aarch64
 %if (0%{?rhel} >= 7)
 BuildRequires:  numactl-devel
 %else
-%if (0%{?suse_version} > 1315)
+%if (0%{?suse_version} >= 1315)
 BuildRequires:  libnuma-devel
 %endif
 %endif
