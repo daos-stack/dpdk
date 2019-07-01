@@ -1,0 +1,190 @@
+#!/usr/bin/make -f
+
+# Modified from https://github.com/ceph/dpdk/blob/master/pkg/dpdk.spec
+#
+# Copyright 2014 6WIND S.A.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# - Redistributions of source code must retain the above copyright
+#   notice, this list of conditions and the following disclaimer.
+#
+# - Redistributions in binary form must reproduce the above copyright
+#   notice, this list of conditions and the following disclaimer in
+#   the documentation and/or other materials provided with the
+#   distribution.
+#
+# - Neither the name of 6WIND S.A. nor the names of its
+#   contributors may be used to endorse or promote products derived
+#   from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+# OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+arch := x86_64
+machine := default
+target := $(arch)-$(machine)-linuxapp-gcc
+config := $(arch)-native-linuxapp-gcc
+prefix := /usr
+bindir := $(prefix)/bin
+sbindir := $(prefix)/sbin
+datadir := $(prefix)/share
+libdir := $(prefix)/lib/$(DEB_BUILD_MULTIARCH)
+includedir := $(prefix)/include
+docdir := $(prefix)/share/doc
+buildroot := debian/tmp
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	make O=$(target) T=$(config) config
+	sed -ri 's,(RTE_MACHINE=).*,\1$(machine),'        $(target)/.config
+	sed -ri 's,(RTE_APP_TEST=).*,\1n,'                $(target)/.config
+	sed -ri 's,(RTE_BUILD_SHARED_LIB=).*,\1y,'        $(target)/.config
+	sed -ri 's,(RTE_NEXT_ABI=).*,\1n,'                $(target)/.config
+	sed -ri 's,(LIBRTE_VHOST=).*,\1y,'                $(target)/.config
+	sed -ri 's,(LIBRTE_PMD_PCAP=).*,\1y,'             $(target)/.config
+	sed -ri 's,(CONFIG_RTE_EAL_IGB_UIO=).*,\1n,'      $(target)/.config
+	sed -ri 's,(CONFIG_RTE_KNI_KMOD=).*,\1n,'         $(target)/.config
+	sed -ri 's,(CONFIG_RTE_KNI_KMOD_ETHTOOL=).*,\1n,' $(target)/.config
+	make CONFIG_RTE_EAL_IGB_UIO=n                  \
+	     CONFIG_RTE_LIBRTE_KVARGS=n                \
+	     CONFIG_RTE_LIBRTE_ARK_PMD=n               \
+	     CONFIG_RTE_LIBRTE_BNX2X_PMD=n             \
+	     CONFIG_RTE_LIBRTE_BNXT_PMD=n              \
+	     CONFIG_RTE_LIBRTE_CXGBE_PMD=n             \
+	     CONFIG_RTE_LIBRTE_DPAA_BUS=n              \
+	     CONFIG_RTE_LIBRTE_FSLMC_BUS=n             \
+	     CONFIG_RTE_LIBRTE_ENA_PMD=n               \
+	     CONFIG_RTE_LIBRTE_ENIC_PMD=n              \
+	     CONFIG_RTE_LIBRTE_EM_PMD=n                \
+	     CONFIG_RTE_LIBRTE_IGB_PMD=n               \
+	     CONFIG_RTE_LIBRTE_IXGBE_PMD=n             \
+	     CONFIG_RTE_LIBRTE_I40E_PMD=n              \
+	     CONFIG_RTE_LIBRTE_FM10K_PMD=n             \
+	     CONFIG_RTE_LIBRTE_AVF_PMD=n               \
+	     CONFIG_RTE_LIBRTE_NFP_PMD=n               \
+	     CONFIG_RTE_LIBRTE_QEDE_PMD=n              \
+	     CONFIG_RTE_LIBRTE_SFC_EFX_PMD=n           \
+	     CONFIG_RTE_LIBRTE_THUNDERX_NICVF_PMD=n    \
+	     CONFIG_RTE_LIBRTE_LIO_PMD=n               \
+	     CONFIG_RTE_LIBRTE_OCTEONTX_PMD=n          \
+	     CONFIG_RTE_LIBRTE_AVP_PMD=n               \
+	     CONFIG_RTE_LIBRTE_VIRTIO_PMD=n            \
+	     CONFIG_RTE_VIRTIO_USER=n                  \
+	     CONFIG_RTE_LIBRTE_VMXNET3_PMD=n           \
+	     CONFIG_RTE_LIBRTE_PMD_AF_PACKET=n         \
+	     CONFIG_RTE_LIBRTE_PMD_BOND=n              \
+	     CONFIG_RTE_LIBRTE_PMD_FAILSAFE=n          \
+	     CONFIG_RTE_LIBRTE_VDEV_NETVSC_PMD=n       \
+	     CONFIG_RTE_LIBRTE_PMD_NULL=n              \
+	     CONFIG_RTE_LIBRTE_PMD_RING=n              \
+	     CONFIG_RTE_LIBRTE_PMD_TAP=n               \
+	     CONFIG_RTE_LIBRTE_BBDEV=n                 \
+	     CONFIG_RTE_LIBRTE_CRYPTODEV=n             \
+	     CONFIG_RTE_LIBRTE_SECURITY=n              \
+	     CONFIG_RTE_LIBRTE_EVENTDEV=n              \
+	     CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV=n \
+	     CONFIG_RTE_LIBRTE_PMD_SW_EVENTDEV=n       \
+	     CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV=n \
+	     CONFIG_RTE_LIBRTE_PMD_SW_EVENTDEV=n       \
+	     CONFIG_RTE_LIBRTE_PMD_OCTEONTX_SSOVF=n    \
+	     CONFIG_RTE_LIBRTE_RAWDEV=n                \
+	     CONFIG_RTE_DRIVER_MEMPOOL_STACK=n         \
+	     CONFIG_RTE_LIBRTE_OCTEONTX_MEMPOOL=n      \
+	     CONFIG_RTE_LIBRTE_TIMER=n                 \
+	     CONFIG_RTE_LIBRTE_CFGFILE=n               \
+	     CONFIG_RTE_LIBRTE_CMDLINE=n               \
+	     CONFIG_RTE_LIBRTE_HASH=n                  \
+	     CONFIG_RTE_LIBRTE_EFD=n                   \
+	     CONFIG_RTE_LIBRTE_MEMBER=n                \
+	     CONFIG_RTE_LIBRTE_JOBSTATS=n              \
+	     CONFIG_RTE_LIBRTE_METRICS=n               \
+	     CONFIG_RTE_LIBRTE_BITRATE=n               \
+	     CONFIG_RTE_LIBRTE_LATENCY_STATS=n         \
+	     CONFIG_RTE_LIBRTE_LPM=n                   \
+	     CONFIG_RTE_LIBRTE_ACL=n                   \
+	     CONFIG_RTE_LIBRTE_POWER=n                 \
+	     CONFIG_RTE_LIBRTE_IP_FRAG=n               \
+	     CONFIG_RTE_LIBRTE_GRO=n                   \
+	     CONFIG_RTE_LIBRTE_GSO=n                   \
+	     CONFIG_RTE_LIBRTE_METER=n                 \
+	     CONFIG_RTE_LIBRTE_FLOW_CLASSIFY=n         \
+	     CONFIG_RTE_LIBRTE_SCHED=n                 \
+	     CONFIG_RTE_LIBRTE_DISTRIBUTOR=n           \
+	     CONFIG_RTE_LIBRTE_REORDER=n               \
+	     CONFIG_RTE_LIBRTE_PORT=n                  \
+	     CONFIG_RTE_LIBRTE_TABLE=n                 \
+	     CONFIG_RTE_LIBRTE_PIPELINE=n              \
+	     CONFIG_RTE_LIBRTE_KNI=n                   \
+	     CONFIG_RTE_LIBRTE_PMD_KNI=n               \
+	     CONFIG_RTE_KNI_KMOD=n                     \
+	     CONFIG_RTE_LIBRTE_PDUMP=n                 \
+	     CONFIG_RTE_LIBRTE_VHOST=n                 \
+	     CONFIG_RTE_LIBRTE_PMD_VHOST=n             \
+	     CONFIG_RTE_APP_TEST=n                     \
+	     CONFIG_RTE_PROC_INFO=n                    \
+	     CONFIG_RTE_TEST_PMD=n                     \
+	     CONFIG_RTE_APP_CRYPTO_PERF=n              \
+	     CONFIG_RTE_APP_EVENTDEV=n                 \
+	     CONFIG_RTE_LIBRTE_PMD_PCAP=n              \
+	     O=$(target) -j4
+
+# spdk dpdk 18.02 fork distclean target is broken.
+# It can not be run on an already clean directory tree.
+# And does not do a complete cleanup.
+override_dh_auto_clean:
+	if [ ! -d build ]; then mkdir build; fi
+	if [ ! -e build/.config ] ;then make O=$(target) T=$(config) config; fi
+	if [ ! -e "$(target)/build" ] ;then mkdir "$(target)/build"; fi
+	dh_auto_clean -- O=$(target)
+	rm -f $(target)/.config $(target)/include/rte_config.h \
+	  $(target)/Makefile
+
+override_dh_auto_install:
+	make install O=$(target) DESTDIR=$(buildroot) \
+          prefix=$(prefix) bindir=$(bindir) sbindir=$(sbindir) \
+          includedir=$(includedir)/dpdk libdir=$(libdir) \
+          datadir=$(datadir)/dpdk docdir=$(docdir)/dpdk
+	mv $(buildroot)$(prefix)/bin/dpdk-pmdinfo \
+	  $(buildroot)$(prefix)/bin/$(DEB_BUILD_MULTIARCH)-dpdk-pmdinfo
+	ln -s $(DEB_BUILD_MULTIARCH)-dpdk-pmdinfo \
+	  $(buildroot)$(prefix)/bin/dpdk-pmdinfo
+	mv $(buildroot)$(datadir)/dpdk/$(target)/app/dpdk-pmdinfogen \
+	  $(buildroot)$(datadir)/dpdk/$(target)/app/$(DEB_BUILD_MULTIARCH)-dpdk-pmdinfogen
+	ln -s $(DEB_BUILD_MULTIARCH)-dpdk-pmdinfogen \
+	  $(buildroot)$(datadir)/dpdk/$(target)/app/dpdk-pmdinfogen
+	chmod 755 $(buildroot)$(datadir)/dpdk/buildtools/symlink-drivers-solibs.sh
+
+override_dh_auto_test:
+	make test-build O=$(target)
+	dh_auto_test -- O=$(target)
+
