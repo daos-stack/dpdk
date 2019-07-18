@@ -1,0 +1,73 @@
+Source: dpdk
+Priority: optional
+Maintainer: daos-stack <daos@daos.groups.io>
+Build-Depends: debhelper (>= 11),
+               dh-python,
+               dkms,
+               doxygen <!nodoc>,
+               graphviz <!nodoc>,
+               inkscape <!nodoc>,
+               libcap-dev,
+               libelf-dev,
+               libibverbs-dev,
+               libpcap-dev,
+               libnuma-dev,
+               libssl-dev,
+               python3,
+               python3-sphinx <!nodoc>,
+               python3-sphinx-rtd-theme <!nodoc>,
+               texlive-fonts-recommended <!nodoc>,
+               texlive-latex-extra <!nodoc>
+Standards-Version: 4.1.3
+Section: libs
+Homepage: https://github.com/spdk/dpdk
+Vcs-Browser: https://github.com/spdk/dpdk
+Vcs-Git: https://github.com/spdk/dpdk.git
+
+Package: dpdk
+Section: admin
+Architecture: any
+Multi-Arch: same
+Depends: dpdk1 (= ${binary:Version}),
+         hwdata,
+         lsb-base (>= 3.2-14),
+         pciutils,
+         python,
+         python3,
+         ${shlibs:Depends},
+         ${misc:Depends}
+Description: Data Plane Development Kit (basic development files)
+ Fork of DPDK from the SPDK project.
+ DPDK is a set of libraries for fast packet processing. Applications run
+ in user-space and communicate directly with dedicated network interfaces.
+ .
+ This package contains the runtime environment to run DPDK applications.
+
+Package: dpdk-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: dpdk1 (= ${binary:Version}), ${shlibs:Depends},
+         python (>=1.7),
+         ${misc:Depends},
+Description: Data Plane Development Kit (basic development files)
+ Fork of DPDK from the SPDK project.
+ DPDK is a set of libraries for fast packet processing. Applications run
+ in user-space and communicate directly with dedicated network interfaces.
+ .
+ This package contains the basic headers and library files required to
+ build external applications which will also require at least SSE3 support
+ when running.
+
+Package: dpdk1
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libdpdk0
+Description: Data Plane Development Kit (Run-time library)
+ Fork of DPDK from the SPDK project.
+ DPDK is a set of libraries for fast packet processing. Applications run
+ in user-space and communicate directly with dedicated network interfaces.
+ .
+ This package contains the run-time libraries
+

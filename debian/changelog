@@ -1,0 +1,8 @@
+dpdk (18.02-1) unstable; urgency=medium
+
+  [ John Malmberg ]
+  * Patched of spdk fork of upstream release
+  * Experimental build for daos-stack project
+
+ -- John Malmberg <john.e.malmberg@intel.com>  Mon, 01 Jul 2019 15:06:07 +0000
+

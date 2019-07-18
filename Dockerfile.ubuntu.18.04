@@ -1,0 +1,26 @@
+#
+# Copyright 2019, Intel Corporation
+#
+# 'recipe' for Docker to build an Debian package
+#
+# Pull base image
+FROM ubuntu:18.04
+Maintainer John.E.Malmberg <John.E.Malmberg@intel.com>
+
+# Install basic tools
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            autoconf bash curl debmake debhelper dpkg-dev doxygen gcc \
+            git locales make patch rpm
+
+# spdk dpdk fork
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            dh-python dkms doxygen graphviz inkscape \
+            libcap-dev libelf-dev libibverbs-dev libnuma-dev libpcap-dev \
+            libssl-dev \
+            python3 python3-sphinx python3-sphinx-rtd-theme \
+            texlive-fonts-recommended texlive-latex-extra
+
+# force an upgrade to get any newly built packages
+ARG CACHEBUST=1
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y; \
+    apt-get autoremove -y

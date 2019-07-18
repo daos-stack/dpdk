@@ -1,0 +1,4 @@
+usr/bin/dpdk-pmdinfo
+usr/bin/*-dpdk-pmdinfo
+usr/share/dpdk/usertools
+

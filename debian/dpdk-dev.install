@@ -1,0 +1,7 @@
+usr/include/dpdk
+usr/lib/*/lib*.so
+usr/share/dpdk/mk
+usr/share/dpdk/buildtools
+usr/share/dpdk/x86_64-default-linuxapp-gcc
+usr/share/dpdk/examples
+
