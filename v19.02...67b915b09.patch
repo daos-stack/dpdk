@@ -1,0 +1,1148 @@
+diff --git a/.gitignore b/.gitignore
+index 9105e26c5..4f5eb9dbc 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -13,3 +13,4 @@ GPATH
+ GRTAGS
+ tags
+ TAGS
++/build/
+diff --git a/config/common_base b/config/common_base
+index 7c6da5165..c228be098 100644
+--- a/config/common_base
++++ b/config/common_base
+@@ -90,7 +90,7 @@ CONFIG_RTE_BACKTRACE=y
+ CONFIG_RTE_LIBEAL_USE_HPET=n
+ CONFIG_RTE_EAL_ALLOW_INV_SOCKET_ID=n
+ CONFIG_RTE_EAL_ALWAYS_PANIC_ON_ERROR=n
+-CONFIG_RTE_EAL_IGB_UIO=n
++#CONFIG_RTE_EAL_IGB_UIO=n
+ CONFIG_RTE_EAL_VFIO=n
+ CONFIG_RTE_MAX_VFIO_GROUPS=64
+ CONFIG_RTE_MAX_VFIO_CONTAINERS=64
+@@ -152,7 +152,7 @@ CONFIG_RTE_LIBRTE_COMMON_DPAAX=n
+ #
+ # Compile the Intel FPGA bus
+ #
+-CONFIG_RTE_LIBRTE_IFPGA_BUS=y
++CONFIG_RTE_LIBRTE_IFPGA_BUS=n
+ 
+ #
+ # Compile PCI bus driver
+@@ -167,7 +167,7 @@ CONFIG_RTE_LIBRTE_VDEV_BUS=y
+ #
+ # Compile ARK PMD
+ #
+-CONFIG_RTE_LIBRTE_ARK_PMD=y
++CONFIG_RTE_LIBRTE_ARK_PMD=n
+ CONFIG_RTE_LIBRTE_ARK_PAD_TX=y
+ CONFIG_RTE_LIBRTE_ARK_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_ARK_DEBUG_TX=n
+@@ -177,12 +177,12 @@ CONFIG_RTE_LIBRTE_ARK_DEBUG_TRACE=n
+ #
+ # Compile Aquantia Atlantic PMD driver
+ #
+-CONFIG_RTE_LIBRTE_ATLANTIC_PMD=y
++CONFIG_RTE_LIBRTE_ATLANTIC_PMD=n
+ 
+ #
+ # Compile AMD PMD
+ #
+-CONFIG_RTE_LIBRTE_AXGBE_PMD=y
++CONFIG_RTE_LIBRTE_AXGBE_PMD=n
+ CONFIG_RTE_LIBRTE_AXGBE_PMD_DEBUG=n
+ 
+ #
+@@ -197,12 +197,12 @@ CONFIG_RTE_LIBRTE_BNX2X_DEBUG_PERIODIC=n
+ #
+ # Compile burst-oriented Broadcom BNXT PMD driver
+ #
+-CONFIG_RTE_LIBRTE_BNXT_PMD=y
++CONFIG_RTE_LIBRTE_BNXT_PMD=n
+ 
+ #
+ # Compile burst-oriented Chelsio Terminator (CXGBE) PMD
+ #
+-CONFIG_RTE_LIBRTE_CXGBE_PMD=y
++CONFIG_RTE_LIBRTE_CXGBE_PMD=n
+ CONFIG_RTE_LIBRTE_CXGBE_DEBUG=n
+ CONFIG_RTE_LIBRTE_CXGBE_DEBUG_REG=n
+ CONFIG_RTE_LIBRTE_CXGBE_DEBUG_MBOX=n
+@@ -241,7 +241,7 @@ CONFIG_RTE_LIBRTE_ENETC_PMD=n
+ #
+ # Compile burst-oriented Amazon ENA PMD driver
+ #
+-CONFIG_RTE_LIBRTE_ENA_PMD=y
++CONFIG_RTE_LIBRTE_ENA_PMD=n
+ CONFIG_RTE_LIBRTE_ENA_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_ENA_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_ENA_DEBUG_TX_FREE=n
+@@ -250,13 +250,13 @@ CONFIG_RTE_LIBRTE_ENA_COM_DEBUG=n
+ #
+ # Compile burst-oriented Cisco ENIC PMD driver
+ #
+-CONFIG_RTE_LIBRTE_ENIC_PMD=y
++CONFIG_RTE_LIBRTE_ENIC_PMD=n
+ 
+ #
+ # Compile burst-oriented IGB & EM PMD drivers
+ #
+-CONFIG_RTE_LIBRTE_EM_PMD=y
+-CONFIG_RTE_LIBRTE_IGB_PMD=y
++CONFIG_RTE_LIBRTE_EM_PMD=n
++CONFIG_RTE_LIBRTE_IGB_PMD=n
+ CONFIG_RTE_LIBRTE_E1000_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_E1000_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_E1000_DEBUG_TX_FREE=n
+@@ -265,7 +265,7 @@ CONFIG_RTE_LIBRTE_E1000_PF_DISABLE_STRIP_CRC=n
+ #
+ # Compile burst-oriented IXGBE PMD driver
+ #
+-CONFIG_RTE_LIBRTE_IXGBE_PMD=y
++CONFIG_RTE_LIBRTE_IXGBE_PMD=n
+ CONFIG_RTE_LIBRTE_IXGBE_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_IXGBE_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_IXGBE_DEBUG_TX_FREE=n
+@@ -276,7 +276,7 @@ CONFIG_RTE_LIBRTE_IXGBE_BYPASS=n
+ #
+ # Compile burst-oriented I40E PMD driver
+ #
+-CONFIG_RTE_LIBRTE_I40E_PMD=y
++CONFIG_RTE_LIBRTE_I40E_PMD=n
+ CONFIG_RTE_LIBRTE_I40E_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_I40E_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_I40E_DEBUG_TX_FREE=n
+@@ -289,7 +289,7 @@ CONFIG_RTE_LIBRTE_I40E_QUEUE_NUM_PER_VM=4
+ #
+ # Compile burst-oriented FM10K PMD
+ #
+-CONFIG_RTE_LIBRTE_FM10K_PMD=y
++CONFIG_RTE_LIBRTE_FM10K_PMD=n
+ CONFIG_RTE_LIBRTE_FM10K_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_FM10K_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_FM10K_DEBUG_TX_FREE=n
+@@ -299,7 +299,7 @@ CONFIG_RTE_LIBRTE_FM10K_INC_VECTOR=y
+ #
+ # Compile burst-oriented ICE PMD driver
+ #
+-CONFIG_RTE_LIBRTE_ICE_PMD=y
++CONFIG_RTE_LIBRTE_ICE_PMD=n
+ CONFIG_RTE_LIBRTE_ICE_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_ICE_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_ICE_DEBUG_TX_FREE=n
+@@ -308,7 +308,7 @@ CONFIG_RTE_LIBRTE_ICE_16BYTE_RX_DESC=n
+ 
+ # Compile burst-oriented AVF PMD driver
+ #
+-CONFIG_RTE_LIBRTE_AVF_PMD=y
++CONFIG_RTE_LIBRTE_AVF_PMD=n
+ CONFIG_RTE_LIBRTE_AVF_INC_VECTOR=y
+ CONFIG_RTE_LIBRTE_AVF_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_AVF_DEBUG_TX_FREE=n
+@@ -343,7 +343,7 @@ CONFIG_RTE_LIBRTE_NFP_DEBUG_RX=n
+ 
+ # QLogic 10G/25G/40G/50G/100G PMD
+ #
+-CONFIG_RTE_LIBRTE_QEDE_PMD=y
++CONFIG_RTE_LIBRTE_QEDE_PMD=n
+ CONFIG_RTE_LIBRTE_QEDE_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_QEDE_DEBUG_RX=n
+ #Provides abs path/name of the firmware file.
+@@ -353,7 +353,7 @@ CONFIG_RTE_LIBRTE_QEDE_FW=""
+ #
+ # Compile burst-oriented Solarflare libefx-based PMD
+ #
+-CONFIG_RTE_LIBRTE_SFC_EFX_PMD=y
++CONFIG_RTE_LIBRTE_SFC_EFX_PMD=n
+ CONFIG_RTE_LIBRTE_SFC_EFX_DEBUG=n
+ 
+ #
+@@ -364,14 +364,14 @@ CONFIG_RTE_LIBRTE_PMD_SZEDATA2=n
+ #
+ # Compile burst-oriented Cavium Thunderx NICVF PMD driver
+ #
+-CONFIG_RTE_LIBRTE_THUNDERX_NICVF_PMD=y
++CONFIG_RTE_LIBRTE_THUNDERX_NICVF_PMD=n
+ CONFIG_RTE_LIBRTE_THUNDERX_NICVF_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_THUNDERX_NICVF_DEBUG_TX=n
+ 
+ #
+ # Compile burst-oriented Cavium LiquidIO PMD driver
+ #
+-CONFIG_RTE_LIBRTE_LIO_PMD=y
++CONFIG_RTE_LIBRTE_LIO_PMD=n
+ CONFIG_RTE_LIBRTE_LIO_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_LIO_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_LIO_DEBUG_MBOX=n
+@@ -380,7 +380,7 @@ CONFIG_RTE_LIBRTE_LIO_DEBUG_REGS=n
+ #
+ # Compile burst-oriented Cavium OCTEONTX network PMD driver
+ #
+-CONFIG_RTE_LIBRTE_OCTEONTX_PMD=y
++CONFIG_RTE_LIBRTE_OCTEONTX_PMD=n
+ 
+ #
+ # Compile WRS accelerated virtual port (AVP) guest PMD driver
+@@ -393,7 +393,7 @@ CONFIG_RTE_LIBRTE_AVP_DEBUG_BUFFERS=n
+ #
+ # Compile burst-oriented VIRTIO PMD driver
+ #
+-CONFIG_RTE_LIBRTE_VIRTIO_PMD=y
++CONFIG_RTE_LIBRTE_VIRTIO_PMD=n
+ CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_DUMP=n
+@@ -406,7 +406,7 @@ CONFIG_RTE_VIRTIO_USER=n
+ #
+ # Compile burst-oriented VMXNET3 PMD driver
+ #
+-CONFIG_RTE_LIBRTE_VMXNET3_PMD=y
++CONFIG_RTE_LIBRTE_VMXNET3_PMD=n
+ CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_TX_FREE=n
+@@ -419,19 +419,19 @@ CONFIG_RTE_LIBRTE_PMD_AF_PACKET=n
+ #
+ # Compile link bonding PMD library
+ #
+-CONFIG_RTE_LIBRTE_PMD_BOND=y
++CONFIG_RTE_LIBRTE_PMD_BOND=n
+ CONFIG_RTE_LIBRTE_BOND_DEBUG_ALB=n
+ CONFIG_RTE_LIBRTE_BOND_DEBUG_ALB_L1=n
+ 
+ #
+ # Compile fail-safe PMD
+ #
+-CONFIG_RTE_LIBRTE_PMD_FAILSAFE=y
++CONFIG_RTE_LIBRTE_PMD_FAILSAFE=n
+ 
+ #
+ # Compile Marvell PMD driver
+ #
+-CONFIG_RTE_LIBRTE_MVPP2_PMD=n
++CONFIG_RTE_LIBRTE_MRVL_PMD=n
+ 
+ #
+ # Compile Marvell MVNETA PMD driver
+@@ -459,7 +459,7 @@ CONFIG_RTE_LIBRTE_VDEV_NETVSC_PMD=n
+ #
+ # Compile null PMD
+ #
+-CONFIG_RTE_LIBRTE_PMD_NULL=y
++CONFIG_RTE_LIBRTE_PMD_NULL=n
+ 
+ #
+ # Compile software PMD backed by PCAP files
+@@ -469,7 +469,7 @@ CONFIG_RTE_LIBRTE_PMD_PCAP=n
+ #
+ # Compile example software rings based PMD
+ #
+-CONFIG_RTE_LIBRTE_PMD_RING=y
++CONFIG_RTE_LIBRTE_PMD_RING=n
+ CONFIG_RTE_PMD_RING_MAX_RX_RINGS=16
+ CONFIG_RTE_PMD_RING_MAX_TX_RINGS=16
+ 
+@@ -492,14 +492,14 @@ CONFIG_RTE_PMD_PACKET_PREFETCH=y
+ # Compile generic wireless base band device library
+ # EXPERIMENTAL: API may change without prior notice
+ #
+-CONFIG_RTE_LIBRTE_BBDEV=y
++CONFIG_RTE_LIBRTE_BBDEV=n
+ CONFIG_RTE_BBDEV_MAX_DEVS=128
+ CONFIG_RTE_BBDEV_OFFLOAD_COST=y
+ 
+ #
+ # Compile PMD for NULL bbdev device
+ #
+-CONFIG_RTE_LIBRTE_PMD_BBDEV_NULL=y
++CONFIG_RTE_LIBRTE_PMD_BBDEV_NULL=n
+ 
+ #
+ # Compile PMD for turbo software bbdev device
+@@ -538,13 +538,13 @@ CONFIG_RTE_LIBRTE_DPAA_MAX_CRYPTODEV=4
+ #
+ # Compile PMD for Cavium OCTEON TX crypto device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX_CRYPTO=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX_CRYPTO=n
+ 
+ #
+ # Compile PMD for QuickAssist based devices - see docs for details
+ #
+-CONFIG_RTE_LIBRTE_PMD_QAT=y
+-CONFIG_RTE_LIBRTE_PMD_QAT_SYM=n
++#CONFIG_RTE_LIBRTE_PMD_QAT=n
++#CONFIG_RTE_LIBRTE_PMD_QAT_SYM=n
+ #
+ # Max. number of QuickAssist devices, which can be detected and attached
+ #
+@@ -555,7 +555,7 @@ CONFIG_RTE_PMD_QAT_COMP_IM_BUFFER_SIZE=65536
+ #
+ # Compile PMD for virtio crypto devices
+ #
+-CONFIG_RTE_LIBRTE_PMD_VIRTIO_CRYPTO=y
++CONFIG_RTE_LIBRTE_PMD_VIRTIO_CRYPTO=n
+ #
+ # Number of maximum virtio crypto devices
+ #
+@@ -564,7 +564,7 @@ CONFIG_RTE_MAX_VIRTIO_CRYPTO=32
+ #
+ # Compile PMD for AESNI backed device
+ #
+-CONFIG_RTE_LIBRTE_PMD_AESNI_MB=n
++#CONFIG_RTE_LIBRTE_PMD_AESNI_MB=n
+ 
+ #
+ # Compile PMD for Software backed device
+@@ -594,12 +594,12 @@ CONFIG_RTE_LIBRTE_PMD_ZUC=n
+ 
+ # Compile PMD for Crypto Scheduler device
+ #
+-CONFIG_RTE_LIBRTE_PMD_CRYPTO_SCHEDULER=y
++CONFIG_RTE_LIBRTE_PMD_CRYPTO_SCHEDULER=n
+ 
+ #
+ # Compile PMD for NULL Crypto device
+ #
+-CONFIG_RTE_LIBRTE_PMD_NULL_CRYPTO=y
++CONFIG_RTE_LIBRTE_PMD_NULL_CRYPTO=n
+ 
+ #
+ # Compile PMD for AMD CCP crypto device
+@@ -614,7 +614,7 @@ CONFIG_RTE_LIBRTE_PMD_MVSAM_CRYPTO=n
+ #
+ # Compile generic security library
+ #
+-CONFIG_RTE_LIBRTE_SECURITY=y
++CONFIG_RTE_LIBRTE_SECURITY=n
+ 
+ #
+ # Compile generic compression device library
+@@ -630,12 +630,12 @@ CONFIG_RTE_COMPRESSDEV_TEST=n
+ #
+ # Compile PMD for Octeontx ZIPVF compression device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX_ZIPVF=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX_ZIPVF=n
+ 
+ #
+ # Compile PMD for ISA-L compression device
+ #
+-CONFIG_RTE_LIBRTE_PMD_ISAL=n
++#CONFIG_RTE_LIBRTE_PMD_ISAL=n
+ 
+ #
+ # Compile PMD for ZLIB compression device
+@@ -645,7 +645,7 @@ CONFIG_RTE_LIBRTE_PMD_ZLIB=n
+ #
+ # Compile generic event device library
+ #
+-CONFIG_RTE_LIBRTE_EVENTDEV=y
++CONFIG_RTE_LIBRTE_EVENTDEV=n
+ CONFIG_RTE_LIBRTE_EVENTDEV_DEBUG=n
+ CONFIG_RTE_EVENT_MAX_DEVS=16
+ CONFIG_RTE_EVENT_MAX_QUEUES_PER_DEV=64
+@@ -657,28 +657,28 @@ CONFIG_RTE_EVENT_ETH_TX_ADAPTER_MAX_INSTANCE=32
+ #
+ # Compile PMD for skeleton event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV=n
+ CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV_DEBUG=n
+ 
+ #
+ # Compile PMD for software event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_SW_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_SW_EVENTDEV=n
+ 
+ #
+ # Compile PMD for distributed software event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_DSW_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_DSW_EVENTDEV=n
+ 
+ #
+ # Compile PMD for octeontx sso event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX_SSOVF=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX_SSOVF=n
+ 
+ #
+ # Compile PMD for OPDL event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OPDL_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_OPDL_EVENTDEV=n
+ 
+ #
+ # Compile PMD for NXP DPAA event device
+@@ -694,9 +694,9 @@ CONFIG_RTE_LIBRTE_PMD_DPAA2_EVENTDEV=n
+ # Compile raw device support
+ # EXPERIMENTAL: API may change without prior notice
+ #
+-CONFIG_RTE_LIBRTE_RAWDEV=y
++CONFIG_RTE_LIBRTE_RAWDEV=n
+ CONFIG_RTE_RAWDEV_MAX_DEVS=10
+-CONFIG_RTE_LIBRTE_PMD_SKELETON_RAWDEV=y
++CONFIG_RTE_LIBRTE_PMD_SKELETON_RAWDEV=n
+ 
+ #
+ # Compile PMD for NXP DPAA2 CMDIF raw device
+@@ -711,7 +711,7 @@ CONFIG_RTE_LIBRTE_PMD_DPAA2_QDMA_RAWDEV=n
+ #
+ # Compile PMD for Intel FPGA raw device
+ #
+-CONFIG_RTE_LIBRTE_PMD_IFPGA_RAWDEV=y
++CONFIG_RTE_LIBRTE_PMD_IFPGA_RAWDEV=n
+ 
+ #
+ # Compile librte_ring
+@@ -731,12 +731,12 @@ CONFIG_RTE_LIBRTE_MEMPOOL_DEBUG=n
+ CONFIG_RTE_DRIVER_MEMPOOL_BUCKET=y
+ CONFIG_RTE_DRIVER_MEMPOOL_BUCKET_SIZE_KB=64
+ CONFIG_RTE_DRIVER_MEMPOOL_RING=y
+-CONFIG_RTE_DRIVER_MEMPOOL_STACK=y
++CONFIG_RTE_DRIVER_MEMPOOL_STACK=n
+ 
+ #
+ # Compile PMD for octeontx fpa mempool device
+ #
+-CONFIG_RTE_LIBRTE_OCTEONTX_MEMPOOL=y
++CONFIG_RTE_LIBRTE_OCTEONTX_MEMPOOL=n
+ 
+ #
+ # Compile librte_mbuf
+@@ -750,13 +750,13 @@ CONFIG_RTE_PKTMBUF_HEADROOM=128
+ #
+ # Compile librte_timer
+ #
+-CONFIG_RTE_LIBRTE_TIMER=y
++CONFIG_RTE_LIBRTE_TIMER=n
+ CONFIG_RTE_LIBRTE_TIMER_DEBUG=n
+ 
+ #
+ # Compile librte_cfgfile
+ #
+-CONFIG_RTE_LIBRTE_CFGFILE=y
++CONFIG_RTE_LIBRTE_CFGFILE=n
+ 
+ #
+ # Compile librte_cmdline
+@@ -767,38 +767,38 @@ CONFIG_RTE_LIBRTE_CMDLINE_DEBUG=n
+ #
+ # Compile librte_hash
+ #
+-CONFIG_RTE_LIBRTE_HASH=y
++CONFIG_RTE_LIBRTE_HASH=n
+ CONFIG_RTE_LIBRTE_HASH_DEBUG=n
+ 
+ #
+ # Compile librte_efd
+ #
+-CONFIG_RTE_LIBRTE_EFD=y
++CONFIG_RTE_LIBRTE_EFD=n
+ 
+ #
+ # Compile librte_member
+ #
+-CONFIG_RTE_LIBRTE_MEMBER=y
++CONFIG_RTE_LIBRTE_MEMBER=n
+ 
+ #
+ # Compile librte_jobstats
+ #
+-CONFIG_RTE_LIBRTE_JOBSTATS=y
++CONFIG_RTE_LIBRTE_JOBSTATS=n
+ 
+ #
+ # Compile the device metrics library
+ #
+-CONFIG_RTE_LIBRTE_METRICS=y
++CONFIG_RTE_LIBRTE_METRICS=n
+ 
+ #
+ # Compile the bitrate statistics library
+ #
+-CONFIG_RTE_LIBRTE_BITRATE=y
++CONFIG_RTE_LIBRTE_BITRATE=n
+ 
+ #
+ # Compile the latency statistics library
+ #
+-CONFIG_RTE_LIBRTE_LATENCY_STATS=y
++CONFIG_RTE_LIBRTE_LATENCY_STATS=n
+ 
+ #
+ # Compile librte_telemetry
+@@ -808,13 +808,13 @@ CONFIG_RTE_LIBRTE_TELEMETRY=n
+ #
+ # Compile librte_lpm
+ #
+-CONFIG_RTE_LIBRTE_LPM=y
++CONFIG_RTE_LIBRTE_LPM=n
+ CONFIG_RTE_LIBRTE_LPM_DEBUG=n
+ 
+ #
+ # Compile librte_acl
+ #
+-CONFIG_RTE_LIBRTE_ACL=y
++CONFIG_RTE_LIBRTE_ACL=n
+ CONFIG_RTE_LIBRTE_ACL_DEBUG=n
+ 
+ #
+@@ -832,7 +832,7 @@ CONFIG_RTE_LIBRTE_NET=y
+ #
+ # Compile librte_ip_frag
+ #
+-CONFIG_RTE_LIBRTE_IP_FRAG=y
++CONFIG_RTE_LIBRTE_IP_FRAG=n
+ CONFIG_RTE_LIBRTE_IP_FRAG_DEBUG=n
+ CONFIG_RTE_LIBRTE_IP_FRAG_MAX_FRAG=4
+ CONFIG_RTE_LIBRTE_IP_FRAG_TBL_STAT=n
+@@ -840,12 +840,12 @@ CONFIG_RTE_LIBRTE_IP_FRAG_TBL_STAT=n
+ #
+ # Compile GRO library
+ #
+-CONFIG_RTE_LIBRTE_GRO=y
++CONFIG_RTE_LIBRTE_GRO=n
+ 
+ #
+ # Compile GSO library
+ #
+-CONFIG_RTE_LIBRTE_GSO=y
++CONFIG_RTE_LIBRTE_GSO=n
+ 
+ #
+ # Compile librte_meter
+@@ -855,12 +855,12 @@ CONFIG_RTE_LIBRTE_METER=y
+ #
+ # Compile librte_classify
+ #
+-CONFIG_RTE_LIBRTE_FLOW_CLASSIFY=y
++CONFIG_RTE_LIBRTE_FLOW_CLASSIFY=n
+ 
+ #
+ # Compile librte_sched
+ #
+-CONFIG_RTE_LIBRTE_SCHED=y
++CONFIG_RTE_LIBRTE_SCHED=n
+ CONFIG_RTE_SCHED_DEBUG=n
+ CONFIG_RTE_SCHED_RED=n
+ CONFIG_RTE_SCHED_COLLECT_STATS=n
+@@ -871,30 +871,30 @@ CONFIG_RTE_SCHED_VECTOR=n
+ #
+ # Compile the distributor library
+ #
+-CONFIG_RTE_LIBRTE_DISTRIBUTOR=y
++CONFIG_RTE_LIBRTE_DISTRIBUTOR=n
+ 
+ #
+ # Compile the reorder library
+ #
+-CONFIG_RTE_LIBRTE_REORDER=y
++#CONFIG_RTE_LIBRTE_REORDER=n
+ 
+ #
+ # Compile librte_port
+ #
+-CONFIG_RTE_LIBRTE_PORT=y
++CONFIG_RTE_LIBRTE_PORT=n
+ CONFIG_RTE_PORT_STATS_COLLECT=n
+ CONFIG_RTE_PORT_PCAP=n
+ 
+ #
+ # Compile librte_table
+ #
+-CONFIG_RTE_LIBRTE_TABLE=y
++CONFIG_RTE_LIBRTE_TABLE=n
+ CONFIG_RTE_TABLE_STATS_COLLECT=n
+ 
+ #
+ # Compile librte_pipeline
+ #
+-CONFIG_RTE_LIBRTE_PIPELINE=y
++CONFIG_RTE_LIBRTE_PIPELINE=n
+ CONFIG_RTE_PIPELINE_STATS_COLLECT=n
+ 
+ #
+@@ -909,7 +909,7 @@ CONFIG_RTE_KNI_PREEMPT_DEFAULT=y
+ #
+ # Compile the pdump library
+ #
+-CONFIG_RTE_LIBRTE_PDUMP=y
++CONFIG_RTE_LIBRTE_PDUMP=n
+ 
+ #
+ # Compile vhost user library
+@@ -925,28 +925,28 @@ CONFIG_RTE_LIBRTE_VHOST_DEBUG=n
+ CONFIG_RTE_LIBRTE_PMD_VHOST=n
+ 
+ #
+-# Compile IFC driver
++# Compile IFCVF driver
+ # To compile, CONFIG_RTE_LIBRTE_VHOST and CONFIG_RTE_EAL_VFIO
+ # should be enabled.
+ #
+-CONFIG_RTE_LIBRTE_IFC_PMD=n
++CONFIG_RTE_LIBRTE_IFCVF_VDPA_PMD=n
+ 
+ #
+ # Compile librte_bpf
+ #
+-CONFIG_RTE_LIBRTE_BPF=y
++CONFIG_RTE_LIBRTE_BPF=n
+ # allow load BPF from ELF files (requires libelf)
+ CONFIG_RTE_LIBRTE_BPF_ELF=n
+ 
+ #
+ # Compile librte_ipsec
+ #
+-CONFIG_RTE_LIBRTE_IPSEC=y
++CONFIG_RTE_LIBRTE_IPSEC=n
+ 
+ #
+ # Compile the test application
+ #
+-CONFIG_RTE_APP_TEST=y
++CONFIG_RTE_APP_TEST=n
+ CONFIG_RTE_APP_TEST_RESOURCE_TAR=n
+ 
+ #
+@@ -957,26 +957,26 @@ CONFIG_RTE_PROC_INFO=n
+ #
+ # Compile the PMD test application
+ #
+-CONFIG_RTE_TEST_PMD=y
++CONFIG_RTE_TEST_PMD=n
+ CONFIG_RTE_TEST_PMD_RECORD_CORE_CYCLES=n
+ CONFIG_RTE_TEST_PMD_RECORD_BURST_STATS=n
+ 
+ #
+ # Compile the bbdev test application
+ #
+-CONFIG_RTE_TEST_BBDEV=y
++CONFIG_RTE_TEST_BBDEV=n
+ 
+ #
+ # Compile the compression performance application
+ #
+-CONFIG_RTE_APP_COMPRESS_PERF=y
++CONFIG_RTE_APP_COMPRESS_PERF=n
+ 
+ #
+ # Compile the crypto performance application
+ #
+-CONFIG_RTE_APP_CRYPTO_PERF=y
++CONFIG_RTE_APP_CRYPTO_PERF=n
+ 
+ #
+ # Compile the eventdev application
+ #
+-CONFIG_RTE_APP_EVENTDEV=y
++CONFIG_RTE_APP_EVENTDEV=n
+diff --git a/config/common_linuxapp b/config/common_linuxapp
+index 6c1c8d0f4..16168af51 100644
+--- a/config/common_linuxapp
++++ b/config/common_linuxapp
+@@ -7,46 +7,46 @@ CONFIG_RTE_EXEC_ENV="linuxapp"
+ CONFIG_RTE_EXEC_ENV_LINUXAPP=y
+ 
+ CONFIG_RTE_EAL_NUMA_AWARE_HUGEPAGES=y
+-CONFIG_RTE_EAL_IGB_UIO=y
++#CONFIG_RTE_EAL_IGB_UIO=n
+ CONFIG_RTE_EAL_VFIO=y
+-CONFIG_RTE_KNI_KMOD=y
+-CONFIG_RTE_LIBRTE_KNI=y
+-CONFIG_RTE_LIBRTE_PMD_KNI=y
+-CONFIG_RTE_LIBRTE_VHOST=y
++CONFIG_RTE_KNI_KMOD=n
++CONFIG_RTE_LIBRTE_KNI=n
++CONFIG_RTE_LIBRTE_PMD_KNI=n
++CONFIG_RTE_LIBRTE_VHOST=n
+ CONFIG_RTE_LIBRTE_VHOST_NUMA=y
+ CONFIG_RTE_LIBRTE_VHOST_POSTCOPY=n
+-CONFIG_RTE_LIBRTE_PMD_VHOST=y
+-CONFIG_RTE_LIBRTE_IFC_PMD=y
+-CONFIG_RTE_LIBRTE_PMD_AF_PACKET=y
+-CONFIG_RTE_LIBRTE_PMD_SOFTNIC=y
+-CONFIG_RTE_LIBRTE_PMD_TAP=y
+-CONFIG_RTE_LIBRTE_AVP_PMD=y
+-CONFIG_RTE_LIBRTE_VDEV_NETVSC_PMD=y
+-CONFIG_RTE_LIBRTE_NFP_PMD=y
+-CONFIG_RTE_LIBRTE_POWER=y
+-CONFIG_RTE_VIRTIO_USER=y
+-CONFIG_RTE_PROC_INFO=y
+-
+-CONFIG_RTE_LIBRTE_VMBUS=y
+-CONFIG_RTE_LIBRTE_NETVSC_PMD=y
++CONFIG_RTE_LIBRTE_PMD_VHOST=n
++CONFIG_RTE_LIBRTE_IFC_PMD=n
++CONFIG_RTE_LIBRTE_PMD_AF_PACKET=n
++CONFIG_RTE_LIBRTE_PMD_SOFTNIC=n
++CONFIG_RTE_LIBRTE_PMD_TAP=n
++CONFIG_RTE_LIBRTE_AVP_PMD=n
++CONFIG_RTE_LIBRTE_VDEV_NETVSC_PMD=n
++CONFIG_RTE_LIBRTE_NFP_PMD=n
++CONFIG_RTE_LIBRTE_POWER=n
++CONFIG_RTE_VIRTIO_USER=n
++CONFIG_RTE_PROC_INFO=n
++
++CONFIG_RTE_LIBRTE_VMBUS=n
++CONFIG_RTE_LIBRTE_NETVSC_PMD=n
+ 
+ #
+ # Common libraries, before Bus/PMDs
+ #
+-CONFIG_RTE_LIBRTE_COMMON_DPAAX=y
++CONFIG_RTE_LIBRTE_COMMON_DPAAX=n
+ 
+ # NXP DPAA BUS and drivers
+-CONFIG_RTE_LIBRTE_DPAA_BUS=y
+-CONFIG_RTE_LIBRTE_DPAA_MEMPOOL=y
+-CONFIG_RTE_LIBRTE_DPAA_PMD=y
+-CONFIG_RTE_LIBRTE_PMD_DPAA_EVENTDEV=y
+-CONFIG_RTE_LIBRTE_PMD_DPAA_SEC=y
+-CONFIG_RTE_LIBRTE_PMD_CAAM_JR=y
++CONFIG_RTE_LIBRTE_DPAA_BUS=n
++CONFIG_RTE_LIBRTE_DPAA_MEMPOOL=n
++CONFIG_RTE_LIBRTE_DPAA_PMD=n
++CONFIG_RTE_LIBRTE_PMD_DPAA_EVENTDEV=n
++CONFIG_RTE_LIBRTE_PMD_DPAA_SEC=n
++CONFIG_RTE_LIBRTE_PMD_CAAM_JR=n
+ 
+ # NXP FSLMC BUS and DPAA2 drivers
+-CONFIG_RTE_LIBRTE_FSLMC_BUS=y
+-CONFIG_RTE_LIBRTE_DPAA2_MEMPOOL=y
+-CONFIG_RTE_LIBRTE_DPAA2_PMD=y
++CONFIG_RTE_LIBRTE_FSLMC_BUS=n
++CONFIG_RTE_LIBRTE_DPAA2_MEMPOOL=n
++CONFIG_RTE_LIBRTE_DPAA2_PMD=n
+ CONFIG_RTE_LIBRTE_PMD_DPAA2_EVENTDEV=y
+ CONFIG_RTE_LIBRTE_PMD_DPAA2_SEC=y
+ CONFIG_RTE_LIBRTE_PMD_DPAA2_CMDIF_RAWDEV=y
+@@ -55,4 +55,4 @@ CONFIG_RTE_LIBRTE_PMD_DPAA2_QDMA_RAWDEV=y
+ #
+ # NXP ENETC PMD Driver
+ #
+-CONFIG_RTE_LIBRTE_ENETC_PMD=y
++CONFIG_RTE_LIBRTE_ENETC_PMD=n
+diff --git a/drivers/crypto/aesni_mb/rte_aesni_mb_pmd.c b/drivers/crypto/aesni_mb/rte_aesni_mb_pmd.c
+index 48d6ac002..46b817c93 100644
+--- a/drivers/crypto/aesni_mb/rte_aesni_mb_pmd.c
++++ b/drivers/crypto/aesni_mb/rte_aesni_mb_pmd.c
+@@ -751,11 +751,18 @@ get_session(struct aesni_mb_qp *qp, struct rte_crypto_op *op)
+  * - Completed JOB_AES_HMAC structure pointer on success
+  * - NULL pointer if completion of JOB_AES_HMAC structure isn't possible
+  */
++#define SPDK_CRYPTO_HACK
+ static inline int
+ set_mb_job_params(JOB_AES_HMAC *job, struct aesni_mb_qp *qp,
+ 		struct rte_crypto_op *op, uint8_t *digest_idx)
+ {
++#ifdef SPDK_CRYPTO_HACK
++	struct rte_mbuf *m_src = op->sym->m_src;
++	struct rte_mbuf *m_dst = op->sym->m_dst;
++#else
+ 	struct rte_mbuf *m_src = op->sym->m_src, *m_dst;
++#endif
++
+ 	struct aesni_mb_session *session;
+ 	uint16_t m_offset = 0;
+ 
+@@ -840,6 +847,12 @@ set_mb_job_params(JOB_AES_HMAC *job, struct aesni_mb_qp *qp,
+ 		}
+ 	}
+ 
++#ifdef SPDK_CRYPTO_HACK
++        if (!op->sym->m_dst) {
++                m_dst = m_src;
++        }
++        m_offset = op->sym->cipher.data.offset;
++#else
+ 	/* Mutable crypto operation parameters */
+ 	if (op->sym->m_dst) {
+ 		m_src = m_dst = op->sym->m_dst;
+@@ -864,6 +877,7 @@ set_mb_job_params(JOB_AES_HMAC *job, struct aesni_mb_qp *qp,
+ 		else
+ 			m_offset = op->sym->cipher.data.offset;
+ 	}
++#endif
+ 
+ 	/* Set digest output location */
+ 	if (job->hash_alg != NULL_HASH &&
+@@ -895,7 +909,16 @@ set_mb_job_params(JOB_AES_HMAC *job, struct aesni_mb_qp *qp,
+ 
+ 	/* Data  Parameter */
+ 	job->src = rte_pktmbuf_mtod(m_src, uint8_t *);
++
++#ifdef SPDK_CRYPTO_HACK
++        if (!op->sym->m_dst) {
++                job->dst = rte_pktmbuf_mtod_offset(m_dst, uint8_t *, m_offset);
++        } else {
++                job->dst = rte_pktmbuf_mtod(m_dst, uint8_t *);
++        }
++#else
+ 	job->dst = rte_pktmbuf_mtod_offset(m_dst, uint8_t *, m_offset);
++#endif
+ 
+ 	switch (job->hash_alg) {
+ 	case AES_CCM:
+diff --git a/kernel/freebsd/contigmem/contigmem.c b/kernel/freebsd/contigmem/contigmem.c
+index 1715b5dc5..79c982357 100644
+--- a/kernel/freebsd/contigmem/contigmem.c
++++ b/kernel/freebsd/contigmem/contigmem.c
+@@ -22,37 +22,24 @@ __FBSDID("$FreeBSD$");
+ 
+ #include <vm/vm.h>
+ #include <vm/pmap.h>
+-#include <vm/vm_param.h>
+ #include <vm/vm_object.h>
+ #include <vm/vm_page.h>
+ #include <vm/vm_pager.h>
+-#include <vm/vm_phys.h>
+-
+-struct contigmem_buffer {
+-	void           *addr;
+-	int             refcnt;
+-	struct mtx      mtx;
+-};
+-
+-struct contigmem_vm_handle {
+-	int             buffer_index;
+-};
+ 
+ static int              contigmem_load(void);
+ static int              contigmem_unload(void);
+ static int              contigmem_physaddr(SYSCTL_HANDLER_ARGS);
+ 
++static d_mmap_t         contigmem_mmap;
+ static d_mmap_single_t  contigmem_mmap_single;
+ static d_open_t         contigmem_open;
+-static d_close_t        contigmem_close;
+ 
+ static int              contigmem_num_buffers = RTE_CONTIGMEM_DEFAULT_NUM_BUFS;
+ static int64_t          contigmem_buffer_size = RTE_CONTIGMEM_DEFAULT_BUF_SIZE;
+ 
+ static eventhandler_tag contigmem_eh_tag;
+-static struct contigmem_buffer contigmem_buffers[RTE_CONTIGMEM_MAX_NUM_BUFS];
++static void            *contigmem_buffers[RTE_CONTIGMEM_MAX_NUM_BUFS];
+ static struct cdev     *contigmem_cdev = NULL;
+-static int              contigmem_refcnt;
+ 
+ TUNABLE_INT("hw.contigmem.num_buffers", &contigmem_num_buffers);
+ TUNABLE_QUAD("hw.contigmem.buffer_size", &contigmem_buffer_size);
+@@ -63,8 +50,6 @@ SYSCTL_INT(_hw_contigmem, OID_AUTO, num_buffers, CTLFLAG_RD,
+ 	&contigmem_num_buffers, 0, "Number of contigmem buffers allocated");
+ SYSCTL_QUAD(_hw_contigmem, OID_AUTO, buffer_size, CTLFLAG_RD,
+ 	&contigmem_buffer_size, 0, "Size of each contiguous buffer");
+-SYSCTL_INT(_hw_contigmem, OID_AUTO, num_references, CTLFLAG_RD,
+-	&contigmem_refcnt, 0, "Number of references to contigmem");
+ 
+ static SYSCTL_NODE(_hw_contigmem, OID_AUTO, physaddr, CTLFLAG_RD, 0,
+ 	"physaddr");
+@@ -101,10 +86,9 @@ MODULE_VERSION(contigmem, 1);
+ static struct cdevsw contigmem_ops = {
+ 	.d_name         = "contigmem",
+ 	.d_version      = D_VERSION,
+-	.d_flags        = D_TRACKCLOSE,
++	.d_mmap         = contigmem_mmap,
+ 	.d_mmap_single  = contigmem_mmap_single,
+ 	.d_open         = contigmem_open,
+-	.d_close        = contigmem_close,
+ };
+ 
+ static int
+@@ -112,7 +96,6 @@ contigmem_load()
+ {
+ 	char index_string[8], description[32];
+ 	int  i, error = 0;
+-	void *addr;
+ 
+ 	if (contigmem_num_buffers > RTE_CONTIGMEM_MAX_NUM_BUFS) {
+ 		printf("%d buffers requested is greater than %d allowed\n",
+@@ -130,20 +113,18 @@ contigmem_load()
+ 	}
+ 
+ 	for (i = 0; i < contigmem_num_buffers; i++) {
+-		addr = contigmalloc(contigmem_buffer_size, M_CONTIGMEM, M_ZERO,
+-			0, BUS_SPACE_MAXADDR, contigmem_buffer_size, 0);
+-		if (addr == NULL) {
++		contigmem_buffers[i] =
++				contigmalloc(contigmem_buffer_size, M_CONTIGMEM, M_ZERO, 0,
++			BUS_SPACE_MAXADDR, contigmem_buffer_size, 0);
++
++		if (contigmem_buffers[i] == NULL) {
+ 			printf("contigmalloc failed for buffer %d\n", i);
+ 			error = ENOMEM;
+ 			goto error;
+ 		}
+ 
+-		printf("%2u: virt=%p phys=%p\n", i, addr,
+-			(void *)pmap_kextract((vm_offset_t)addr));
+-
+-		mtx_init(&contigmem_buffers[i].mtx, "contigmem", NULL, MTX_DEF);
+-		contigmem_buffers[i].addr = addr;
+-		contigmem_buffers[i].refcnt = 0;
++		printf("%2u: virt=%p phys=%p\n", i, contigmem_buffers[i],
++				(void *)pmap_kextract((vm_offset_t)contigmem_buffers[i]));
+ 
+ 		snprintf(index_string, sizeof(index_string), "%d", i);
+ 		snprintf(description, sizeof(description),
+@@ -161,13 +142,10 @@ contigmem_load()
+ 	return 0;
+ 
+ error:
+-	for (i = 0; i < contigmem_num_buffers; i++) {
+-		if (contigmem_buffers[i].addr != NULL)
+-			contigfree(contigmem_buffers[i].addr,
+-				contigmem_buffer_size, M_CONTIGMEM);
+-		if (mtx_initialized(&contigmem_buffers[i].mtx))
+-			mtx_destroy(&contigmem_buffers[i].mtx);
+-	}
++	for (i = 0; i < contigmem_num_buffers; i++)
++		if (contigmem_buffers[i] != NULL)
++			contigfree(contigmem_buffers[i], contigmem_buffer_size,
++					M_CONTIGMEM);
+ 
+ 	return error;
+ }
+@@ -177,22 +155,16 @@ contigmem_unload()
+ {
+ 	int i;
+ 
+-	if (contigmem_refcnt > 0)
+-		return EBUSY;
+-
+ 	if (contigmem_cdev != NULL)
+ 		destroy_dev(contigmem_cdev);
+ 
+ 	if (contigmem_eh_tag != NULL)
+ 		EVENTHANDLER_DEREGISTER(process_exit, contigmem_eh_tag);
+ 
+-	for (i = 0; i < RTE_CONTIGMEM_MAX_NUM_BUFS; i++) {
+-		if (contigmem_buffers[i].addr != NULL)
+-			contigfree(contigmem_buffers[i].addr,
+-				contigmem_buffer_size, M_CONTIGMEM);
+-		if (mtx_initialized(&contigmem_buffers[i].mtx))
+-			mtx_destroy(&contigmem_buffers[i].mtx);
+-	}
++	for (i = 0; i < RTE_CONTIGMEM_MAX_NUM_BUFS; i++)
++		if (contigmem_buffers[i] != NULL)
++			contigfree(contigmem_buffers[i], contigmem_buffer_size,
++					M_CONTIGMEM);
+ 
+ 	return 0;
+ }
+@@ -203,7 +175,7 @@ contigmem_physaddr(SYSCTL_HANDLER_ARGS)
+ 	uint64_t	physaddr;
+ 	int		index = (int)(uintptr_t)arg1;
+ 
+-	physaddr = (uint64_t)vtophys(contigmem_buffers[index].addr);
++	physaddr = (uint64_t)vtophys(contigmem_buffers[index]);
+ 	return sysctl_handle_64(oidp, &physaddr, 0, req);
+ }
+ 
+@@ -211,121 +183,22 @@ static int
+ contigmem_open(struct cdev *cdev, int fflags, int devtype,
+ 		struct thread *td)
+ {
+-
+-	atomic_add_int(&contigmem_refcnt, 1);
+-
+-	return 0;
+-}
+-
+-static int
+-contigmem_close(struct cdev *cdev, int fflags, int devtype,
+-		struct thread *td)
+-{
+-
+-	atomic_subtract_int(&contigmem_refcnt, 1);
+-
+ 	return 0;
+ }
+ 
+ static int
+-contigmem_cdev_pager_ctor(void *handle, vm_ooffset_t size, vm_prot_t prot,
+-		vm_ooffset_t foff, struct ucred *cred, u_short *color)
++contigmem_mmap(struct cdev *cdev, vm_ooffset_t offset, vm_paddr_t *paddr,
++		int prot, vm_memattr_t *memattr)
+ {
+-	struct contigmem_vm_handle *vmh = handle;
+-	struct contigmem_buffer *buf;
+-
+-	buf = &contigmem_buffers[vmh->buffer_index];
+-
+-	atomic_add_int(&contigmem_refcnt, 1);
+-
+-	mtx_lock(&buf->mtx);
+-	if (buf->refcnt == 0)
+-		memset(buf->addr, 0, contigmem_buffer_size);
+-	buf->refcnt++;
+-	mtx_unlock(&buf->mtx);
+ 
++	*paddr = offset;
+ 	return 0;
+ }
+ 
+-static void
+-contigmem_cdev_pager_dtor(void *handle)
+-{
+-	struct contigmem_vm_handle *vmh = handle;
+-	struct contigmem_buffer *buf;
+-
+-	buf = &contigmem_buffers[vmh->buffer_index];
+-
+-	mtx_lock(&buf->mtx);
+-	buf->refcnt--;
+-	mtx_unlock(&buf->mtx);
+-
+-	free(vmh, M_CONTIGMEM);
+-
+-	atomic_subtract_int(&contigmem_refcnt, 1);
+-}
+-
+-static int
+-contigmem_cdev_pager_fault(vm_object_t object, vm_ooffset_t offset, int prot,
+-		vm_page_t *mres)
+-{
+-	vm_paddr_t paddr;
+-	vm_page_t m_paddr, page;
+-	vm_memattr_t memattr, memattr1;
+-
+-	memattr = object->memattr;
+-
+-	VM_OBJECT_WUNLOCK(object);
+-
+-	paddr = offset;
+-
+-	m_paddr = vm_phys_paddr_to_vm_page(paddr);
+-	if (m_paddr != NULL) {
+-		memattr1 = pmap_page_get_memattr(m_paddr);
+-		if (memattr1 != memattr)
+-			memattr = memattr1;
+-	}
+-
+-	if (((*mres)->flags & PG_FICTITIOUS) != 0) {
+-		/*
+-		 * If the passed in result page is a fake page, update it with
+-		 * the new physical address.
+-		 */
+-		page = *mres;
+-		VM_OBJECT_WLOCK(object);
+-		vm_page_updatefake(page, paddr, memattr);
+-	} else {
+-		vm_page_t mret;
+-		/*
+-		 * Replace the passed in reqpage page with our own fake page and
+-		 * free up the original page.
+-		 */
+-		page = vm_page_getfake(paddr, memattr);
+-		VM_OBJECT_WLOCK(object);
+-		mret = vm_page_replace(page, object, (*mres)->pindex);
+-		KASSERT(mret == *mres,
+-		    ("invalid page replacement, old=%p, ret=%p", *mres, mret));
+-		vm_page_lock(mret);
+-		vm_page_free(mret);
+-		vm_page_unlock(mret);
+-		*mres = page;
+-	}
+-
+-	page->valid = VM_PAGE_BITS_ALL;
+-
+-	return VM_PAGER_OK;
+-}
+-
+-static struct cdev_pager_ops contigmem_cdev_pager_ops = {
+-	.cdev_pg_ctor = contigmem_cdev_pager_ctor,
+-	.cdev_pg_dtor = contigmem_cdev_pager_dtor,
+-	.cdev_pg_fault = contigmem_cdev_pager_fault,
+-};
+-
+ static int
+ contigmem_mmap_single(struct cdev *cdev, vm_ooffset_t *offset, vm_size_t size,
+ 		struct vm_object **obj, int nprot)
+ {
+-	struct contigmem_vm_handle *vmh;
+ 	uint64_t buffer_index;
+ 
+ 	/*
+@@ -337,17 +210,10 @@ contigmem_mmap_single(struct cdev *cdev, vm_ooffset_t *offset, vm_size_t size,
+ 	if (buffer_index >= contigmem_num_buffers)
+ 		return EINVAL;
+ 
+-	if (size > contigmem_buffer_size)
+-		return EINVAL;
+-
+-	vmh = malloc(sizeof(*vmh), M_CONTIGMEM, M_NOWAIT | M_ZERO);
+-	if (vmh == NULL)
+-		return ENOMEM;
+-	vmh->buffer_index = buffer_index;
+-
+-	*offset = (vm_ooffset_t)vtophys(contigmem_buffers[buffer_index].addr);
+-	*obj = cdev_pager_allocate(vmh, OBJT_DEVICE, &contigmem_cdev_pager_ops,
+-			size, nprot, *offset, curthread->td_ucred);
++	memset(contigmem_buffers[buffer_index], 0, contigmem_buffer_size);
++	*offset = (vm_ooffset_t)vtophys(contigmem_buffers[buffer_index]);
++	*obj = vm_pager_allocate(OBJT_DEVICE, cdev, size, nprot, *offset,
++			curthread->td_ucred);
+ 
+ 	return 0;
+ }
+diff --git a/lib/librte_compat/rte_compat.h b/lib/librte_compat/rte_compat.h
+index 92ff28faf..3ffaa9e6d 100644
+--- a/lib/librte_compat/rte_compat.h
++++ b/lib/librte_compat/rte_compat.h
+@@ -78,10 +78,7 @@
+ 
+ #ifndef ALLOW_EXPERIMENTAL_API
+ 
+-#define __rte_experimental \
+-__attribute__((deprecated("Symbol is not yet part of stable ABI"), \
+-section(".text.experimental")))
+-
++#define __rte_experimental  __attribute__((deprecated)) __attribute__((section(".text.experimental")))
+ #else
+ 
+ #define __rte_experimental \
+diff --git a/lib/librte_eal/common/eal_common_proc.c b/lib/librte_eal/common/eal_common_proc.c
+index b46d644b3..abaff5164 100644
+--- a/lib/librte_eal/common/eal_common_proc.c
++++ b/lib/librte_eal/common/eal_common_proc.c
+@@ -927,13 +927,13 @@ rte_mp_request_sync(struct rte_mp_msg *req, struct rte_mp_reply *reply,
+ 
+ 	RTE_LOG(DEBUG, EAL, "request: %s\n", req->name);
+ 
+-	if (check_input(req) == false)
+-		return -1;
+-
+ 	reply->nb_sent = 0;
+ 	reply->nb_received = 0;
+ 	reply->msgs = NULL;
+ 
++	if (check_input(req) == false)
++		return -1;
++
+ 	if (internal_config.no_shconf) {
+ 		RTE_LOG(DEBUG, EAL, "No shared files mode enabled, IPC is disabled\n");
+ 		return 0;
+diff --git a/lib/librte_eal/common/hotplug_mp.c b/lib/librte_eal/common/hotplug_mp.c
+index 4052a5c7f..2c8366afa 100644
+--- a/lib/librte_eal/common/hotplug_mp.c
++++ b/lib/librte_eal/common/hotplug_mp.c
+@@ -377,6 +377,7 @@ int eal_dev_hotplug_request_to_primary(struct eal_dev_mp_req *req)
+ 	ret = rte_mp_request_sync(&mp_req, &mp_reply, &ts);
+ 	if (ret || mp_reply.nb_received != 1) {
+ 		RTE_LOG(ERR, EAL, "cannot send request to primary");
++		free(mp_reply.msgs);
+ 		if (!ret)
+ 			return -1;
+ 		return ret;
+@@ -405,6 +406,7 @@ int eal_dev_hotplug_request_to_secondary(struct eal_dev_mp_req *req)
+ 	ret = rte_mp_request_sync(&mp_req, &mp_reply, &ts);
+ 	if (ret != 0) {
+ 		RTE_LOG(ERR, EAL, "rte_mp_request_sync failed\n");
++		free(mp_reply.msgs);
+ 		return ret;
+ 	}
+ 
