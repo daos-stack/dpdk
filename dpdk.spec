@@ -36,7 +36,7 @@ Version: 18.02
 Release: 3%{?dist}
 Packager: packaging@6wind.com
 URL: http://dpdk.org
-Source: http://dpdk.org/browse/dpdk/snapshot/dpdk-%{version}.tar.gz
+Source: http://dpdk.org/browse/dpdk/snapshot/dpdk-%{version}.tar.xz
 Patch1: dpdk-b354dddee.patch
 
 Summary: Data Plane Development Kit core
