@@ -9,7 +9,7 @@
 # define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
 
 %define ver 19.02
-%define rel 1
+%define rel 2
 
 %define srcname dpdk
 
@@ -105,10 +105,11 @@ BuildRequires: %{_py}-sphinx
 BuildRequires: %{_py}-Sphinx
 %endif
 %endif
-%ifarch x86_64
-BuildRequires: rdma-core-devel >= 15, libmnl-devel
-%global __requires_exclude_from ^%{_libdir}/librte_pmd_mlx[45]_glue\.so.*$
-%endif
+# we disable these PMDs for DAOS/spdk
+#ifarch x86_64
+#BuildRequires: rdma-core-devel >= 15, libmnl-devel
+#global __requires_exclude_from ^#{_libdir}/librte_pmd_mlx[45]_glue\.so.*$
+#endif
 %if 0%{?sle_version} >= 150000
 # have choice for libffi.so.7()(64bit) needed by libp11-kit0: ghc-bootstrap libffi7
 # have choice for libffi.so.7(LIBFFI_BASE_7.0)(64bit) needed by libp11-kit0: ghc-bootstrap libffi7
@@ -178,6 +179,9 @@ make V=1 O=%{target} T=%{target} %{?_smp_mflags} config
 
 cp -f %{SOURCE500} %{SOURCE502}  %{SOURCE502} %{SOURCE506} .
 %{SOURCE502} %{target}-config "%{target}/.config"
+# DAOS/spdk customizations:
+# disable MLX{4,5} as they don't build with MLNX legacy I/B stack
+sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
 
 make V=1 O=%{target} %{?_smp_mflags} 
 
@@ -309,6 +313,9 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 
 %changelog
+* Fri Mar 13 2020 Brian J. Murrell <brian.murrell@intel.com> - 0:19.02-2
+- Disable CONFIG_RTE_LIBRTE_MLX[45]_PMD for DAOS/spdk
+
 * Mon Sep 30 2019 Brian J. Murrell <brian.murrell@intel.com> - 0:19.02-1
 - Update to 67b915b09 to align with the SPDK 19.04.1 release
 
