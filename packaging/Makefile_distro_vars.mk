@@ -27,13 +27,6 @@ DISTRO_ID   := el7
 DISTRO_BASE := EL_7
 SED_EXPR    := 1s/$(DIST)//p
 endif
-ifeq ($(CHROOT_NAME),epel-8-x86_64)
-DIST        := $(shell rpm $(COMMON_RPM_ARGS) --eval %{?dist})
-VERSION_ID  := 8
-DISTRO_ID   := el8
-DISTRO_BASE := EL_8
-SED_EXPR    := 1s/$(DIST)//p
-endif
 ifeq ($(CHROOT_NAME),opensuse-leap-15.1-x86_64)
 VERSION_ID  := 15.1
 DISTRO_ID   := sl15.1
@@ -76,4 +69,19 @@ ifeq ($(ID_LIKE),suse)
 define install_repo
 	zypper --non-interactive ar $(1)
 endef
+endif
+ifeq ($(ID_LIKE),debian)
+ifndef LANG
+export LANG = C.UTF-8
+endif
+ifndef LC_ALL
+export LC_ALL = C.UTF-8
+endif
+else
+ifndef LANG
+export LANG = C.utf8
+endif
+ifndef LC_ALL
+export LC_ALL = C.utf8
+endif
 endif

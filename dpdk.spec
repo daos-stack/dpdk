@@ -8,8 +8,8 @@
 # define date 20181127
 # define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
 
-%define ver 19.02
-%define rel 2
+%define ver 19.11
+%define rel 1
 
 %define srcname dpdk
 
@@ -35,9 +35,6 @@ Source502: set_config.sh
 #Source504: arm64-armv8a-linuxapp-gcc-config
 #Source505: ppc_64-power8-linuxapp-gcc-config
 Source506: x86_64-native-linuxapp-gcc-config
-
-# Patches only in dpdk package
-Patch1: v19.02...67b915b09.patch
 
 
 Summary: Set of libraries and drivers for fast packet processing
@@ -313,6 +310,9 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 
 %changelog
+* Fri Mar 27 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
+- Update to 19.11 to align with the SPDK 20.01.1 release
+
 * Fri Mar 13 2020 Brian J. Murrell <brian.murrell@intel.com> - 0:19.02-2
 - Disable CONFIG_RTE_LIBRTE_MLX[45]_PMD for DAOS/spdk
 
