@@ -36,6 +36,9 @@ Source502: set_config.sh
 #Source505: ppc_64-power8-linuxapp-gcc-config
 Source506: x86_64-native-linuxapp-gcc-config
 
+# Patches only in dpdk package
+Patch1: v19.11...3fcb1dd39.patch
+
 
 Summary: Set of libraries and drivers for fast packet processing
 
