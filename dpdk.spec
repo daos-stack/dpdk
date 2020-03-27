@@ -34,7 +34,7 @@ Source502: set_config.sh
 # @TODO: this causes a warning - fix it?
 #Source504: arm64-armv8a-linuxapp-gcc-config
 #Source505: ppc_64-power8-linuxapp-gcc-config
-Source506: x86_64-native-linuxapp-gcc-config
+#Source506: x86_64-native-linuxapp-gcc-config
 
 
 Summary: Set of libraries and drivers for fast packet processing
