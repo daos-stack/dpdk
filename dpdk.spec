@@ -184,7 +184,7 @@ cat "%{target}/.config"
 # disable MLX{4,5} as they don't build with MLNX legacy I/B stack
 sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
 
-make V=1 O=%{target} %{?_smp_mflags} 
+make V=1 O=%{target} %{?_smp_mflags}
 
 # Creating PDF's has excessive build-requirements, html docs suffice fine
 make V=1 O=%{target} %{?_smp_mflags} doc-api-html doc-guides-html
