@@ -1,3 +1,4 @@
+# -*- cfg-sha: 4bfdb5adfc58968af6739d7098aa8a5ea16ae273a6a45571b926cf71826fd4c0
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright(c) 2010-2014 Intel Corporation
 # SPDX-License-Identifier: BSD-3-Clause
@@ -589,3 +590,4 @@ CONFIG_RTE_ARCH_X86_64=y
 CONFIG_RTE_ARCH_X86=y
 CONFIG_RTE_ARCH_64=y
 CONFIG_RTE_TOOLCHAIN_GCC=y
+

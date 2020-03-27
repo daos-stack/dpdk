@@ -178,7 +178,6 @@ export EXTRA_CFLAGS="$(echo %{optflags} | sed -e 's:-Wall::g' -e 's:-march=[[:al
 make V=1 O=%{target} T=%{target} %{?_smp_mflags} config
 
 cp -f %{SOURCE500} %{SOURCE502} %{SOURCE506} .
-cat "%{target}/.config"
 %{SOURCE502} %{target}-config "%{target}/.config"
 # DAOS/spdk customizations:
 # disable MLX{4,5} as they don't build with MLNX legacy I/B stack
