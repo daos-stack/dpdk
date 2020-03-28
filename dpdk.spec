@@ -259,6 +259,11 @@ EOF
 # Fixup target machine mismatch
 sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profile.d/dpdk-sdk*
 
+echo %{_libdir}
+echo %{pmddir}
+ls -lah %{_libdir}
+ls -lah %{pmddir}
+
 #%if 0%{?suse_version} >= 1315
 #%post -n %{suse_libname} -p /sbin/ldconfig
 #%postun -n %{suse_libname} -p /sbin/ldconfig
