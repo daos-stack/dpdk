@@ -39,7 +39,7 @@ Source502: set_config.sh
 Source506: x86_64-native-linuxapp-gcc-config
 
 # Patches only in dpdk package
-Patch1: v19.11...3fcb1dd39.patch
+Patch0: v19.11...3fcb1dd39.patch
 
 
 Summary: Set of libraries and drivers for fast packet processing
@@ -82,6 +82,8 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define docdir  %{_docdir}/%{name}
 %define incdir  %{_includedir}/%{name}
 %define pmddir %{_libdir}/%{name}-pmds
+
+%undefine _missing_build_ids_terminate_build
 
 %if 0%{?rhel} > 7 || 0%{?fedora}
 %define _py python3
@@ -165,6 +167,8 @@ as L2 and L3 forwarding.
 %prep
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
+#%patch0
+
 %build
 # In case dpdk-devel is installed
 unset RTE_SDK RTE_INCLUDE RTE_TARGET
@@ -188,9 +192,9 @@ cp -f %{SOURCE500} %{SOURCE502} %{SOURCE506} .
 # disable MLX{4,5} as they don't build with MLNX legacy I/B stack
 sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
 
-%if %{with shared}
-setconf CONFIG_RTE_BUILD_SHARED_LIB y
-%endif
+#%if %{with shared}
+#setconf CONFIG_RTE_BUILD_SHARED_LIB y
+#%endif
 
 make V=1 O=%{target} %{?_smp_mflags}
 
@@ -268,18 +272,8 @@ EOF
 # Fixup target machine mismatch
 sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profile.d/dpdk-sdk*
 
-echo %{_libdir}
-echo %{pmddir}
-ls -lah %{_libdir}
-ls -lah %{pmddir}
-
-#%if 0%{?suse_version} >= 1315
-#%post -n %{suse_libname} -p /sbin/ldconfig
-#%postun -n %{suse_libname} -p /sbin/ldconfig
-#%else
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
-#%endif
 
 %files
 # BSD
