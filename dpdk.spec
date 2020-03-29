@@ -162,8 +162,6 @@ as L2 and L3 forwarding.
 %prep
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
-%patch0
-
 %build
 # In case dpdk-devel is installed
 unset RTE_SDK RTE_INCLUDE RTE_TARGET
