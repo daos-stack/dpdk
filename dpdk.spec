@@ -1,5 +1,3 @@
-# Add option to build as static libraries (--without shared)
-%bcond_without shared
 #Add option to build with examples
 %bcond_with examples
 # Add option to build without tools
@@ -129,9 +127,6 @@ fast packet processing in the user space.
 %package devel
 Summary: Data Plane Development Kit development files
 Requires: %{name}%{?_isa} = %{version}-%{release}
-%if ! %{with shared}
-Provides: %{name}-static = %{epoch}:%{version}-%{release}
-%endif
 
 %description devel
 This package contains the headers and other files needed for developing
@@ -167,7 +162,7 @@ as L2 and L3 forwarding.
 %prep
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
-#%patch0
+%patch0
 
 %build
 # In case dpdk-devel is installed
@@ -191,10 +186,6 @@ cp -f %{SOURCE500} %{SOURCE502} %{SOURCE506} .
 # DAOS/spdk customizations:
 # disable MLX{4,5} as they don't build with MLNX legacy I/B stack
 sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
-
-#%if %{with shared}
-#setconf CONFIG_RTE_BUILD_SHARED_LIB y
-#%endif
 
 make V=1 O=%{target} %{?_smp_mflags}
 
@@ -278,10 +269,8 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %files
 # BSD
 %doc README MAINTAINERS
-%if %{with shared}
 %{_libdir}/*.so.*
 %{pmddir}/
-%endif
 
 %files doc
 #BSD
@@ -304,11 +293,7 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %exclude %{sdkdir}/examples/
 %endif
 %{_sysconfdir}/profile.d/dpdk-sdk-*.*
-%if ! %{with shared}
-%{_libdir}/*.a
-%else
 %{_libdir}/*.so
-%endif
 
 %if %{with examples}
 %files examples
