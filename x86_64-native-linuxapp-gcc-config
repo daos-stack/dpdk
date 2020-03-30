@@ -19,7 +19,7 @@ CONFIG_RTE_EXEC_ENV="linuxapp"
 CONFIG_RTE_ARCH="x86_64"
 # machine can define specific variables or action for a specific board
 # RTE_MACHINE values are architecture we compile for. directories in mk/machine/
-CONFIG_RTE_MACHINE="native"
+CONFIG_RTE_MACHINE="default"
 # The compiler we use.
 # RTE_TOOLCHAIN values are architecture we compile for. directories in mk/toolchain/
 CONFIG_RTE_TOOLCHAIN="gcc"

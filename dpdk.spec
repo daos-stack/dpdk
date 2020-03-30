@@ -1,4 +1,4 @@
-#Add option to build with examples
+# Add option to build with examples
 %bcond_with examples
 # Add option to build without tools
 %bcond_without tools
@@ -261,14 +261,22 @@ EOF
 # Fixup target machine mismatch
 sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profile.d/dpdk-sdk*
 
+#%if 0%{?suse_version} >= 1315
+#%post -n %{suse_libname} -p /sbin/ldconfig
+#%postun -n %{suse_libname} -p /sbin/ldconfig
+#%else
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
+#%endif
 
 %files
 # BSD
 %doc README MAINTAINERS
+%dir %{pmddir}
 %{_libdir}/*.so.*
-%{pmddir}/
+%{pmddir}/*.so.*
+%ifarch x86_64
+%endif
 
 %files doc
 #BSD
@@ -292,7 +300,6 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 %{_sysconfdir}/profile.d/dpdk-sdk-*.*
 %{_libdir}/*.so
-
 %if %{with examples}
 %files examples
 %exclude %{_bindir}/dpdk-procinfo
