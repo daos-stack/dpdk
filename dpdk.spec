@@ -81,8 +81,6 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define incdir  %{_includedir}/%{name}
 %define pmddir %{_libdir}/%{name}-pmds
 
-%undefine _missing_build_ids_terminate_build
-
 %if 0%{?rhel} > 7 || 0%{?fedora}
 %define _py python3
 %define _py_exec %{?__python3}
@@ -315,7 +313,7 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 
 %changelog
-* Fri Mar 27 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
+* Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
 - Update to 19.11 to align with the SPDK 20.01.1 release
 
 * Fri Mar 13 2020 Brian J. Murrell <brian.murrell@intel.com> - 0:19.02-2
