@@ -8,8 +8,8 @@
 # define date 20181127
 # define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
 
-%define ver 19.02
-%define rel 2
+%define ver 19.11
+%define rel 1
 
 %define srcname dpdk
 
@@ -37,7 +37,7 @@ Source502: set_config.sh
 Source506: x86_64-native-linuxapp-gcc-config
 
 # Patches only in dpdk package
-Patch1: v19.02...67b915b09.patch
+Patch0: v19.11...3fcb1dd39.patch
 
 
 Summary: Set of libraries and drivers for fast packet processing
@@ -177,13 +177,13 @@ export EXTRA_CFLAGS="$(echo %{optflags} | sed -e 's:-Wall::g' -e 's:-march=[[:al
 
 make V=1 O=%{target} T=%{target} %{?_smp_mflags} config
 
-cp -f %{SOURCE500} %{SOURCE502}  %{SOURCE502} %{SOURCE506} .
+cp -f %{SOURCE500} %{SOURCE502} %{SOURCE506} .
 %{SOURCE502} %{target}-config "%{target}/.config"
 # DAOS/spdk customizations:
 # disable MLX{4,5} as they don't build with MLNX legacy I/B stack
 sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
 
-make V=1 O=%{target} %{?_smp_mflags} 
+make V=1 O=%{target} %{?_smp_mflags}
 
 # Creating PDF's has excessive build-requirements, html docs suffice fine
 make V=1 O=%{target} %{?_smp_mflags} doc-api-html doc-guides-html
@@ -313,6 +313,9 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 
 %changelog
+* Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
+- Update to 19.11 to align with the SPDK 20.01.1 release
+
 * Fri Mar 13 2020 Brian J. Murrell <brian.murrell@intel.com> - 0:19.02-2
 - Disable CONFIG_RTE_LIBRTE_MLX[45]_PMD for DAOS/spdk
 

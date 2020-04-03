@@ -1,0 +1,1104 @@
+From 5d0be1f142ac64f2dcb7a572771e3acc253ec2ef Mon Sep 17 00:00:00 2001
+From: Dariusz Stojaczyk <dariuszx.stojaczyk@intel.com>
+Date: Fri, 11 Oct 2019 07:06:06 -0400
+Subject: [PATCH 1/6] config: don't compile libs we don't use
+
+This builds the bare minimum DPDK libraries required
+for SPDK.
+
+Few notes:
+ * kvargs lib is an eal dependency and must be compiled.
+ * vdev bus is only used by the crypto bdev, but was
+   always enabled for our previous dpdk forks
+ * net, ether and mbuf libraries must be enabled
+   for our internal rte_vhost copy to compile
+ * cmdline and meter must be enabled for ether
+ * generic cyptodev and compressdev must be enabled for
+   spdk crypto and compress. those take very little time
+   to build
+
+spdk-19.11 note: fixed some typos present in previous revisions,
+and disabled any new PMDs brought with DPDK 19.11.
+
+Change-Id: I8024f583357138b1d0695acb64c4bac10845bcb2
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/455809 (spdk-19.05)
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/471061 (spdk-19.08)
+Signed-off-by: Dariusz Stojaczyk <dariuszx.stojaczyk@intel.com>
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/477009
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-by: Vitaliy Mysak <vitaliy.mysak@intel.com>
+Reviewed-by: Shuhei Matsumoto <shuhei.matsumoto.xt@hitachi.com>
+Tested-by: Jim Harris <james.r.harris@intel.com>
+---
+ config/common_base  | 170 ++++++++++++++++++++++----------------------
+ config/common_linux |  64 ++++++++---------
+ 2 files changed, 117 insertions(+), 117 deletions(-)
+
+diff --git a/config/common_base b/config/common_base
+index 7dec7ed45..a07d7a65e 100644
+--- a/config/common_base
++++ b/config/common_base
+@@ -168,7 +168,7 @@ CONFIG_RTE_LIBRTE_COMMON_DPAAX=n
+ #
+ # Compile the Intel FPGA bus
+ #
+-CONFIG_RTE_LIBRTE_IFPGA_BUS=y
++CONFIG_RTE_LIBRTE_IFPGA_BUS=n
+ 
+ #
+ # Compile PCI bus driver
+@@ -183,7 +183,7 @@ CONFIG_RTE_LIBRTE_VDEV_BUS=y
+ #
+ # Compile ARK PMD
+ #
+-CONFIG_RTE_LIBRTE_ARK_PMD=y
++CONFIG_RTE_LIBRTE_ARK_PMD=n
+ CONFIG_RTE_LIBRTE_ARK_PAD_TX=y
+ CONFIG_RTE_LIBRTE_ARK_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_ARK_DEBUG_TX=n
+@@ -193,12 +193,12 @@ CONFIG_RTE_LIBRTE_ARK_DEBUG_TRACE=n
+ #
+ # Compile Aquantia Atlantic PMD driver
+ #
+-CONFIG_RTE_LIBRTE_ATLANTIC_PMD=y
++CONFIG_RTE_LIBRTE_ATLANTIC_PMD=n
+ 
+ #
+ # Compile AMD PMD
+ #
+-CONFIG_RTE_LIBRTE_AXGBE_PMD=y
++CONFIG_RTE_LIBRTE_AXGBE_PMD=n
+ CONFIG_RTE_LIBRTE_AXGBE_PMD_DEBUG=n
+ 
+ #
+@@ -213,12 +213,12 @@ CONFIG_RTE_LIBRTE_BNX2X_DEBUG_PERIODIC=n
+ #
+ # Compile burst-oriented Broadcom BNXT PMD driver
+ #
+-CONFIG_RTE_LIBRTE_BNXT_PMD=y
++CONFIG_RTE_LIBRTE_BNXT_PMD=n
+ 
+ #
+ # Compile burst-oriented Chelsio Terminator (CXGBE) PMD
+ #
+-CONFIG_RTE_LIBRTE_CXGBE_PMD=y
++CONFIG_RTE_LIBRTE_CXGBE_PMD=n
+ 
+ #
+ # Compile burst-oriented NXP PFE PMD driver
+@@ -256,7 +256,7 @@ CONFIG_RTE_LIBRTE_ENETC_PMD=n
+ #
+ # Compile burst-oriented Amazon ENA PMD driver
+ #
+-CONFIG_RTE_LIBRTE_ENA_PMD=y
++CONFIG_RTE_LIBRTE_ENA_PMD=n
+ CONFIG_RTE_LIBRTE_ENA_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_ENA_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_ENA_DEBUG_TX_FREE=n
+@@ -265,13 +265,13 @@ CONFIG_RTE_LIBRTE_ENA_COM_DEBUG=n
+ #
+ # Compile burst-oriented Cisco ENIC PMD driver
+ #
+-CONFIG_RTE_LIBRTE_ENIC_PMD=y
++CONFIG_RTE_LIBRTE_ENIC_PMD=n
+ 
+ #
+ # Compile burst-oriented IGB & EM PMD drivers
+ #
+-CONFIG_RTE_LIBRTE_EM_PMD=y
+-CONFIG_RTE_LIBRTE_IGB_PMD=y
++CONFIG_RTE_LIBRTE_EM_PMD=n
++CONFIG_RTE_LIBRTE_IGB_PMD=n
+ CONFIG_RTE_LIBRTE_E1000_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_E1000_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_E1000_DEBUG_TX_FREE=n
+@@ -290,7 +290,7 @@ CONFIG_RTE_LIBRTE_HNS3_PMD=n
+ #
+ # Compile burst-oriented IXGBE PMD driver
+ #
+-CONFIG_RTE_LIBRTE_IXGBE_PMD=y
++CONFIG_RTE_LIBRTE_IXGBE_PMD=n
+ CONFIG_RTE_LIBRTE_IXGBE_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_IXGBE_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_IXGBE_DEBUG_TX_FREE=n
+@@ -301,7 +301,7 @@ CONFIG_RTE_LIBRTE_IXGBE_BYPASS=n
+ #
+ # Compile burst-oriented I40E PMD driver
+ #
+-CONFIG_RTE_LIBRTE_I40E_PMD=y
++CONFIG_RTE_LIBRTE_I40E_PMD=n
+ CONFIG_RTE_LIBRTE_I40E_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_I40E_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_I40E_DEBUG_TX_FREE=n
+@@ -314,7 +314,7 @@ CONFIG_RTE_LIBRTE_I40E_QUEUE_NUM_PER_VM=4
+ #
+ # Compile burst-oriented FM10K PMD
+ #
+-CONFIG_RTE_LIBRTE_FM10K_PMD=y
++CONFIG_RTE_LIBRTE_FM10K_PMD=n
+ CONFIG_RTE_LIBRTE_FM10K_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_FM10K_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_FM10K_DEBUG_TX_FREE=n
+@@ -324,7 +324,7 @@ CONFIG_RTE_LIBRTE_FM10K_INC_VECTOR=y
+ #
+ # Compile burst-oriented ICE PMD driver
+ #
+-CONFIG_RTE_LIBRTE_ICE_PMD=y
++CONFIG_RTE_LIBRTE_ICE_PMD=n
+ CONFIG_RTE_LIBRTE_ICE_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_ICE_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_ICE_DEBUG_TX_FREE=n
+@@ -333,7 +333,7 @@ CONFIG_RTE_LIBRTE_ICE_16BYTE_RX_DESC=n
+ 
+ # Compile burst-oriented IAVF PMD driver
+ #
+-CONFIG_RTE_LIBRTE_IAVF_PMD=y
++CONFIG_RTE_LIBRTE_IAVF_PMD=n
+ CONFIG_RTE_LIBRTE_IAVF_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_IAVF_DEBUG_TX_FREE=n
+ CONFIG_RTE_LIBRTE_IAVF_DEBUG_RX=n
+@@ -372,7 +372,7 @@ CONFIG_RTE_LIBRTE_NFP_DEBUG_RX=n
+ 
+ # QLogic 10G/25G/40G/50G/100G PMD
+ #
+-CONFIG_RTE_LIBRTE_QEDE_PMD=y
++CONFIG_RTE_LIBRTE_QEDE_PMD=n
+ CONFIG_RTE_LIBRTE_QEDE_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_QEDE_DEBUG_RX=n
+ #Provides abs path/name of the firmware file.
+@@ -382,7 +382,7 @@ CONFIG_RTE_LIBRTE_QEDE_FW=""
+ #
+ # Compile burst-oriented Solarflare libefx-based PMD
+ #
+-CONFIG_RTE_LIBRTE_SFC_EFX_PMD=y
++CONFIG_RTE_LIBRTE_SFC_EFX_PMD=n
+ CONFIG_RTE_LIBRTE_SFC_EFX_DEBUG=n
+ 
+ #
+@@ -398,14 +398,14 @@ CONFIG_RTE_LIBRTE_NFB_PMD=n
+ #
+ # Compile burst-oriented Cavium Thunderx NICVF PMD driver
+ #
+-CONFIG_RTE_LIBRTE_THUNDERX_NICVF_PMD=y
++CONFIG_RTE_LIBRTE_THUNDERX_NICVF_PMD=n
+ CONFIG_RTE_LIBRTE_THUNDERX_NICVF_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_THUNDERX_NICVF_DEBUG_TX=n
+ 
+ #
+ # Compile burst-oriented Cavium LiquidIO PMD driver
+ #
+-CONFIG_RTE_LIBRTE_LIO_PMD=y
++CONFIG_RTE_LIBRTE_LIO_PMD=n
+ CONFIG_RTE_LIBRTE_LIO_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_LIO_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_LIO_DEBUG_MBOX=n
+@@ -414,12 +414,12 @@ CONFIG_RTE_LIBRTE_LIO_DEBUG_REGS=n
+ #
+ # Compile burst-oriented Cavium OCTEONTX network PMD driver
+ #
+-CONFIG_RTE_LIBRTE_OCTEONTX_PMD=y
++CONFIG_RTE_LIBRTE_OCTEONTX_PMD=n
+ 
+ #
+ # Compile burst-oriented Marvell OCTEON TX2 network PMD driver
+ #
+-CONFIG_RTE_LIBRTE_OCTEONTX2_PMD=y
++CONFIG_RTE_LIBRTE_OCTEONTX2_PMD=n
+ 
+ #
+ # Compile WRS accelerated virtual port (AVP) guest PMD driver
+@@ -432,7 +432,7 @@ CONFIG_RTE_LIBRTE_AVP_DEBUG_BUFFERS=n
+ #
+ # Compile burst-oriented VIRTIO PMD driver
+ #
+-CONFIG_RTE_LIBRTE_VIRTIO_PMD=y
++CONFIG_RTE_LIBRTE_VIRTIO_PMD=n
+ CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_VIRTIO_DEBUG_DUMP=n
+@@ -445,7 +445,7 @@ CONFIG_RTE_VIRTIO_USER=n
+ #
+ # Compile burst-oriented VMXNET3 PMD driver
+ #
+-CONFIG_RTE_LIBRTE_VMXNET3_PMD=y
++CONFIG_RTE_LIBRTE_VMXNET3_PMD=n
+ CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_RX=n
+ CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_TX=n
+ CONFIG_RTE_LIBRTE_VMXNET3_DEBUG_TX_FREE=n
+@@ -468,14 +468,14 @@ CONFIG_RTE_LIBRTE_PMD_MEMIF=n
+ #
+ # Compile link bonding PMD library
+ #
+-CONFIG_RTE_LIBRTE_PMD_BOND=y
++CONFIG_RTE_LIBRTE_PMD_BOND=n
+ CONFIG_RTE_LIBRTE_BOND_DEBUG_ALB=n
+ CONFIG_RTE_LIBRTE_BOND_DEBUG_ALB_L1=n
+ 
+ #
+ # Compile fail-safe PMD
+ #
+-CONFIG_RTE_LIBRTE_PMD_FAILSAFE=y
++CONFIG_RTE_LIBRTE_PMD_FAILSAFE=n
+ 
+ #
+ # Compile Marvell PMD driver
+@@ -508,7 +508,7 @@ CONFIG_RTE_LIBRTE_VDEV_NETVSC_PMD=n
+ #
+ # Compile null PMD
+ #
+-CONFIG_RTE_LIBRTE_PMD_NULL=y
++CONFIG_RTE_LIBRTE_PMD_NULL=n
+ 
+ #
+ # Compile software PMD backed by PCAP files
+@@ -518,7 +518,7 @@ CONFIG_RTE_LIBRTE_PMD_PCAP=n
+ #
+ # Compile example software rings based PMD
+ #
+-CONFIG_RTE_LIBRTE_PMD_RING=y
++CONFIG_RTE_LIBRTE_PMD_RING=n
+ CONFIG_RTE_PMD_RING_MAX_RX_RINGS=16
+ CONFIG_RTE_PMD_RING_MAX_TX_RINGS=16
+ 
+@@ -541,7 +541,7 @@ CONFIG_RTE_PMD_PACKET_PREFETCH=y
+ # Compile generic wireless base band device library
+ # EXPERIMENTAL: API may change without prior notice
+ #
+-CONFIG_RTE_LIBRTE_BBDEV=y
++CONFIG_RTE_LIBRTE_BBDEV=n
+ CONFIG_RTE_LIBRTE_BBDEV_DEBUG=n
+ CONFIG_RTE_BBDEV_MAX_DEVS=128
+ CONFIG_RTE_BBDEV_OFFLOAD_COST=y
+@@ -551,17 +551,17 @@ CONFIG_RTE_BBDEV_SDK_AVX512=n
+ #
+ # Compile PMD for NULL bbdev device
+ #
+-CONFIG_RTE_LIBRTE_PMD_BBDEV_NULL=y
++CONFIG_RTE_LIBRTE_PMD_BBDEV_NULL=n
+ 
+ #
+ # Compile PMD for turbo software bbdev device
+ #
+-CONFIG_RTE_LIBRTE_PMD_BBDEV_TURBO_SW=y
++CONFIG_RTE_LIBRTE_PMD_BBDEV_TURBO_SW=n
+ 
+ #
+ # Compile PMD for Intel FPGA LTE FEC bbdev device
+ #
+-CONFIG_RTE_LIBRTE_PMD_BBDEV_FPGA_LTE_FEC=y
++CONFIG_RTE_LIBRTE_PMD_BBDEV_FPGA_LTE_FEC=n
+ 
+ #
+ # Compile generic crypto device library
+@@ -595,17 +595,17 @@ CONFIG_RTE_LIBRTE_DPAA_MAX_CRYPTODEV=4
+ #
+ # Compile PMD for Cavium OCTEON TX crypto device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX_CRYPTO=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX_CRYPTO=n
+ 
+ #
+ # Compile PMD for Marvell OCTEON TX2 crypto device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX2_CRYPTO=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX2_CRYPTO=n
+ 
+ #
+ # Compile PMD for QuickAssist based devices - see docs for details
+ #
+-CONFIG_RTE_LIBRTE_PMD_QAT=y
++CONFIG_RTE_LIBRTE_PMD_QAT=n
+ CONFIG_RTE_LIBRTE_PMD_QAT_SYM=n
+ CONFIG_RTE_LIBRTE_PMD_QAT_ASYM=n
+ #
+@@ -617,7 +617,7 @@ CONFIG_RTE_PMD_QAT_COMP_IM_BUFFER_SIZE=65536
+ #
+ # Compile PMD for virtio crypto devices
+ #
+-CONFIG_RTE_LIBRTE_PMD_VIRTIO_CRYPTO=y
++CONFIG_RTE_LIBRTE_PMD_VIRTIO_CRYPTO=n
+ #
+ # Number of maximum virtio crypto devices
+ #
+@@ -656,12 +656,12 @@ CONFIG_RTE_LIBRTE_PMD_ZUC=n
+ 
+ # Compile PMD for Crypto Scheduler device
+ #
+-CONFIG_RTE_LIBRTE_PMD_CRYPTO_SCHEDULER=y
++CONFIG_RTE_LIBRTE_PMD_CRYPTO_SCHEDULER=n
+ 
+ #
+ # Compile PMD for NULL Crypto device
+ #
+-CONFIG_RTE_LIBRTE_PMD_NULL_CRYPTO=y
++CONFIG_RTE_LIBRTE_PMD_NULL_CRYPTO=n
+ 
+ #
+ # Compile PMD for AMD CCP crypto device
+@@ -676,12 +676,12 @@ CONFIG_RTE_LIBRTE_PMD_MVSAM_CRYPTO=n
+ #
+ # Compile PMD for NITROX crypto device
+ #
+-CONFIG_RTE_LIBRTE_PMD_NITROX=y
++CONFIG_RTE_LIBRTE_PMD_NITROX=n
+ 
+ #
+ # Compile generic security library
+ #
+-CONFIG_RTE_LIBRTE_SECURITY=y
++CONFIG_RTE_LIBRTE_SECURITY=n
+ 
+ #
+ # Compile generic compression device library
+@@ -697,7 +697,7 @@ CONFIG_RTE_COMPRESSDEV_TEST=n
+ #
+ # Compile PMD for Octeontx ZIPVF compression device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX_ZIPVF=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX_ZIPVF=n
+ 
+ #
+ # Compile PMD for ISA-L compression device
+@@ -712,7 +712,7 @@ CONFIG_RTE_LIBRTE_PMD_ZLIB=n
+ #
+ # Compile generic event device library
+ #
+-CONFIG_RTE_LIBRTE_EVENTDEV=y
++CONFIG_RTE_LIBRTE_EVENTDEV=n
+ CONFIG_RTE_LIBRTE_EVENTDEV_DEBUG=n
+ CONFIG_RTE_EVENT_MAX_DEVS=16
+ CONFIG_RTE_EVENT_MAX_QUEUES_PER_DEV=64
+@@ -724,33 +724,33 @@ CONFIG_RTE_EVENT_ETH_TX_ADAPTER_MAX_INSTANCE=32
+ #
+ # Compile PMD for skeleton event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV=n
+ CONFIG_RTE_LIBRTE_PMD_SKELETON_EVENTDEV_DEBUG=n
+ 
+ #
+ # Compile PMD for software event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_SW_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_SW_EVENTDEV=n
+ 
+ #
+ # Compile PMD for distributed software event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_DSW_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_DSW_EVENTDEV=n
+ 
+ #
+ # Compile PMD for octeontx sso event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX_SSOVF=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX_SSOVF=n
+ 
+ #
+ # Compile PMD for octeontx2 sso event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX2_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX2_EVENTDEV=n
+ 
+ #
+ # Compile PMD for OPDL event device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OPDL_EVENTDEV=y
++CONFIG_RTE_LIBRTE_PMD_OPDL_EVENTDEV=n
+ 
+ #
+ # Compile PMD for NXP DPAA event device
+@@ -766,7 +766,7 @@ CONFIG_RTE_LIBRTE_PMD_DPAA2_EVENTDEV=n
+ # Compile raw device support
+ # EXPERIMENTAL: API may change without prior notice
+ #
+-CONFIG_RTE_LIBRTE_RAWDEV=y
++CONFIG_RTE_LIBRTE_RAWDEV=n
+ CONFIG_RTE_RAWDEV_MAX_DEVS=64
+ CONFIG_RTE_LIBRTE_PMD_SKELETON_RAWDEV=y
+ 
+@@ -793,12 +793,12 @@ CONFIG_RTE_LIBRTE_PMD_IOAT_RAWDEV=y
+ #
+ # Compile PMD for octeontx2 DMA raw device
+ #
+-CONFIG_RTE_LIBRTE_PMD_OCTEONTX2_DMA_RAWDEV=y
++CONFIG_RTE_LIBRTE_PMD_OCTEONTX2_DMA_RAWDEV=n
+ 
+ #
+ # Compile PMD for NTB raw device
+ #
+-CONFIG_RTE_LIBRTE_PMD_NTB_RAWDEV=y
++CONFIG_RTE_LIBRTE_PMD_NTB_RAWDEV=n
+ 
+ #
+ # Compile librte_ring
+@@ -808,7 +808,7 @@ CONFIG_RTE_LIBRTE_RING=y
+ #
+ # Compile librte_stack
+ #
+-CONFIG_RTE_LIBRTE_STACK=y
++CONFIG_RTE_LIBRTE_STACK=n
+ 
+ #
+ # Compile librte_mempool
+@@ -823,17 +823,17 @@ CONFIG_RTE_LIBRTE_MEMPOOL_DEBUG=n
+ CONFIG_RTE_DRIVER_MEMPOOL_BUCKET=y
+ CONFIG_RTE_DRIVER_MEMPOOL_BUCKET_SIZE_KB=64
+ CONFIG_RTE_DRIVER_MEMPOOL_RING=y
+-CONFIG_RTE_DRIVER_MEMPOOL_STACK=y
++CONFIG_RTE_DRIVER_MEMPOOL_STACK=n
+ 
+ #
+ # Compile PMD for octeontx fpa mempool device
+ #
+-CONFIG_RTE_LIBRTE_OCTEONTX_MEMPOOL=y
++CONFIG_RTE_LIBRTE_OCTEONTX_MEMPOOL=n
+ 
+ #
+ # Compile PMD for octeontx2 npa mempool device
+ #
+-CONFIG_RTE_LIBRTE_OCTEONTX2_MEMPOOL=y
++CONFIG_RTE_LIBRTE_OCTEONTX2_MEMPOOL=n
+ 
+ #
+ # Compile librte_mbuf
+@@ -847,13 +847,13 @@ CONFIG_RTE_PKTMBUF_HEADROOM=128
+ #
+ # Compile librte_timer
+ #
+-CONFIG_RTE_LIBRTE_TIMER=y
++CONFIG_RTE_LIBRTE_TIMER=n
+ CONFIG_RTE_LIBRTE_TIMER_DEBUG=n
+ 
+ #
+ # Compile librte_cfgfile
+ #
+-CONFIG_RTE_LIBRTE_CFGFILE=y
++CONFIG_RTE_LIBRTE_CFGFILE=n
+ 
+ #
+ # Compile librte_cmdline
+@@ -864,38 +864,38 @@ CONFIG_RTE_LIBRTE_CMDLINE_DEBUG=n
+ #
+ # Compile librte_hash
+ #
+-CONFIG_RTE_LIBRTE_HASH=y
++CONFIG_RTE_LIBRTE_HASH=n
+ CONFIG_RTE_LIBRTE_HASH_DEBUG=n
+ 
+ #
+ # Compile librte_efd
+ #
+-CONFIG_RTE_LIBRTE_EFD=y
++CONFIG_RTE_LIBRTE_EFD=n
+ 
+ #
+ # Compile librte_member
+ #
+-CONFIG_RTE_LIBRTE_MEMBER=y
++CONFIG_RTE_LIBRTE_MEMBER=n
+ 
+ #
+ # Compile librte_jobstats
+ #
+-CONFIG_RTE_LIBRTE_JOBSTATS=y
++CONFIG_RTE_LIBRTE_JOBSTATS=n
+ 
+ #
+ # Compile the device metrics library
+ #
+-CONFIG_RTE_LIBRTE_METRICS=y
++CONFIG_RTE_LIBRTE_METRICS=n
+ 
+ #
+ # Compile the bitrate statistics library
+ #
+-CONFIG_RTE_LIBRTE_BITRATE=y
++CONFIG_RTE_LIBRTE_BITRATE=n
+ 
+ #
+ # Compile the latency statistics library
+ #
+-CONFIG_RTE_LIBRTE_LATENCY_STATS=y
++CONFIG_RTE_LIBRTE_LATENCY_STATS=n
+ 
+ #
+ # Compile librte_telemetry
+@@ -905,7 +905,7 @@ CONFIG_RTE_LIBRTE_TELEMETRY=n
+ #
+ # Compile librte_rcu
+ #
+-CONFIG_RTE_LIBRTE_RCU=y
++CONFIG_RTE_LIBRTE_RCU=n
+ CONFIG_RTE_LIBRTE_RCU_DEBUG=n
+ 
+ #
+@@ -922,13 +922,13 @@ CONFIG_RTE_LIBRTE_FIB_DEBUG=n
+ #
+ # Compile librte_lpm
+ #
+-CONFIG_RTE_LIBRTE_LPM=y
++CONFIG_RTE_LIBRTE_LPM=n
+ CONFIG_RTE_LIBRTE_LPM_DEBUG=n
+ 
+ #
+ # Compile librte_acl
+ #
+-CONFIG_RTE_LIBRTE_ACL=y
++CONFIG_RTE_LIBRTE_ACL=n
+ CONFIG_RTE_LIBRTE_ACL_DEBUG=n
+ 
+ #
+@@ -946,7 +946,7 @@ CONFIG_RTE_LIBRTE_NET=y
+ #
+ # Compile librte_ip_frag
+ #
+-CONFIG_RTE_LIBRTE_IP_FRAG=y
++CONFIG_RTE_LIBRTE_IP_FRAG=n
+ CONFIG_RTE_LIBRTE_IP_FRAG_DEBUG=n
+ CONFIG_RTE_LIBRTE_IP_FRAG_MAX_FRAG=4
+ CONFIG_RTE_LIBRTE_IP_FRAG_TBL_STAT=n
+@@ -954,12 +954,12 @@ CONFIG_RTE_LIBRTE_IP_FRAG_TBL_STAT=n
+ #
+ # Compile GRO library
+ #
+-CONFIG_RTE_LIBRTE_GRO=y
++CONFIG_RTE_LIBRTE_GRO=n
+ 
+ #
+ # Compile GSO library
+ #
+-CONFIG_RTE_LIBRTE_GSO=y
++CONFIG_RTE_LIBRTE_GSO=n
+ 
+ #
+ # Compile librte_meter
+@@ -969,12 +969,12 @@ CONFIG_RTE_LIBRTE_METER=y
+ #
+ # Compile librte_classify
+ #
+-CONFIG_RTE_LIBRTE_FLOW_CLASSIFY=y
++CONFIG_RTE_LIBRTE_FLOW_CLASSIFY=n
+ 
+ #
+ # Compile librte_sched
+ #
+-CONFIG_RTE_LIBRTE_SCHED=y
++CONFIG_RTE_LIBRTE_SCHED=n
+ CONFIG_RTE_SCHED_DEBUG=n
+ CONFIG_RTE_SCHED_RED=n
+ CONFIG_RTE_SCHED_COLLECT_STATS=n
+@@ -985,30 +985,30 @@ CONFIG_RTE_SCHED_VECTOR=n
+ #
+ # Compile the distributor library
+ #
+-CONFIG_RTE_LIBRTE_DISTRIBUTOR=y
++CONFIG_RTE_LIBRTE_DISTRIBUTOR=n
+ 
+ #
+ # Compile the reorder library
+ #
+-CONFIG_RTE_LIBRTE_REORDER=y
++CONFIG_RTE_LIBRTE_REORDER=n
+ 
+ #
+ # Compile librte_port
+ #
+-CONFIG_RTE_LIBRTE_PORT=y
++CONFIG_RTE_LIBRTE_PORT=n
+ CONFIG_RTE_PORT_STATS_COLLECT=n
+ CONFIG_RTE_PORT_PCAP=n
+ 
+ #
+ # Compile librte_table
+ #
+-CONFIG_RTE_LIBRTE_TABLE=y
++CONFIG_RTE_LIBRTE_TABLE=n
+ CONFIG_RTE_TABLE_STATS_COLLECT=n
+ 
+ #
+ # Compile librte_pipeline
+ #
+-CONFIG_RTE_LIBRTE_PIPELINE=y
++CONFIG_RTE_LIBRTE_PIPELINE=n
+ CONFIG_RTE_PIPELINE_STATS_COLLECT=n
+ 
+ #
+@@ -1022,7 +1022,7 @@ CONFIG_RTE_KNI_PREEMPT_DEFAULT=y
+ #
+ # Compile the pdump library
+ #
+-CONFIG_RTE_LIBRTE_PDUMP=y
++CONFIG_RTE_LIBRTE_PDUMP=n
+ 
+ #
+ # Compile vhost user library
+@@ -1047,19 +1047,19 @@ CONFIG_RTE_LIBRTE_IFC_PMD=n
+ #
+ # Compile librte_bpf
+ #
+-CONFIG_RTE_LIBRTE_BPF=y
++CONFIG_RTE_LIBRTE_BPF=n
+ # allow load BPF from ELF files (requires libelf)
+ CONFIG_RTE_LIBRTE_BPF_ELF=n
+ 
+ #
+ # Compile librte_ipsec
+ #
+-CONFIG_RTE_LIBRTE_IPSEC=y
++CONFIG_RTE_LIBRTE_IPSEC=n
+ 
+ #
+ # Compile the test application
+ #
+-CONFIG_RTE_APP_TEST=y
++CONFIG_RTE_APP_TEST=n
+ CONFIG_RTE_APP_TEST_RESOURCE_TAR=n
+ 
+ #
+@@ -1070,26 +1070,26 @@ CONFIG_RTE_PROC_INFO=n
+ #
+ # Compile the PMD test application
+ #
+-CONFIG_RTE_TEST_PMD=y
++CONFIG_RTE_TEST_PMD=n
+ CONFIG_RTE_TEST_PMD_RECORD_CORE_CYCLES=n
+ CONFIG_RTE_TEST_PMD_RECORD_BURST_STATS=n
+ 
+ #
+ # Compile the bbdev test application
+ #
+-CONFIG_RTE_TEST_BBDEV=y
++CONFIG_RTE_TEST_BBDEV=n
+ 
+ #
+ # Compile the compression performance application
+ #
+-CONFIG_RTE_APP_COMPRESS_PERF=y
++CONFIG_RTE_APP_COMPRESS_PERF=n
+ 
+ #
+ # Compile the crypto performance application
+ #
+-CONFIG_RTE_APP_CRYPTO_PERF=y
++CONFIG_RTE_APP_CRYPTO_PERF=n
+ 
+ #
+ # Compile the eventdev application
+ #
+-CONFIG_RTE_APP_EVENTDEV=y
++CONFIG_RTE_APP_EVENTDEV=n
+diff --git a/config/common_linux b/config/common_linux
+index c5cf3d662..9cca643a1 100644
+--- a/config/common_linux
++++ b/config/common_linux
+@@ -8,47 +8,47 @@ CONFIG_RTE_EXEC_ENV_LINUX=y
+ CONFIG_RTE_EXEC_ENV_LINUXAPP=y
+ 
+ CONFIG_RTE_EAL_NUMA_AWARE_HUGEPAGES=y
+-CONFIG_RTE_EAL_IGB_UIO=y
++CONFIG_RTE_EAL_IGB_UIO=n
+ CONFIG_RTE_EAL_VFIO=y
+-CONFIG_RTE_KNI_KMOD=y
+-CONFIG_RTE_LIBRTE_KNI=y
+-CONFIG_RTE_LIBRTE_PMD_KNI=y
+-CONFIG_RTE_LIBRTE_VHOST=y
++CONFIG_RTE_KNI_KMOD=n
++CONFIG_RTE_LIBRTE_KNI=n
++CONFIG_RTE_LIBRTE_PMD_KNI=n
++CONFIG_RTE_LIBRTE_VHOST=n
+ CONFIG_RTE_LIBRTE_VHOST_NUMA=y
+ CONFIG_RTE_LIBRTE_VHOST_POSTCOPY=n
+-CONFIG_RTE_LIBRTE_PMD_VHOST=y
+-CONFIG_RTE_LIBRTE_IFC_PMD=y
+-CONFIG_RTE_LIBRTE_PMD_AF_PACKET=y
+-CONFIG_RTE_LIBRTE_PMD_MEMIF=y
+-CONFIG_RTE_LIBRTE_PMD_SOFTNIC=y
+-CONFIG_RTE_LIBRTE_PMD_TAP=y
+-CONFIG_RTE_LIBRTE_AVP_PMD=y
+-CONFIG_RTE_LIBRTE_VDEV_NETVSC_PMD=y
+-CONFIG_RTE_LIBRTE_NFP_PMD=y
+-CONFIG_RTE_LIBRTE_POWER=y
+-CONFIG_RTE_VIRTIO_USER=y
+-CONFIG_RTE_PROC_INFO=y
++CONFIG_RTE_LIBRTE_PMD_VHOST=n
++CONFIG_RTE_LIBRTE_IFC_PMD=n
++CONFIG_RTE_LIBRTE_PMD_AF_PACKET=n
++CONFIG_RTE_LIBRTE_PMD_MEMIF=n
++CONFIG_RTE_LIBRTE_PMD_SOFTNIC=n
++CONFIG_RTE_LIBRTE_PMD_TAP=n
++CONFIG_RTE_LIBRTE_AVP_PMD=n
++CONFIG_RTE_LIBRTE_VDEV_NETVSC_PMD=n
++CONFIG_RTE_LIBRTE_NFP_PMD=n
++CONFIG_RTE_LIBRTE_POWER=n
++CONFIG_RTE_VIRTIO_USER=n
++CONFIG_RTE_PROC_INFO=n
+ 
+-CONFIG_RTE_LIBRTE_VMBUS=y
+-CONFIG_RTE_LIBRTE_NETVSC_PMD=y
++CONFIG_RTE_LIBRTE_VMBUS=n
++CONFIG_RTE_LIBRTE_NETVSC_PMD=n
+ 
+ #
+ # Common libraries, before Bus/PMDs
+ #
+-CONFIG_RTE_LIBRTE_COMMON_DPAAX=y
++CONFIG_RTE_LIBRTE_COMMON_DPAAX=n
+ 
+ # NXP DPAA BUS and drivers
+-CONFIG_RTE_LIBRTE_DPAA_BUS=y
+-CONFIG_RTE_LIBRTE_DPAA_MEMPOOL=y
+-CONFIG_RTE_LIBRTE_DPAA_PMD=y
+-CONFIG_RTE_LIBRTE_PMD_DPAA_EVENTDEV=y
+-CONFIG_RTE_LIBRTE_PMD_DPAA_SEC=y
+-CONFIG_RTE_LIBRTE_PMD_CAAM_JR=y
++CONFIG_RTE_LIBRTE_DPAA_BUS=n
++CONFIG_RTE_LIBRTE_DPAA_MEMPOOL=n
++CONFIG_RTE_LIBRTE_DPAA_PMD=n
++CONFIG_RTE_LIBRTE_PMD_DPAA_EVENTDEV=n
++CONFIG_RTE_LIBRTE_PMD_DPAA_SEC=n
++CONFIG_RTE_LIBRTE_PMD_CAAM_JR=n
+ 
+ # NXP FSLMC BUS and DPAA2 drivers
+-CONFIG_RTE_LIBRTE_FSLMC_BUS=y
+-CONFIG_RTE_LIBRTE_DPAA2_MEMPOOL=y
+-CONFIG_RTE_LIBRTE_DPAA2_PMD=y
++CONFIG_RTE_LIBRTE_FSLMC_BUS=n
++CONFIG_RTE_LIBRTE_DPAA2_MEMPOOL=n
++CONFIG_RTE_LIBRTE_DPAA2_PMD=n
+ CONFIG_RTE_LIBRTE_PMD_DPAA2_EVENTDEV=y
+ CONFIG_RTE_LIBRTE_PMD_DPAA2_SEC=y
+ CONFIG_RTE_LIBRTE_PMD_DPAA2_CMDIF_RAWDEV=y
+@@ -57,17 +57,17 @@ CONFIG_RTE_LIBRTE_PMD_DPAA2_QDMA_RAWDEV=y
+ #
+ # NXP ENETC PMD Driver
+ #
+-CONFIG_RTE_LIBRTE_ENETC_PMD=y
++CONFIG_RTE_LIBRTE_ENETC_PMD=n
+ 
+ #
+ # HINIC PMD driver
+ #
+-CONFIG_RTE_LIBRTE_HINIC_PMD=y
++CONFIG_RTE_LIBRTE_HINIC_PMD=n
+ 
+ #
+ # Hisilicon HNS3 PMD driver
+ #
+-CONFIG_RTE_LIBRTE_HNS3_PMD=y
++CONFIG_RTE_LIBRTE_HNS3_PMD=n
+ 
+ #
+ # Compile PMD for Intel FPGA raw device
+
+From 92c570e365e51eb5531937a98e9f7dbc63796958 Mon Sep 17 00:00:00 2001
+From: paul luse <paul.e.luse@intel.com>
+Date: Fri, 11 Oct 2019 07:06:19 -0400
+Subject: [PATCH 2/6] config: comment out options that we want to override in
+ the makefile
+
+If the config file specifies y or n for an option we are unable to
+change it in the makefile, so comment out the relevant options for
+crypto so they can be set via makefile.
+
+There's an issue with DPDK and build order when we use makefile
+cmd line options like we do to build the PMDs and APIs for
+crypto and compression.  Basically DPDK will not compile if we
+specify all of them on the command line.  Turns out if we specify
+just the APIs in the command line and everything else in the
+makefile we can build both crypto and compress just fine. This
+allows us to avoid making folks install things like isa-l and
+ipsec unless they actually are going to use compress or crypto.
+
+Everyone, however, will build the 2 API modules for DPDK all of
+the time but this should not be an issue.
+
+Change-Id: I1d1b17f35fbacaab8146f6a41e506f24320b0f4d
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/455810 (spdk-19.05)
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/471062 (spdk-19.08)
+Signed-off-by: paul luse <paul.e.luse@intel.com>
+Signed-off-by: Jim Harris <james.r.harris@intel.com>
+Signed-off-by: Dariusz Stojaczyk <dariuszx.stojaczyk@intel.com>
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/477010
+Reviewed-by: Vitaliy Mysak <vitaliy.mysak@intel.com>
+Reviewed-by: Shuhei Matsumoto <shuhei.matsumoto.xt@hitachi.com>
+---
+ config/common_base  | 12 ++++++------
+ config/common_linux |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/config/common_base b/config/common_base
+index a07d7a65e..4126596f0 100644
+--- a/config/common_base
++++ b/config/common_base
+@@ -103,7 +103,7 @@ CONFIG_RTE_LOG_HISTORY=256
+ CONFIG_RTE_BACKTRACE=y
+ CONFIG_RTE_LIBEAL_USE_HPET=n
+ CONFIG_RTE_EAL_ALWAYS_PANIC_ON_ERROR=n
+-CONFIG_RTE_EAL_IGB_UIO=n
++#CONFIG_RTE_EAL_IGB_UIO=n
+ CONFIG_RTE_EAL_VFIO=n
+ CONFIG_RTE_MAX_VFIO_GROUPS=64
+ CONFIG_RTE_MAX_VFIO_CONTAINERS=64
+@@ -605,8 +605,8 @@ CONFIG_RTE_LIBRTE_PMD_OCTEONTX2_CRYPTO=n
+ #
+ # Compile PMD for QuickAssist based devices - see docs for details
+ #
+-CONFIG_RTE_LIBRTE_PMD_QAT=n
+-CONFIG_RTE_LIBRTE_PMD_QAT_SYM=n
++#CONFIG_RTE_LIBRTE_PMD_QAT=n
++#CONFIG_RTE_LIBRTE_PMD_QAT_SYM=n
+ CONFIG_RTE_LIBRTE_PMD_QAT_ASYM=n
+ #
+ # Max. number of QuickAssist devices, which can be detected and attached
+@@ -626,7 +626,7 @@ CONFIG_RTE_MAX_VIRTIO_CRYPTO=32
+ #
+ # Compile PMD for AESNI backed device
+ #
+-CONFIG_RTE_LIBRTE_PMD_AESNI_MB=n
++#CONFIG_RTE_LIBRTE_PMD_AESNI_MB=n
+ 
+ #
+ # Compile PMD for Software backed device
+@@ -702,7 +702,7 @@ CONFIG_RTE_LIBRTE_PMD_OCTEONTX_ZIPVF=n
+ #
+ # Compile PMD for ISA-L compression device
+ #
+-CONFIG_RTE_LIBRTE_PMD_ISAL=n
++#CONFIG_RTE_LIBRTE_PMD_ISAL=n
+ 
+ #
+ # Compile PMD for ZLIB compression device
+@@ -990,7 +990,7 @@ CONFIG_RTE_LIBRTE_DISTRIBUTOR=n
+ #
+ # Compile the reorder library
+ #
+-CONFIG_RTE_LIBRTE_REORDER=n
++#CONFIG_RTE_LIBRTE_REORDER=n
+ 
+ #
+ # Compile librte_port
+diff --git a/config/common_linux b/config/common_linux
+index 9cca643a1..ba45de7bb 100644
+--- a/config/common_linux
++++ b/config/common_linux
+@@ -8,7 +8,7 @@ CONFIG_RTE_EXEC_ENV_LINUX=y
+ CONFIG_RTE_EXEC_ENV_LINUXAPP=y
+ 
+ CONFIG_RTE_EAL_NUMA_AWARE_HUGEPAGES=y
+-CONFIG_RTE_EAL_IGB_UIO=n
++#CONFIG_RTE_EAL_IGB_UIO=n
+ CONFIG_RTE_EAL_VFIO=y
+ CONFIG_RTE_KNI_KMOD=n
+ CONFIG_RTE_LIBRTE_KNI=n
+
+From 33918d7f28006a78f20baca1bc13b6724c768618 Mon Sep 17 00:00:00 2001
+From: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
+Date: Fri, 11 Oct 2019 07:06:35 -0400
+Subject: [PATCH 3/6] config: comment out vhost
+
+SPDK can be configured to build without vhost target,
+so we shouldn't always need to build DPDK rte_vhost.
+
+Comment out rte_vhost build option, as well as build
+options for vhosts's dependencies, so now we'll be able
+to dynamically turn them on/off in SPDK makefiles.
+
+Change-Id: I0ea639905360712361f34aeeb13827d5f48b4ac5
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/460527 (spdk-19.05)
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/471064 (spdk-19.08)
+Signed-off-by: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/477011
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-by: Vitaliy Mysak <vitaliy.mysak@intel.com>
+Reviewed-by: Shuhei Matsumoto <shuhei.matsumoto.xt@hitachi.com>
+Tested-by: Jim Harris <james.r.harris@intel.com>
+---
+ config/common_base  | 10 +++++-----
+ config/common_linux |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/config/common_base b/config/common_base
+index 4126596f0..19802fd54 100644
+--- a/config/common_base
++++ b/config/common_base
+@@ -143,7 +143,7 @@ CONFIG_RTE_LIBRTE_KVARGS=y
+ #
+ # Compile generic ethernet library
+ #
+-CONFIG_RTE_LIBRTE_ETHER=y
++#CONFIG_RTE_LIBRTE_ETHER=n
+ CONFIG_RTE_LIBRTE_ETHDEV_DEBUG=n
+ CONFIG_RTE_MAX_ETHPORTS=32
+ CONFIG_RTE_MAX_QUEUES_PER_PORT=1024
+@@ -858,13 +858,13 @@ CONFIG_RTE_LIBRTE_CFGFILE=n
+ #
+ # Compile librte_cmdline
+ #
+-CONFIG_RTE_LIBRTE_CMDLINE=y
++#CONFIG_RTE_LIBRTE_CMDLINE=n
+ CONFIG_RTE_LIBRTE_CMDLINE_DEBUG=n
+ 
+ #
+ # Compile librte_hash
+ #
+-CONFIG_RTE_LIBRTE_HASH=n
++#CONFIG_RTE_LIBRTE_HASH=n
+ CONFIG_RTE_LIBRTE_HASH_DEBUG=n
+ 
+ #
+@@ -964,7 +964,7 @@ CONFIG_RTE_LIBRTE_GSO=n
+ #
+ # Compile librte_meter
+ #
+-CONFIG_RTE_LIBRTE_METER=y
++#CONFIG_RTE_LIBRTE_METER=n
+ 
+ #
+ # Compile librte_classify
+@@ -1027,7 +1027,7 @@ CONFIG_RTE_LIBRTE_PDUMP=n
+ #
+ # Compile vhost user library
+ #
+-CONFIG_RTE_LIBRTE_VHOST=n
++#CONFIG_RTE_LIBRTE_VHOST=n
+ CONFIG_RTE_LIBRTE_VHOST_NUMA=n
+ CONFIG_RTE_LIBRTE_VHOST_DEBUG=n
+ 
+diff --git a/config/common_linux b/config/common_linux
+index ba45de7bb..613c9f713 100644
+--- a/config/common_linux
++++ b/config/common_linux
+@@ -13,7 +13,7 @@ CONFIG_RTE_EAL_VFIO=y
+ CONFIG_RTE_KNI_KMOD=n
+ CONFIG_RTE_LIBRTE_KNI=n
+ CONFIG_RTE_LIBRTE_PMD_KNI=n
+-CONFIG_RTE_LIBRTE_VHOST=n
++#CONFIG_RTE_LIBRTE_VHOST=n
+ CONFIG_RTE_LIBRTE_VHOST_NUMA=y
+ CONFIG_RTE_LIBRTE_VHOST_POSTCOPY=n
+ CONFIG_RTE_LIBRTE_PMD_VHOST=n
+
+From a0c8f2041456e27a97dfeebd2b39c47b6fad995f Mon Sep 17 00:00:00 2001
+From: Seth Howell <seth.howell@intel.com>
+Date: Fri, 11 Oct 2019 07:06:42 -0400
+Subject: [PATCH 4/6] config: allow the shared library to be built.
+
+If we want to be able to build the shared objects for the dpdk submodule
+alongside spdk, we will need to disable this configuration option.
+
+Change-Id: If42bc59ff2142b773becf3909ba17da7d2f7373e
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/463029 (spdk-19.05)
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/471065 (spdk-19.08)
+Signed-off-by: Seth Howell <seth.howell@intel.com>
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/477012
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-by: Vitaliy Mysak <vitaliy.mysak@intel.com>
+Reviewed-by: Shuhei Matsumoto <shuhei.matsumoto.xt@hitachi.com>
+Tested-by: Jim Harris <james.r.harris@intel.com>
+---
+ config/common_base | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/common_base b/config/common_base
+index 19802fd54..9080740bd 100644
+--- a/config/common_base
++++ b/config/common_base
+@@ -57,7 +57,7 @@ CONFIG_RTE_ENABLE_LTO=n
+ #
+ # Compile to share library
+ #
+-CONFIG_RTE_BUILD_SHARED_LIB=n
++#CONFIG_RTE_BUILD_SHARED_LIB=n
+ 
+ #
+ # Use newest code breaking previous ABI
+
+From fdb511332624e28631f553a226abb1dc0b35b28a Mon Sep 17 00:00:00 2001
+From: Alexey Marchuk <alexeymar@mellanox.com>
+Date: Tue, 14 Jan 2020 06:34:01 +0000
+Subject: [PATCH 5/6] config: disable build of NXP PFE PMD Driver on ARM
+
+Enabling build of this library causes compilation error on ARM:
+/usr/bin/ld: cannot find -lrte_common_dpaax
+collect2: error: ld returned 1 exit status
+/scratch/spdk/dpdk/mk/rte.app.mk:433: recipe for target 'cmdline_test' failed
+NXP PFE PMD drivers requires librte_common_dpaax which is not built by default.
+Passing CONFIG_RTE_LIBRTE_PFE_PMD=n to dpdpk Makefile has no effect since
+this is overwritten by the config file.
+
+Change-Id: I3fc4822804d0e649c838028a670562fba3f08479
+Signed-off-by: Alexey Marchuk <alexeymar@mellanox.com>
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/481562
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Tested-by: Jim Harris <james.r.harris@intel.com>
+---
+ config/common_armv8a_linux | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/common_armv8a_linux b/config/common_armv8a_linux
+index 782877bb2..5b7c57f5f 100644
+--- a/config/common_armv8a_linux
++++ b/config/common_armv8a_linux
+@@ -39,6 +39,6 @@ CONFIG_RTE_LIBRTE_PMD_IOAT_RAWDEV=n
+ #
+ # NXP PFE PMD Driver
+ #
+-CONFIG_RTE_LIBRTE_PFE_PMD=y
++CONFIG_RTE_LIBRTE_PFE_PMD=n
+ 
+ CONFIG_RTE_SCHED_VECTOR=n
+
+From 3fcb1dd395a870c64450f151a53338034b832906 Mon Sep 17 00:00:00 2001
+From: Jim Harris <james.r.harris@intel.com>
+Date: Mon, 9 Mar 2020 00:55:19 -0700
+Subject: [PATCH 6/6] contigmem: cleanup properly when load fails
+
+If contigmem is not able to allocate all of the
+requested buffers, it frees whatever buffers were
+able to be allocated up until that point.
+
+But the pointers are not set to NULL in that case.
+After the load fails, the FreeBSD kernel will
+immediately call the contigmem unload handler, which
+tries to free the buffers again since the pointers
+were not set to NULL.
+
+It's not clear that we should just rely on the unload
+handler getting called after load failure. So let's
+keep the existing cleanup code in the load handler,
+but explicitly set the pointers to NULL after freeing
+them.
+
+Signed-off-by: Jim Harris <james.r.harris@intel.com>
+Change-Id: If1d5104620ad0e4fbbf2ffe8a8c38563b14ae1cd
+
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/1200
+Reviewed-by: Aleksey Marchuk <alexeymar@mellanox.com>
+Reviewed-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+---
+ kernel/freebsd/contigmem/contigmem.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/freebsd/contigmem/contigmem.c b/kernel/freebsd/contigmem/contigmem.c
+index 64e0a7fec..abb76f241 100644
+--- a/kernel/freebsd/contigmem/contigmem.c
++++ b/kernel/freebsd/contigmem/contigmem.c
+@@ -165,9 +165,11 @@ contigmem_load()
+ 
+ error:
+ 	for (i = 0; i < contigmem_num_buffers; i++) {
+-		if (contigmem_buffers[i].addr != NULL)
++		if (contigmem_buffers[i].addr != NULL) {
+ 			contigfree(contigmem_buffers[i].addr,
+ 				contigmem_buffer_size, M_CONTIGMEM);
++			contigmem_buffers[i].addr = NULL;
++		}
+ 		if (mtx_initialized(&contigmem_buffers[i].mtx))
+ 			mtx_destroy(&contigmem_buffers[i].mtx);
+ 	}
