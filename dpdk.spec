@@ -9,7 +9,7 @@
 # define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
 
 %define ver 19.02
-%define rel 2
+%define rel 3
 
 %define srcname dpdk
 
