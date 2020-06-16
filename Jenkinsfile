@@ -40,4 +40,5 @@
 // I.e. for testing library changes
 //@Library(value="pipeline-lib@your_branch") _
 
-packageBuildingPipelineDAOS(['distros': ['centos7', 'leap15']])
+packageBuildingPipelineDAOS(['distros': ['centos7', 'leap15'],
+                            'publish_branch': 'release/0.9'])

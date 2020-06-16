@@ -45,9 +45,13 @@ Summary: Set of libraries and drivers for fast packet processing
 #
 # Note that, while this is dual licensed, all code that is included with this
 # Pakcage are BSD licensed. The only files that aren't licensed via BSD is the
-# kni kernel module which is dual LGPLv2/BSD, and thats not built for fedora.
+# kni kernel module which is dual LGPLv2/BSD, and thats not built.
 #
+%if (0%{?suse_version} > 0)
+License: BSD-3-Clause and LGPLv2 and GPLv2
+%else
 License: BSD and LGPLv2 and GPLv2
+%endif
 
 #
 # The DPDK is designed to optimize througput of network traffic using, among
@@ -269,6 +273,7 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 
 %files
 # BSD
+%license license/README
 %doc README MAINTAINERS
 %dir %{pmddir}
 %{_libdir}/*.so.*
@@ -278,6 +283,7 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 
 %files doc
 #BSD
+%license license/README
 %if (0%{?rhel} >= 7)
 %{docdir}
 %else
@@ -288,6 +294,7 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 
 %files devel
 #BSD
+%license license/README
 %{incdir}/
 %{sdkdir}/
 %if %{with tools}
@@ -313,6 +320,10 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 
 %changelog
+* Tue Jun 16 2020 Brian J. Murrell <brian.murrell@intel.com> - 0:19.02-3
+- Add %license macro to packages
+- Update License: for SUSE builds
+
 * Fri Mar 13 2020 Brian J. Murrell <brian.murrell@intel.com> - 0:19.02-2
 - Disable CONFIG_RTE_LIBRTE_MLX[45]_PMD for DAOS/spdk
 
