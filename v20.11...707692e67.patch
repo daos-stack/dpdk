@@ -1,0 +1,381 @@
+diff --git a/drivers/bus/pci/linux/pci.c b/drivers/bus/pci/linux/pci.c
+index 2e1808b..430938f 100644
+--- a/drivers/bus/pci/linux/pci.c
++++ b/drivers/bus/pci/linux/pci.c
+@@ -332,6 +332,7 @@
+ 			dev->kdrv = RTE_PCI_KDRV_UNKNOWN;
+ 	} else {
+ 		dev->kdrv = RTE_PCI_KDRV_NONE;
++		free(dev);
+ 		return 0;
+ 	}
+ 	/* device is valid, add in list (sorted) */
+diff --git a/drivers/common/qat/meson.build b/drivers/common/qat/meson.build
+index 29e1299..9d67cfb 100644
+--- a/drivers/common/qat/meson.build
++++ b/drivers/common/qat/meson.build
+@@ -56,10 +56,10 @@ endif
+ 
+ if qat_crypto
+ 	foreach f: ['qat_sym_pmd.c', 'qat_sym.c', 'qat_sym_session.c',
+-			'qat_sym_hw_dp.c', 'qat_asym_pmd.c', 'qat_asym.c']
++			'qat_sym_hw_dp.c']
+ 		sources += files(join_paths(qat_crypto_relpath, f))
+ 	endforeach
+ 	deps += ['security']
+ 	ext_deps += libcrypto
+-	cflags += ['-DBUILD_QAT_SYM', '-DBUILD_QAT_ASYM']
++	cflags += ['-DBUILD_QAT_SYM']
+ endif
+diff --git a/drivers/compress/isal/meson.build b/drivers/compress/isal/meson.build
+index 5ee17e2..097b873 100644
+--- a/drivers/compress/isal/meson.build
++++ b/drivers/compress/isal/meson.build
+@@ -3,7 +3,7 @@
+ 
+ dep = dependency('libisal', required: false)
+ if not dep.found()
+-	build = false
++	build = true
+ 	reason = 'missing dependency, "libisal"'
+ endif
+ 
+diff --git a/drivers/crypto/qat/meson.build b/drivers/crypto/qat/meson.build
+index bc90ec4..8a5aa33 100644
+--- a/drivers/crypto/qat/meson.build
++++ b/drivers/crypto/qat/meson.build
+@@ -15,10 +15,7 @@ if dep.found()
+ 	qat_sources += files('qat_sym_pmd.c',
+ 			     'qat_sym.c',
+ 			     'qat_sym_session.c',
+-			     'qat_sym_hw_dp.c',
+-			     'qat_asym_pmd.c',
+-			     'qat_asym.c')
++			     'qat_sym_hw_dp.c')
+ 	qat_ext_deps += dep
+ 	qat_cflags += '-DBUILD_QAT_SYM'
+-	qat_cflags += '-DBUILD_QAT_ASYM'
+ endif
+diff --git a/lib/librte_acl/meson.build b/lib/librte_acl/meson.build
+index ee4e229..5e1aaa8 100644
+--- a/lib/librte_acl/meson.build
++++ b/lib/librte_acl/meson.build
+@@ -81,3 +81,5 @@ elif dpdk_conf.has('RTE_ARCH_ARM')
+ elif dpdk_conf.has('RTE_ARCH_PPC_64')
+ 	sources += files('acl_run_altivec.c')
+ endif
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_bbdev/meson.build b/lib/librte_bbdev/meson.build
+index 1267782..7b46559 100644
+--- a/lib/librte_bbdev/meson.build
++++ b/lib/librte_bbdev/meson.build
+@@ -6,3 +6,5 @@ headers = files('rte_bbdev.h',
+ 		'rte_bbdev_pmd.h',
+ 		'rte_bbdev_op.h')
+ deps += ['mbuf']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_bitratestats/meson.build b/lib/librte_bitratestats/meson.build
+index ede7e0a..0815520 100644
+--- a/lib/librte_bitratestats/meson.build
++++ b/lib/librte_bitratestats/meson.build
+@@ -4,3 +4,5 @@
+ sources = files('rte_bitrate.c')
+ headers = files('rte_bitrate.h')
+ deps += ['ethdev', 'metrics']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_bpf/meson.build b/lib/librte_bpf/meson.build
+index 48460e9..5b5fd02 100644
+--- a/lib/librte_bpf/meson.build
++++ b/lib/librte_bpf/meson.build
+@@ -25,3 +25,5 @@ if dep.found()
+ 	sources += files('bpf_load_elf.c')
+ 	ext_deps += dep
+ endif
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_cfgfile/meson.build b/lib/librte_cfgfile/meson.build
+index 88eb819..1f48577 100644
+--- a/lib/librte_cfgfile/meson.build
++++ b/lib/librte_cfgfile/meson.build
+@@ -3,3 +3,5 @@
+ 
+ sources = files('rte_cfgfile.c')
+ headers = files('rte_cfgfile.h')
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_distributor/meson.build b/lib/librte_distributor/meson.build
+index bd12ddb..694929b 100644
+--- a/lib/librte_distributor/meson.build
++++ b/lib/librte_distributor/meson.build
+@@ -9,3 +9,5 @@ else
+ endif
+ headers = files('rte_distributor.h')
+ deps += ['mbuf']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_efd/meson.build b/lib/librte_efd/meson.build
+index 07fb1c2..e658dfc 100644
+--- a/lib/librte_efd/meson.build
++++ b/lib/librte_efd/meson.build
+@@ -4,3 +4,5 @@
+ sources = files('rte_efd.c')
+ headers = files('rte_efd.h')
+ deps += ['ring', 'hash']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_eventdev/meson.build b/lib/librte_eventdev/meson.build
+index 0adc2cd..e9e894b 100644
+--- a/lib/librte_eventdev/meson.build
++++ b/lib/librte_eventdev/meson.build
+@@ -28,3 +28,5 @@ headers = files('rte_eventdev.h',
+ 		'rte_event_eth_tx_adapter.h')
+ deps += ['ring', 'ethdev', 'hash', 'mempool', 'mbuf', 'timer', 'cryptodev']
+ deps += ['telemetry']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_fib/meson.build b/lib/librte_fib/meson.build
+index 18eadcc..43b1dea 100644
+--- a/lib/librte_fib/meson.build
++++ b/lib/librte_fib/meson.build
+@@ -56,3 +56,5 @@ if dpdk_conf.has('RTE_ARCH_X86_64') and binutils_ok.returncode() == 0
+ 		endif
+ 	endif
+ endif
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_flow_classify/meson.build b/lib/librte_flow_classify/meson.build
+index a7a5b3d..ce1211f 100644
+--- a/lib/librte_flow_classify/meson.build
++++ b/lib/librte_flow_classify/meson.build
+@@ -4,3 +4,5 @@
+ sources = files('rte_flow_classify.c', 'rte_flow_classify_parse.c')
+ headers = files('rte_flow_classify.h')
+ deps += ['net', 'table']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_graph/meson.build b/lib/librte_graph/meson.build
+index d3ec78c..b1f31e7 100644
+--- a/lib/librte_graph/meson.build
++++ b/lib/librte_graph/meson.build
+@@ -5,3 +5,5 @@ sources = files('node.c', 'graph.c', 'graph_ops.c', 'graph_debug.c', 'graph_stat
+ headers = files('rte_graph.h', 'rte_graph_worker.h')
+ 
+ deps += ['eal']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_gro/meson.build b/lib/librte_gro/meson.build
+index ea8b45c..a5cb4ad 100644
+--- a/lib/librte_gro/meson.build
++++ b/lib/librte_gro/meson.build
+@@ -4,3 +4,5 @@
+ sources = files('rte_gro.c', 'gro_tcp4.c', 'gro_udp4.c', 'gro_vxlan_tcp4.c', 'gro_vxlan_udp4.c')
+ headers = files('rte_gro.h')
+ deps += ['ethdev']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_gso/meson.build b/lib/librte_gso/meson.build
+index ad8dd85..a32ffe4 100644
+--- a/lib/librte_gso/meson.build
++++ b/lib/librte_gso/meson.build
+@@ -5,3 +5,5 @@ sources = files('gso_common.c', 'gso_tcp4.c', 'gso_udp4.c',
+  		'gso_tunnel_tcp4.c', 'rte_gso.c')
+ headers = files('rte_gso.h')
+ deps += ['ethdev']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_ip_frag/meson.build b/lib/librte_ip_frag/meson.build
+index c5b9a45..c00c406 100644
+--- a/lib/librte_ip_frag/meson.build
++++ b/lib/librte_ip_frag/meson.build
+@@ -9,3 +9,5 @@ sources = files('rte_ipv4_fragmentation.c',
+ 		'ip_frag_internal.c')
+ headers = files('rte_ip_frag.h')
+ deps += ['ethdev', 'hash']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_ipsec/meson.build b/lib/librte_ipsec/meson.build
+index fc69970..7dcbff5 100644
+--- a/lib/librte_ipsec/meson.build
++++ b/lib/librte_ipsec/meson.build
+@@ -6,3 +6,5 @@ sources = files('esp_inb.c', 'esp_outb.c', 'sa.c', 'ses.c', 'ipsec_sad.c')
+ headers = files('rte_ipsec.h', 'rte_ipsec_group.h', 'rte_ipsec_sa.h', 'rte_ipsec_sad.h')
+ 
+ deps += ['mbuf', 'net', 'cryptodev', 'security', 'hash']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_jobstats/meson.build b/lib/librte_jobstats/meson.build
+index 391e4f8..0e7c2af 100644
+--- a/lib/librte_jobstats/meson.build
++++ b/lib/librte_jobstats/meson.build
+@@ -3,3 +3,5 @@
+ 
+ sources = files('rte_jobstats.c')
+ headers = files('rte_jobstats.h')
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_kni/meson.build b/lib/librte_kni/meson.build
+index 55e47df..7e16893 100644
+--- a/lib/librte_kni/meson.build
++++ b/lib/librte_kni/meson.build
+@@ -8,3 +8,5 @@ endif
+ sources = files('rte_kni.c')
+ headers = files('rte_kni.h', 'rte_kni_common.h')
+ deps += ['ethdev', 'pci']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_latencystats/meson.build b/lib/librte_latencystats/meson.build
+index 286558d..6f85401 100644
+--- a/lib/librte_latencystats/meson.build
++++ b/lib/librte_latencystats/meson.build
+@@ -4,3 +4,5 @@
+ sources = files('rte_latencystats.c')
+ headers = files('rte_latencystats.h')
+ deps += ['metrics', 'ethdev']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_lpm/meson.build b/lib/librte_lpm/meson.build
+index 6cfc083..dd183a7 100644
+--- a/lib/librte_lpm/meson.build
++++ b/lib/librte_lpm/meson.build
+@@ -8,3 +8,5 @@ headers = files('rte_lpm.h', 'rte_lpm6.h')
+ headers += files('rte_lpm_altivec.h', 'rte_lpm_neon.h', 'rte_lpm_sse.h')
+ deps += ['hash']
+ deps += ['rcu']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_member/meson.build b/lib/librte_member/meson.build
+index 0e6b34c..058584b 100644
+--- a/lib/librte_member/meson.build
++++ b/lib/librte_member/meson.build
+@@ -4,3 +4,5 @@
+ sources = files('rte_member.c', 'rte_member_ht.c', 'rte_member_vbf.c')
+ headers = files('rte_member.h')
+ deps += ['hash']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_metrics/meson.build b/lib/librte_metrics/meson.build
+index eed27b8..24c1daa 100644
+--- a/lib/librte_metrics/meson.build
++++ b/lib/librte_metrics/meson.build
+@@ -12,3 +12,5 @@ if jansson.found()
+ 	deps += ['ethdev', 'telemetry']
+ 	includes += include_directories('../librte_telemetry')
+ endif
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_node/meson.build b/lib/librte_node/meson.build
+index 3d582f6..313a1e9 100644
+--- a/lib/librte_node/meson.build
++++ b/lib/librte_node/meson.build
+@@ -7,3 +7,5 @@ headers = files('rte_node_ip4_api.h', 'rte_node_eth_api.h')
+ # Strict-aliasing rules are violated by uint8_t[] to context size casts.
+ cflags += '-fno-strict-aliasing'
+ deps += ['graph', 'mbuf', 'lpm', 'ethdev', 'mempool', 'cryptodev']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_pdump/meson.build b/lib/librte_pdump/meson.build
+index 3a95eab..5dfd211 100644
+--- a/lib/librte_pdump/meson.build
++++ b/lib/librte_pdump/meson.build
+@@ -4,3 +4,5 @@
+ sources = files('rte_pdump.c')
+ headers = files('rte_pdump.h')
+ deps += ['ethdev']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_pipeline/meson.build b/lib/librte_pipeline/meson.build
+index 65c1a8d..0219a47 100644
+--- a/lib/librte_pipeline/meson.build
++++ b/lib/librte_pipeline/meson.build
+@@ -14,3 +14,5 @@ headers = files('rte_pipeline.h',
+ 	'rte_swx_extern.h',
+ 	'rte_swx_ctl.h',)
+ deps += ['port', 'table', 'meter', 'sched', 'cryptodev']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_port/meson.build b/lib/librte_port/meson.build
+index 609624c..b6468b9 100644
+--- a/lib/librte_port/meson.build
++++ b/lib/librte_port/meson.build
+@@ -38,3 +38,5 @@ if dpdk_conf.has('RTE_LIB_KNI')
+ 	headers += files('rte_port_kni.h')
+ 	deps += 'kni'
+ endif
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_rawdev/meson.build b/lib/librte_rawdev/meson.build
+index 30d363c..f82c2f2 100644
+--- a/lib/librte_rawdev/meson.build
++++ b/lib/librte_rawdev/meson.build
+@@ -5,3 +5,5 @@ sources = files('rte_rawdev.c')
+ headers = files('rte_rawdev.h', 'rte_rawdev_pmd.h')
+ 
+ deps += ['telemetry']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_regexdev/meson.build b/lib/librte_regexdev/meson.build
+index c417b9c..0a3ef6d 100644
+--- a/lib/librte_regexdev/meson.build
++++ b/lib/librte_regexdev/meson.build
+@@ -6,3 +6,5 @@ headers = files('rte_regexdev.h',
+ 	'rte_regexdev_core.h',
+ 	'rte_regexdev_driver.h')
+ deps += ['mbuf']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_rib/meson.build b/lib/librte_rib/meson.build
+index 7bacbb4..0fcdba0 100644
+--- a/lib/librte_rib/meson.build
++++ b/lib/librte_rib/meson.build
+@@ -5,3 +5,5 @@
+ sources = files('rte_rib.c', 'rte_rib6.c')
+ headers = files('rte_rib.h', 'rte_rib6.h')
+ deps += ['mempool']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_sched/meson.build b/lib/librte_sched/meson.build
+index f85d64d..d15fd60 100644
+--- a/lib/librte_sched/meson.build
++++ b/lib/librte_sched/meson.build
+@@ -5,3 +5,5 @@ sources = files('rte_sched.c', 'rte_red.c', 'rte_approx.c')
+ headers = files('rte_sched.h', 'rte_sched_common.h',
+ 		'rte_red.h', 'rte_approx.h')
+ deps += ['mbuf', 'meter']
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_stack/meson.build b/lib/librte_stack/meson.build
+index 8f82a40..1c447b4 100644
+--- a/lib/librte_stack/meson.build
++++ b/lib/librte_stack/meson.build
+@@ -7,3 +7,5 @@ headers = files('rte_stack.h',
+ 		'rte_stack_lf.h',
+ 		'rte_stack_lf_generic.h',
+ 		'rte_stack_lf_c11.h')
++build = false
++reason = 'not needed by SPDK'
+diff --git a/lib/librte_table/meson.build b/lib/librte_table/meson.build
+index d696783..046a412 100644
+--- a/lib/librte_table/meson.build
++++ b/lib/librte_table/meson.build
+@@ -31,3 +31,5 @@ deps += ['mbuf', 'port', 'lpm', 'hash', 'acl']
+ if arch_subdir == 'x86'
+ 	headers += files('rte_lru_x86.h')
+ endif
++build = false
++reason = 'not needed by SPDK'
+diff --git a/meson.build b/meson.build
+index 45d974c..9459fc8 100644
+--- a/meson.build
++++ b/meson.build
+@@ -51,7 +51,7 @@ subdir('drivers')
+ 
+ # build binaries and installable tools
+ subdir('usertools')
+-subdir('app')
++#subdir('app')
+ 
+ # build docs
+ subdir('doc')
