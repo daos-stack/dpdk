@@ -8,7 +8,7 @@
 # define date 20181127
 # define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
 
-%define ver 19.11
+%define ver 20.11
 %define rel 1
 
 %define srcname dpdk
@@ -35,10 +35,6 @@ Source502: set_config.sh
 #Source504: arm64-armv8a-linuxapp-gcc-config
 #Source505: ppc_64-power8-linuxapp-gcc-config
 Source506: x86_64-native-linuxapp-gcc-config
-
-# Patches only in dpdk package
-Patch0: v19.11...3fcb1dd39.patch
-
 
 Summary: Set of libraries and drivers for fast packet processing
 
@@ -313,6 +309,9 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 
 %changelog
+* Thu Jan 29 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:20.11-1
+- Update to 20.11 to align with the SPDK 21.01 release
+
 * Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
 - Update to 19.11 to align with the SPDK 20.01.1 release
 
