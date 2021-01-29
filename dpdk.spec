@@ -39,6 +39,7 @@ Source506: x86_64-native-linuxapp-gcc-config
 # Patches only in dpdk package
 Patch0: v20.11...707692e67.patch
 
+
 Summary: Set of libraries and drivers for fast packet processing
 
 #
