@@ -309,7 +309,7 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 
 %changelog
-* Thu Jan 29 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:20.11-1
+* Thu Jan 28 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:20.11-1
 - Update to 20.11 to align with the SPDK 21.01 release
 
 * Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
@@ -694,4 +694,3 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 
 * Tue May 13 2014 - Neil Horman <nhorman@tuxdriver.com> - 1.7.0-0.6.20140603git5ebbb1728
 - Initial Build
-
