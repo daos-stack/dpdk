@@ -161,42 +161,82 @@ as L2 and L3 forwarding.
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
-# In case dpdk-devel is installed
-unset RTE_SDK RTE_INCLUDE RTE_TARGET
+meson build
+ninja -C build
 
-# Avoid appending second -Wall to everything, it breaks upstream warning
-# disablers in makefiles. Strip expclit -march= from optflags since they
-# will only guarantee build failures, DPDK is picky with that.
-export EXTRA_CFLAGS="$(echo %{optflags} | sed -e 's:-Wall::g' -e 's:-march=[[:alnum:]]* ::g') -Wformat -fPIC"
-
-# DPDK defaults to using builder-specific compiler flags.  However,
-# the config has been changed by specifying CONFIG_RTE_MACHINE=default
-# in order to build for a more generic host.  NOTE: It is possible that
-# the compiler flags used still won't work for all Fedora-supported
-# machines, but runtime checks in DPDK will catch those situations.
-
-make V=1 O=%{target} T=%{target} %{?_smp_mflags} config
-
-cp -f %{SOURCE500} %{SOURCE502} %{SOURCE506} .
-%{SOURCE502} %{target}-config "%{target}/.config"
-# DAOS/spdk customizations:
-# disable MLX{4,5} as they don't build with MLNX legacy I/B stack
-sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
-
-make V=1 O=%{target} %{?_smp_mflags}
-
-# Creating PDF's has excessive build-requirements, html docs suffice fine
-make V=1 O=%{target} %{?_smp_mflags} doc-api-html doc-guides-html
-
-%if %{with examples}
-make V=1 O=%{target}/examples T=%{target} %{?_smp_mflags} examples
-%endif
+##%set_build_flags
+## set up a method for modifying the resulting .config file
+#function setconf() {
+#	if grep -q ^$1= %{target}/.config; then
+#		sed -i "s:^$1=.*$:$1=$2:g" %{target}/.config
+#	else
+#		echo $1=$2 >> %{target}/.config
+#	fi
+#}
+#
+## In case dpdk-devel is installed
+#unset RTE_SDK RTE_INCLUDE RTE_TARGET
+#
+## Avoid appending second -Wall to everything, it breaks upstream warning
+## disablers in makefiles. Strip expclit -march= from optflags since they
+## will only guarantee build failures, DPDK is picky with that.
+#export EXTRA_CFLAGS="$(echo %{optflags} | sed -e 's:-Wall::g' -e 's:-march=[[:alnum:]]* ::g') -Wformat -fPIC"
+#
+## DPDK defaults to using builder-specific compiler flags.  However,
+## the config has been changed by specifying CONFIG_RTE_MACHINE=default
+## in order to build for a more generic host.  NOTE: It is possible that
+## the compiler flags used still won't work for all Fedora-supported
+## machines, but runtime checks in DPDK will catch those situations.
+#
+#make V=1 O=%{target} T=%{target} %{?_smp_mflags} config
+#
+#setconf CONFIG_RTE_MACHINE '"%{machine}"'
+## Disable experimental features
+#setconf CONFIG_RTE_NEXT_ABI n
+#setconf CONFIG_RTE_LIBRTE_MBUF_OFFLOAD n
+## Disable unmaintained features
+#setconf CONFIG_RTE_LIBRTE_POWER n
+#
+## Enable automatic driver loading from this path
+#setconf CONFIG_RTE_EAL_PMD_PATH '"%{pmddir}"'
+#
+#setconf CONFIG_RTE_LIBRTE_BNX2X_PMD y
+#setconf CONFIG_RTE_LIBRTE_PMD_PCAP y
+#setconf CONFIG_RTE_LIBRTE_VHOST_NUMA y
+#
+#setconf CONFIG_RTE_EAL_IGB_UIO n
+#setconf CONFIG_RTE_LIBRTE_KNI n
+#setconf CONFIG_RTE_KNI_KMOD n
+#setconf CONFIG_RTE_KNI_PREEMPT_DEFAULT n
+#
+#setconf CONFIG_RTE_APP_EVENTDEV n
+#
+#setconf CONFIG_RTE_LIBRTE_NFP_PMD y
+#
+#setconf CONFIG_RTE_LIBRTE_MLX5_PMD y
+#
+#cp -f %{SOURCE500} %{SOURCE502} %{SOURCE506} .
+#%{SOURCE502} %{target}-config "%{target}/.config"
+## DAOS/spdk customizations:
+## disable MLX{4,5} as they don't build with MLNX legacy I/B stack
+#sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
+#
+#make V=1 O=%{target} %{?_smp_mflags}
+#
+## Creating PDF's has excessive build-requirements, html docs suffice fine
+#make V=1 O=%{target} %{?_smp_mflags} doc-api-html doc-guides-html
+#
+#%if %{with examples}
+#make V=1 O=%{target}/examples T=%{target} %{?_smp_mflags} examples
+#%endif
 
 %install
 # In case dpdk-devel is installed
 unset RTE_SDK RTE_INCLUDE RTE_TARGET
 
-%make_install O=%{target} prefix=%{_usr} libdir=%{_libdir}
+# TODO: investigate...
+ninja install
+#%make_install O=%{target} prefix=%{_usr} libdir=%{_libdir}
 
 # Replace /usr/bin/env python with the correct python binary
 find %{buildroot}%{sdkdir}/ -name "*.py" -exec \
