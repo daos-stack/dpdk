@@ -71,7 +71,7 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define _vpath_srcdir .
 %define _vpath_builddir ./build
 
-BuildRequires: gcc, kernel-headers, zlib-devel, meson, libisa-l-devel
+BuildRequires: gcc, kernel-headers, zlib-devel, meson
 %if (0%{?rhel} >= 7)
 BuildRequires:  numactl-devel
 %else
