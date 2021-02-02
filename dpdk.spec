@@ -1,13 +1,3 @@
-# Add option to build with examples
-%bcond_with examples
-# Add option to build without tools
-%bcond_without tools
-
-# Dont edit Version: and Release: directly, only these:
-# define commit0 0da7f445df445630c794897347ee360d6fe6348b
-# define date 20181127
-# define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
-
 %define ver 20.11
 %define rel 1
 
@@ -15,22 +5,10 @@
 
 Name: dpdk
 Version: %{ver}
-Release: %{rel}%{?commit0:.%{date}git%{shortcommit0}}%{?dist}
+Release: %{rel}%{?dist}
 URL: http://dpdk.org
-%if 0%{?commit0:1}
-Source: http://dpdk.org/browse/dpdk/snapshot/dpdk-%{commit0}.tar.xz
-%else
 Source: http://fast.dpdk.org/rel/dpdk-%{ver}.tar.xz
-%endif
 
-# Only needed for creating snapshot tarballs, not used in build itself
-Source100: dpdk-snapshot.sh
-
-Source500: configlib.sh
-Source501: gen_config_group.sh
-Source502: set_config.sh
-
-# Important: source503 is used as the actual copy file
 # @TODO: this causes a warning - fix it?
 #Source504: arm64-armv8a-linuxapp-gcc-config
 #Source505: ppc_64-power8-linuxapp-gcc-config
@@ -79,7 +57,7 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define sdkdir  %{_datadir}/%{name}
 %define docdir  %{_docdir}/%{name}
 %define incdir  %{_includedir}/%{name}
-%define pmddir %{_libdir}/%{name}-pmds
+%define pmddir  %{_libdir}/%{name}-pmds
 
 %if 0%{?rhel} > 7 || 0%{?fedora}
 %define _py python3
@@ -89,6 +67,7 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define _py_exec %{?__python2}
 %endif
 
+# meson src and build directories
 %define _vpath_srcdir .
 %define _vpath_builddir ./build
 
@@ -108,11 +87,6 @@ BuildRequires: %{_py}-sphinx
 BuildRequires: %{_py}-Sphinx
 %endif
 %endif
-# we disable these PMDs for DAOS/spdk
-#ifarch x86_64
-#BuildRequires: rdma-core-devel >= 15, libmnl-devel
-#global __requires_exclude_from ^#{_libdir}/librte_pmd_mlx[45]_glue\.so.*$
-#endif
 %if 0%{?sle_version} >= 150000
 # have choice for libffi.so.7()(64bit) needed by libp11-kit0: ghc-bootstrap libffi7
 # have choice for libffi.so.7(LIBFFI_BASE_7.0)(64bit) needed by libp11-kit0: ghc-bootstrap libffi7
@@ -133,113 +107,18 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 This package contains the headers and other files needed for developing
 applications with the Data Plane Development Kit.
 
-%package doc
-Summary: Data Plane Development Kit API documentation
-BuildArch: noarch
-
-%description doc
-API programming documentation for the Data Plane Development Kit.
-
-%if %{with tools}
-%package tools
-Summary: Tools for setting up Data Plane Development Kit environment
-Requires: %{name} = %{version}-%{release}
-Requires: kmod pciutils findutils iproute %{_py_exec}
-
-%description tools
-%{summary}
-%endif
-
-%if %{with examples}
-%package examples
-Summary: Data Plane Development Kit example applications
-BuildRequires: libvirt-devel
-
-%description examples
-Example applications utilizing the Data Plane Development Kit, such
-as L2 and L3 forwarding.
-%endif
-
 %prep
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
-%meson
+%meson -Ddrivers_install_subdir=%{pmddir} -Dinclude_subdir_arch=%{incdir}
 %meson_build
-
-##%set_build_flags
-## set up a method for modifying the resulting .config file
-#function setconf() {
-#	if grep -q ^$1= %{target}/.config; then
-#		sed -i "s:^$1=.*$:$1=$2:g" %{target}/.config
-#	else
-#		echo $1=$2 >> %{target}/.config
-#	fi
-#}
-#
-## In case dpdk-devel is installed
-#unset RTE_SDK RTE_INCLUDE RTE_TARGET
-#
-## Avoid appending second -Wall to everything, it breaks upstream warning
-## disablers in makefiles. Strip expclit -march= from optflags since they
-## will only guarantee build failures, DPDK is picky with that.
-#export EXTRA_CFLAGS="$(echo %{optflags} | sed -e 's:-Wall::g' -e 's:-march=[[:alnum:]]* ::g') -Wformat -fPIC"
-#
-## DPDK defaults to using builder-specific compiler flags.  However,
-## the config has been changed by specifying CONFIG_RTE_MACHINE=default
-## in order to build for a more generic host.  NOTE: It is possible that
-## the compiler flags used still won't work for all Fedora-supported
-## machines, but runtime checks in DPDK will catch those situations.
-#
-#make V=1 O=%{target} T=%{target} %{?_smp_mflags} config
-#
-#setconf CONFIG_RTE_MACHINE '"%{machine}"'
-## Disable experimental features
-#setconf CONFIG_RTE_NEXT_ABI n
-#setconf CONFIG_RTE_LIBRTE_MBUF_OFFLOAD n
-## Disable unmaintained features
-#setconf CONFIG_RTE_LIBRTE_POWER n
-#
-## Enable automatic driver loading from this path
-#setconf CONFIG_RTE_EAL_PMD_PATH '"%{pmddir}"'
-#
-#setconf CONFIG_RTE_LIBRTE_BNX2X_PMD y
-#setconf CONFIG_RTE_LIBRTE_PMD_PCAP y
-#setconf CONFIG_RTE_LIBRTE_VHOST_NUMA y
-#
-#setconf CONFIG_RTE_EAL_IGB_UIO n
-#setconf CONFIG_RTE_LIBRTE_KNI n
-#setconf CONFIG_RTE_KNI_KMOD n
-#setconf CONFIG_RTE_KNI_PREEMPT_DEFAULT n
-#
-#setconf CONFIG_RTE_APP_EVENTDEV n
-#
-#setconf CONFIG_RTE_LIBRTE_NFP_PMD y
-#
-#setconf CONFIG_RTE_LIBRTE_MLX5_PMD y
-#
-#cp -f %{SOURCE500} %{SOURCE502} %{SOURCE506} .
-#%{SOURCE502} %{target}-config "%{target}/.config"
-## DAOS/spdk customizations:
-## disable MLX{4,5} as they don't build with MLNX legacy I/B stack
-#sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
-#
-#make V=1 O=%{target} %{?_smp_mflags}
-#
-## Creating PDF's has excessive build-requirements, html docs suffice fine
-#make V=1 O=%{target} %{?_smp_mflags} doc-api-html doc-guides-html
-#
-#%if %{with examples}
-#make V=1 O=%{target}/examples T=%{target} %{?_smp_mflags} examples
-#%endif
 
 %install
 # In case dpdk-devel is installed
 unset RTE_SDK RTE_INCLUDE RTE_TARGET
 
-# TODO: investigate...
 %meson_install
-#%make_install O=%{target} prefix=%{_usr} libdir=%{_libdir}
 
 # Replace /usr/bin/env python with the correct python binary
 find %{buildroot}%{sdkdir}/ -name "*.py" -exec \
@@ -261,25 +140,16 @@ for f in %{buildroot}/%{_libdir}/*_pmd_*.so.*; do
     ln -s ../${bn} %{buildroot}%{pmddir}/${bn}
 done
 
-%if ! %{with tools}
 rm -rf %{buildroot}%{sdkdir}/usertools
 rm -rf %{buildroot}%{_sbindir}/dpdk-devbind
-%endif
 rm -f %{buildroot}%{sdkdir}/usertools/dpdk-setup.sh
 rm -f %{buildroot}%{sdkdir}/usertools/meson.build
 rm -f %{buildroot}%{_bindir}/dpdk-pmdinfo
 rm -f %{buildroot}%{_bindir}/dpdk-test-crypto-perf
 rm -f %{buildroot}%{_bindir}/dpdk-test-eventdev
-
-%if %{with examples}
-find %{target}/examples/ -name "*.map" | xargs rm -f
-for f in %{target}/examples/*/%{target}/app/*; do
-    bn=`basename ${f}`
-    cp -p ${f} %{buildroot}%{_bindir}/dpdk-${bn}
-done
-%else
 rm -rf %{buildroot}%{sdkdir}/examples
-%endif
+rm -f %{buildroot}%{_libdir}/librte_\*.so\*
+rm -f %{buildroot}%{docdir}/_static/css/custom.css
 
 # Setup RTE_SDK environment as expected by apps etc
 mkdir -p %{buildroot}/%{_sysconfdir}/profile.d
@@ -302,9 +172,6 @@ EOF
 # Fixup target machine mismatch
 sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profile.d/dpdk-sdk*
 
-%check
-%meson_test
-
 #%if 0%{?suse_version} >= 1315
 #%post -n %{suse_libname} -p /sbin/ldconfig
 #%postun -n %{suse_libname} -p /sbin/ldconfig
@@ -319,48 +186,26 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %dir %{pmddir}
 %{_libdir}/*.so.*
 %{pmddir}/*.so.*
-%ifarch x86_64
-%endif
-
-%files doc
-#BSD
-%if (0%{?rhel} >= 7)
-%{docdir}
-%else
-%if (0%{?suse_version} >= 1315)
-%{_datadir}/doc/%{name}
-%endif
-%endif
+%{_bindir}/*.py
+%{_libdir}/pkgconfig/*.pc
 
 %files devel
 #BSD
-%{incdir}/
+#%{incdir}/*.h
+%{_includedir}/*.h
+%{_includedir}/dpdk/rte_*.h
+%{_includedir}/generic/rte_*.h
 %{sdkdir}/
-%if %{with tools}
-%exclude %{sdkdir}/usertools/
-%endif
-%if %{with examples}
-%exclude %{sdkdir}/examples/
-%endif
 %{_sysconfdir}/profile.d/dpdk-sdk-*.*
 %{_libdir}/*.so
-%if %{with examples}
-%files examples
-%exclude %{_bindir}/dpdk-procinfo
-%exclude %{_bindir}/dpdk-pdump
-%{_bindir}/dpdk-*
-%doc %{sdkdir}/examples/
-%endif
-
-%if %{with tools}
-%files tools
-%{sdkdir}/usertools/
-%{_sbindir}/dpdk-devbind
-%endif
+%{_libdir}/*.a
+%{pmddir}/*.so
 
 %changelog
-* Thu Jan 28 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:20.11-1
+* Tue Feb 02 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:20.11-1
 - Update to 20.11 to align with the SPDK 21.01 release
+- Use meson and ninja backend for build
+- Trim doc tools and examples
 
 * Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
 - Update to 19.11 to align with the SPDK 20.01.1 release
