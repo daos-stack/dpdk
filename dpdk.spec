@@ -111,7 +111,8 @@ applications with the Data Plane Development Kit.
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
-%meson -Ddrivers_install_subdir=%{pmddir} -Dinclude_subdir_arch=%{incdir}
+%meson -Ddrivers_install_subdir=%{pmddir} -Dinclude_subdir_arch=%{incdir} \
+	-Ddisable_drivers=compress/isal
 %meson_build
 
 %install
