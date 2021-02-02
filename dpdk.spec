@@ -89,7 +89,10 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define _py_exec %{?__python2}
 %endif
 
-BuildRequires: gcc, kernel-headers, zlib-devel
+%define _vpath_srcdir .
+%define _vpath_builddir ./build
+
+BuildRequires: gcc, kernel-headers, zlib-devel, meson
 %if (0%{?rhel} >= 7)
 BuildRequires:  numactl-devel
 %else
@@ -161,8 +164,8 @@ as L2 and L3 forwarding.
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
-meson build
-ninja -C build
+%meson
+%meson_build
 
 ##%set_build_flags
 ## set up a method for modifying the resulting .config file
@@ -235,7 +238,7 @@ ninja -C build
 unset RTE_SDK RTE_INCLUDE RTE_TARGET
 
 # TODO: investigate...
-ninja install
+%meson_install
 #%make_install O=%{target} prefix=%{_usr} libdir=%{_libdir}
 
 # Replace /usr/bin/env python with the correct python binary
@@ -298,6 +301,9 @@ EOF
 
 # Fixup target machine mismatch
 sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profile.d/dpdk-sdk*
+
+%check
+%meson_test
 
 #%if 0%{?suse_version} >= 1315
 #%post -n %{suse_libname} -p /sbin/ldconfig
