@@ -172,13 +172,8 @@ EOF
 # Fixup target machine mismatch
 sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profile.d/dpdk-sdk*
 
-#%if 0%{?suse_version} >= 1315
-#%post -n %{suse_libname} -p /sbin/ldconfig
-#%postun -n %{suse_libname} -p /sbin/ldconfig
-#%else
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
-#%endif
 
 %files
 # BSD
@@ -191,7 +186,6 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 
 %files devel
 #BSD
-#%{incdir}/*.h
 %{_includedir}/*.h
 %{_includedir}/dpdk/rte_*.h
 %{_includedir}/generic/rte_*.h
