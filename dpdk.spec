@@ -55,7 +55,7 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define target %{machine_arch}-%{machine_tmpl}-linuxapp-gcc
 
 %define sdkdir  %{_datadir}/%{name}
-%define docdir  %{_docdir}/%{name}
+%define docdir  %{_datadir}/doc/%{name}
 %define incdir  %{_includedir}/%{name}
 %define pmddir  %{_libdir}/%{name}-pmds
 
