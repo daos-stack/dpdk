@@ -9,11 +9,6 @@ Release: %{rel}%{?dist}
 URL: http://dpdk.org
 Source: http://fast.dpdk.org/rel/dpdk-%{ver}.tar.xz
 
-# @TODO: this causes a warning - fix it?
-#Source504: arm64-armv8a-linuxapp-gcc-config
-#Source505: ppc_64-power8-linuxapp-gcc-config
-Source506: x86_64-native-linuxapp-gcc-config
-
 # Patches only in dpdk package
 Patch0: v20.11...707692e67.patch
 
