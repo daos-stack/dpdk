@@ -144,8 +144,6 @@ rm -f %{buildroot}%{_bindir}/dpdk-pmdinfo
 rm -f %{buildroot}%{_bindir}/dpdk-test-crypto-perf
 rm -f %{buildroot}%{_bindir}/dpdk-test-eventdev
 rm -rf %{buildroot}%{sdkdir}/examples
-rm -f %{buildroot}%{_libdir}/librte_\*.so\*
-rm -f %{buildroot}%{pmddir}/\*_pmd_\*.so.\*
 rm -f %{buildroot}%{docdir}/_static/css/custom.css
 
 # Setup RTE_SDK environment as expected by apps etc
