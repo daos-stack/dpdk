@@ -1,16 +1,40 @@
+# Add option to build with examples
+%bcond_with examples
+# Add option to build without tools
+%bcond_without tools
+
+# Dont edit Version: and Release: directly, only these:
+# define commit0 0da7f445df445630c794897347ee360d6fe6348b
+# define date 20181127
+# define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
+
 %define ver 20.11
 %define rel 1
 
 %define srcname dpdk
 
+# meson src and build directories
+%define _vpath_srcdir .
+%define _vpath_builddir ./build
+
 Name: dpdk
 Version: %{ver}
-Release: %{rel}%{?dist}
+Release: %{rel}%{?commit0:.%{date}git%{shortcommit0}}%{?dist}
 URL: http://dpdk.org
+%if 0%{?commit0:1}
+Source: http://dpdk.org/browse/dpdk/snapshot/dpdk-%{commit0}.tar.xz
+%else
 Source: http://fast.dpdk.org/rel/dpdk-%{ver}.tar.xz
+%endif
 
-# Patches only in dpdk package
-Patch0: v20.11...707692e67.patch
+# Only needed for creating snapshot tarballs, not used in build itself
+Source100: dpdk-snapshot.sh
+
+# Patches that the spdk team applies on top of this dpdk release
+Patch0: dpdk-20.11-disable-libraries-we-dont-need.patch
+Patch1: dpdk-20.11-disable-qat_asym-driver.patch
+Patch2: dpdk-20.11-pci-linux-free-the-device-if-no-kernel-driver-configured.patch
+Patch3: dpdk-20.11-disable-qat_asym-driver-in-common-qat.patch
 
 
 Summary: Set of libraries and drivers for fast packet processing
@@ -62,10 +86,6 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define _py_exec %{?__python2}
 %endif
 
-# meson src and build directories
-%define _vpath_srcdir .
-%define _vpath_builddir ./build
-
 BuildRequires: gcc, kernel-headers, zlib-devel, meson
 %if (0%{?rhel} >= 7)
 BuildRequires:  numactl-devel
@@ -102,12 +122,44 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 This package contains the headers and other files needed for developing
 applications with the Data Plane Development Kit.
 
+%package doc
+Summary: Data Plane Development Kit API documentation
+BuildArch: noarch
+
+%description doc
+API programming documentation for the Data Plane Development Kit.
+
+%if %{with tools}
+%package tools
+Summary: Tools for setting up Data Plane Development Kit environment
+Requires: %{name} = %{version}-%{release}
+Requires: kmod pciutils findutils iproute %{_py_exec}
+
+%description tools
+%{summary}
+%endif
+
+# Note that with the new meson build system, the examples subpackage no longer
+# actually has anything in it.  It meeds to be determined how the examples are
+# actually built now that they have switched to meson.
+%if %{with examples}
+%package examples
+Summary: Data Plane Development Kit example applications
+BuildRequires: libvirt-devel
+
+%description examples
+Example applications utilizing the Data Plane Development Kit, such
+as L2 and L3 forwarding.
+%endif
+
 %prep
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
-%meson -Ddrivers_install_subdir=%{pmddir} -Dinclude_subdir_arch=%{incdir} \
-	-Ddisable_drivers=compress/isal
+%meson --includedir=%{incdir} -Ddrivers_install_subdir=%{_libdir} \
+                              -Ddisable_drivers=compress/isal     \
+# sadly this results in an error
+#                              -Denable_docs=true
 %meson_build
 
 %install
@@ -116,13 +168,20 @@ unset RTE_SDK RTE_INCLUDE RTE_TARGET
 
 %meson_install
 
+# install incorrectly creates:
+#'./librte_*.so*' -> '/usr/lib64/dpdk-pmds/librte_*.so*'
+rm -f %{buildroot}/%{_libdir}/librte_\*.so\* || true
 # Replace /usr/bin/env python with the correct python binary
 find %{buildroot}%{sdkdir}/ -name "*.py" -exec \
   sed -i -e 's|#!\s*/usr/bin/env python|#!%{_py_exec}|' {} +
 
 # Create a driver directory with symlinks to all pmds
 mkdir -p %{buildroot}/%{pmddir}
-for f in %{buildroot}/%{_libdir}/*_pmd_*.so.*; do
+# this used to create:
+#lrwxrwxrwx    1 root     root                       23 Mar  5  2020 /usr/lib64/dpdk-pmds/librte_pmd_mlx4.so.1 -> ../librte_pmd_mlx4.so.1
+#lrwxrwxrwx    1 root     root                       23 Mar  5  2020 /usr/lib64/dpdk-pmds/librte_pmd_mlx5.so.1 -> ../librte_pmd_mlx5.so.1
+# but %{_libdir}/*_pmd_*.so.* no longer exists
+for f in $(ls %{buildroot}/%{_libdir}/*_pmd_*.so.* || true); do
     bn=$(basename ${f})
 %ifarch x86_64
     case $bn in
@@ -136,17 +195,29 @@ for f in %{buildroot}/%{_libdir}/*_pmd_*.so.*; do
     ln -s ../${bn} %{buildroot}%{pmddir}/${bn}
 done
 
+%if ! %{with tools}
 rm -rf %{buildroot}%{sdkdir}/usertools
-rm -rf %{buildroot}%{_sbindir}/dpdk-devbind
+rm -rf %{buildroot}%{_bindir}/dpdk-devbind.py
+%endif
 rm -f %{buildroot}%{sdkdir}/usertools/dpdk-setup.sh
 rm -f %{buildroot}%{sdkdir}/usertools/meson.build
 rm -f %{buildroot}%{_bindir}/dpdk-pmdinfo
 rm -f %{buildroot}%{_bindir}/dpdk-test-crypto-perf
 rm -f %{buildroot}%{_bindir}/dpdk-test-eventdev
+
+%if %{with examples}
+find %{target}/examples/ -name "*.map" | xargs rm -f
+for f in %{target}/examples/*/%{target}/app/*; do
+    bn=`basename ${f}`
+    cp -p ${f} %{buildroot}%{_bindir}/dpdk-${bn}
+done
+%else
 rm -rf %{buildroot}%{sdkdir}/examples
-rm -f %{buildroot}%{_libdir}/librte_\*.so\*
-rm -f %{buildroot}%{pmddir}/\*_pmd_\*.so.\*
-rm -f %{buildroot}%{docdir}/_static/css/custom.css
+%endif
+# DO NOT LAND with these commented out
+#rm -f %{buildroot}%{_libdir}/librte_\*.so\*
+#rm -f %{buildroot}%{pmddir}/\*_pmd_\*.so.\*
+#rm -f %{buildroot}%{docdir}/_static/css/custom.css
 
 # Setup RTE_SDK environment as expected by apps etc
 mkdir -p %{buildroot}/%{_sysconfdir}/profile.d
@@ -177,26 +248,50 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %doc README MAINTAINERS
 %dir %{pmddir}
 %{_libdir}/*.so.*
-%{pmddir}/*.so.*
-%{_bindir}/*.py
-%{_libdir}/pkgconfig/*.pc
+#%{pmddir}/*.so.*
+%ifarch x86_64
+%endif
+
+%files doc
+#BSD
+%if (0%{?rhel} >= 7)
+%{docdir}
+%else
+%if (0%{?suse_version} >= 1315)
+%{_datadir}/doc/%{name}
+%endif
+%endif
 
 %files devel
 #BSD
-%{_includedir}/*.h
-%{_includedir}/dpdk/rte_*.h
-%{_includedir}/generic/rte_*.h
+%{incdir}/
 %{sdkdir}/
+%if %{with tools}
+%endif
+%if %{with examples}
+%exclude %{sdkdir}/examples/
+%endif
 %{_sysconfdir}/profile.d/dpdk-sdk-*.*
 %{_libdir}/*.so
+%if %{with examples}
+%files examples
+%exclude %{_bindir}/dpdk-procinfo
+%exclude %{_bindir}/dpdk-pdump
+%{_bindir}/dpdk-*
+%doc %{sdkdir}/examples/
+%endif
 %{_libdir}/*.a
-%{pmddir}/*.so
+%{_libdir}/pkgconfig/*.pc
+
+%if %{with tools}
+%files tools
+%{_bindir}/dpdk-*.py
+%endif
 
 %changelog
 * Tue Feb 02 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:20.11-1
 - Update to 20.11 to align with the SPDK 21.01 release
 - Use meson and ninja backend for build
-- Trim doc tools and examples
 
 * Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
 - Update to 19.11 to align with the SPDK 20.01.1 release

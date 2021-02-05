@@ -1,0 +1,46 @@
+commit d0d4c32df10a083bf43eb7ecf5e18d5218875ff6
+Author: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
+Date:   Tue Jun 30 11:24:24 2020 +0200
+
+    build/meson: disable qat_asym driver
+    
+    QAT docs in DPDK say:
+    [...] for crypto, where each QAT VF may expose two crypto devices,
+    sym and asym, it may happen that the number of devices will be bigger
+    than MAX_DEVS and the process will show an error during PMD
+    initialisation. To avoid this problem CONFIG_RTE_CRYPTO_MAX_DEVS may
+    be increased or -w, pci-whitelist domain:bus:devid:func option may be
+    used.
+    
+    We run into this limitation in our CI. We didn't compile the asym driver
+    with Makefiles, so don't compile it with meson either. Increasing
+    MAX_DEVS unnecessarily increases the total memory footprint, so we
+    don't go that way.
+    
+    Change-Id: Idf27335ef0c8890727909985bd3e909edb1282e6
+    Signed-off-by: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
+    Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+    Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/3517 (spdk-20.05)
+    Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/3770 (spdk-20.08)
+    Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/5338
+    Reviewed-by: Jim Harris <james.r.harris@intel.com>
+    Reviewed-by: Paul Luse <paul.e.luse@intel.com>
+    Reviewed-by: <dongx.yi@intel.com>
+    Reviewed-by: Aleksey Marchuk <alexeymar@mellanox.com>
+
+diff --git a/drivers/crypto/qat/meson.build b/drivers/crypto/qat/meson.build
+index bc90ec44c..8a5aa33e4 100644
+--- a/drivers/crypto/qat/meson.build
++++ b/drivers/crypto/qat/meson.build
+@@ -15,10 +15,7 @@ if dep.found()
+ 	qat_sources += files('qat_sym_pmd.c',
+ 			     'qat_sym.c',
+ 			     'qat_sym_session.c',
+-			     'qat_sym_hw_dp.c',
+-			     'qat_asym_pmd.c',
+-			     'qat_asym.c')
++			     'qat_sym_hw_dp.c')
+ 	qat_ext_deps += dep
+ 	qat_cflags += '-DBUILD_QAT_SYM'
+-	qat_cflags += '-DBUILD_QAT_ASYM'
+ endif
