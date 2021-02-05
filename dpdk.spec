@@ -214,10 +214,6 @@ done
 %else
 rm -rf %{buildroot}%{sdkdir}/examples
 %endif
-# DO NOT LAND with these commented out
-#rm -f %{buildroot}%{_libdir}/librte_\*.so\*
-#rm -f %{buildroot}%{pmddir}/\*_pmd_\*.so.\*
-#rm -f %{buildroot}%{docdir}/_static/css/custom.css
 
 # Setup RTE_SDK environment as expected by apps etc
 mkdir -p %{buildroot}/%{_sysconfdir}/profile.d
