@@ -139,23 +139,23 @@ endif
 
 $(DL_NAME)-$(DL_VERSION).tar.$(SRC_EXT).asc: $(SPEC) $(CALLING_MAKEFILE)
 	rm -f ./$(DL_NAME)-*.tar.{gz,bz*,xz}.asc
-	spectool -g $(SPEC)
+	$(SPECTOOL) -g $(SPEC)
 
 $(DL_NAME)-$(DL_VERSION).tar.$(SRC_EXT).sig: $(SPEC) $(CALLING_MAKEFILE)
 	rm -f ./$(DL_NAME)-*.tar.{gz,bz*,xz}.sig
-	spectool -g $(SPEC)
+	$(SPECTOOL) -g $(SPEC)
 
 $(DL_NAME)-$(DL_VERSION).tar.$(SRC_EXT): $(SPEC) $(CALLING_MAKEFILE)
 	rm -f ./$(DL_NAME)-*.tar.{gz,bz*,xz}
-	spectool -g $(SPEC)
+	$(SPECTOOL) -g $(SPEC)
 
 v$(DL_VERSION).tar.$(SRC_EXT): $(SPEC) $(CALLING_MAKEFILE)
 	rm -f ./v*.tar.{gz,bz*,xz}
-	spectool -g $(SPEC)
+	$(SPECTOOL) -g $(SPEC)
 
 $(DL_VERSION).tar.$(SRC_EXT): $(SPEC) $(CALLING_MAKEFILE)
 	rm -f ./*.tar.{gz,bz*,xz}
-	spectool -g $(SPEC)
+	$(SPECTOOL) -g $(SPEC)
 
 $(DEB_TOP)/%: % | $(DEB_TOP)/
 

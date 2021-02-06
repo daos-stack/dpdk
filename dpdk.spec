@@ -13,10 +13,6 @@
 
 %define srcname dpdk
 
-# meson src and build directories
-%define _vpath_srcdir .
-%define _vpath_builddir ./build
-
 Name: dpdk
 Version: %{ver}
 Release: %{rel}%{?commit0:.%{date}git%{shortcommit0}}%{?dist}
@@ -156,8 +152,8 @@ as L2 and L3 forwarding.
 %autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
-%meson --includedir=%{incdir} -Ddrivers_install_subdir=%{_libdir} \
-                              -Ddisable_drivers=compress/isal     \
+%meson --includedir=%{incdir} -Ddrivers_install_subdir=%{pmddir} \
+                              -Ddisable_drivers=compress/isal    \
 # sadly this results in an error
 #                              -Denable_docs=true
 %meson_build
@@ -167,6 +163,17 @@ as L2 and L3 forwarding.
 unset RTE_SDK RTE_INCLUDE RTE_TARGET
 
 %meson_install
+# meson seems unpredictable as to whether it creates these links or not:
+pushd %{buildroot}/%{_libdir}
+pmddir=$(basename %{pmddir})
+for f in $(ls $pmddir/* || true); do
+    bn=${f##*/}
+    if [ ! -e $bn ]; then
+        ln -s $pmddir/$bn $bn
+    fi
+done
+popd
+ls -l %{buildroot}/%{_libdir}/
 
 # install incorrectly creates:
 #'./librte_*.so*' -> '/usr/lib64/dpdk-pmds/librte_*.so*'
@@ -235,6 +242,7 @@ EOF
 
 # Fixup target machine mismatch
 sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profile.d/dpdk-sdk*
+ls -l %{buildroot}/%{_libdir}/
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -244,7 +252,7 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %doc README MAINTAINERS
 %dir %{pmddir}
 %{_libdir}/*.so.*
-#%{pmddir}/*.so.*
+%{pmddir}/*.so.*
 %ifarch x86_64
 %endif
 
@@ -269,6 +277,8 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 %{_sysconfdir}/profile.d/dpdk-sdk-*.*
 %{_libdir}/*.so
+%{pmddir}/*.so
+%{_libdir}/*.a
 %if %{with examples}
 %files examples
 %exclude %{_bindir}/dpdk-procinfo
@@ -276,7 +286,6 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %{_bindir}/dpdk-*
 %doc %{sdkdir}/examples/
 %endif
-%{_libdir}/*.a
 %{_libdir}/pkgconfig/*.pc
 
 %if %{with tools}
