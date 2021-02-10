@@ -1,0 +1,104 @@
+From c1016aec6d08d97f8ee4144398f9b74d6ba5fcba Mon Sep 17 00:00:00 2001
+From: paul luse <paul.e.luse@intel.com>
+Date: Fri, 11 Oct 2019 07:06:19 -0400
+Subject: [PATCH 2/8] config: comment out options that we want to override in
+ the makefile
+
+If the config file specifies y or n for an option we are unable to
+change it in the makefile, so comment out the relevant options for
+crypto so they can be set via makefile.
+
+There's an issue with DPDK and build order when we use makefile
+cmd line options like we do to build the PMDs and APIs for
+crypto and compression.  Basically DPDK will not compile if we
+specify all of them on the command line.  Turns out if we specify
+just the APIs in the command line and everything else in the
+makefile we can build both crypto and compress just fine. This
+allows us to avoid making folks install things like isa-l and
+ipsec unless they actually are going to use compress or crypto.
+
+Everyone, however, will build the 2 API modules for DPDK all of
+the time but this should not be an issue.
+
+Change-Id: I1d1b17f35fbacaab8146f6a41e506f24320b0f4d
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/455810 (spdk-19.05)
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/471062 (spdk-19.08)
+Signed-off-by: paul luse <paul.e.luse@intel.com>
+Signed-off-by: Jim Harris <james.r.harris@intel.com>
+Signed-off-by: Dariusz Stojaczyk <dariuszx.stojaczyk@intel.com>
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/2530
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-by: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
+---
+ config/common_base  | 12 ++++++------
+ config/common_linux |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/config/common_base b/config/common_base
+index bc842d11a..db3ce49b8 100644
+--- a/config/common_base
++++ b/config/common_base
+@@ -103,7 +103,7 @@ CONFIG_RTE_LOG_HISTORY=256
+ CONFIG_RTE_BACKTRACE=y
+ CONFIG_RTE_LIBEAL_USE_HPET=n
+ CONFIG_RTE_EAL_ALWAYS_PANIC_ON_ERROR=n
+-CONFIG_RTE_EAL_IGB_UIO=n
++#CONFIG_RTE_EAL_IGB_UIO=n
+ CONFIG_RTE_EAL_VFIO=n
+ CONFIG_RTE_MAX_VFIO_GROUPS=64
+ CONFIG_RTE_MAX_VFIO_CONTAINERS=64
+@@ -605,8 +605,8 @@ CONFIG_RTE_LIBRTE_PMD_OCTEONTX2_CRYPTO=n
+ #
+ # Compile PMD for QuickAssist based devices - see docs for details
+ #
+-CONFIG_RTE_LIBRTE_PMD_QAT=n
+-CONFIG_RTE_LIBRTE_PMD_QAT_SYM=n
++#CONFIG_RTE_LIBRTE_PMD_QAT=n
++#CONFIG_RTE_LIBRTE_PMD_QAT_SYM=n
+ CONFIG_RTE_LIBRTE_PMD_QAT_ASYM=n
+ #
+ # Max. number of QuickAssist devices, which can be detected and attached
+@@ -626,7 +626,7 @@ CONFIG_RTE_MAX_VIRTIO_CRYPTO=32
+ #
+ # Compile PMD for AESNI backed device
+ #
+-CONFIG_RTE_LIBRTE_PMD_AESNI_MB=n
++#CONFIG_RTE_LIBRTE_PMD_AESNI_MB=n
+ 
+ #
+ # Compile PMD for Software backed device
+@@ -702,7 +702,7 @@ CONFIG_RTE_LIBRTE_PMD_OCTEONTX_ZIPVF=n
+ #
+ # Compile PMD for ISA-L compression device
+ #
+-CONFIG_RTE_LIBRTE_PMD_ISAL=n
++#CONFIG_RTE_LIBRTE_PMD_ISAL=n
+ 
+ #
+ # Compile PMD for ZLIB compression device
+@@ -990,7 +990,7 @@ CONFIG_RTE_LIBRTE_DISTRIBUTOR=n
+ #
+ # Compile the reorder library
+ #
+-CONFIG_RTE_LIBRTE_REORDER=n
++#CONFIG_RTE_LIBRTE_REORDER=n
+ 
+ #
+ # Compile librte_port
+diff --git a/config/common_linux b/config/common_linux
+index 9cca643a1..ba45de7bb 100644
+--- a/config/common_linux
++++ b/config/common_linux
+@@ -8,7 +8,7 @@ CONFIG_RTE_EXEC_ENV_LINUX=y
+ CONFIG_RTE_EXEC_ENV_LINUXAPP=y
+ 
+ CONFIG_RTE_EAL_NUMA_AWARE_HUGEPAGES=y
+-CONFIG_RTE_EAL_IGB_UIO=n
++#CONFIG_RTE_EAL_IGB_UIO=n
+ CONFIG_RTE_EAL_VFIO=y
+ CONFIG_RTE_KNI_KMOD=n
+ CONFIG_RTE_LIBRTE_KNI=n
+-- 
+2.29.2
+

@@ -1,0 +1,42 @@
+From ef71bfaface10cc19b75e45d3158ab71a788e3a9 Mon Sep 17 00:00:00 2001
+From: Michael Haeuptle <michael.haeuptle@hpe.com>
+Date: Mon, 30 Mar 2020 19:57:21 +0000
+Subject: [PATCH 8/8] VFIO: Fixes VFIO/sysfs race condition
+
+This fix treats a 0 return value from vfio_open_group_fd
+in vfio_get_group_fd as the intended error condition instead
+of putting an incorrect 0 file descriptor in the vfio_group table.
+
+Sometimes, the creation of device files in sysfs is not
+instantaneously causing vfio_open_groupfd to return 0.
+This has been observed when hot removing/adding multiple
+NVMe devices (>=4).
+
+Signed-off-by: Michael Haeuptle <michael.haeuptle@hpe.com>
+Submitted-on: https://review.spdk.io/gerrit/c/spdk/spdk/+/1585 (spdk-19.11)
+
+Change-Id: Ie7af69927b6d50f511f5e03913160d1e89e50bbc
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/2618
+Reviewed-by: Michael Haeuptle <michaelhaeuptle@gmail.com>
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+---
+ lib/librte_eal/linux/eal/eal_vfio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/librte_eal/linux/eal/eal_vfio.c b/lib/librte_eal/linux/eal/eal_vfio.c
+index 01b5ef3f4..b82a5018b 100644
+--- a/lib/librte_eal/linux/eal/eal_vfio.c
++++ b/lib/librte_eal/linux/eal/eal_vfio.c
+@@ -379,7 +379,7 @@ vfio_get_group_fd(struct vfio_config *vfio_cfg,
+ 	}
+ 
+ 	vfio_group_fd = vfio_open_group_fd(iommu_group_num);
+-	if (vfio_group_fd < 0) {
++	if (vfio_group_fd <= 0) {
+ 		RTE_LOG(ERR, EAL, "Failed to open group %d\n", iommu_group_num);
+ 		return -1;
+ 	}
+-- 
+2.29.2
+
