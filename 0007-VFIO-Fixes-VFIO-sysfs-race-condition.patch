@@ -35,7 +35,7 @@ index 01b5ef3f4..b82a5018b 100644
 -	if (vfio_group_fd < 0) {
 +	if (vfio_group_fd <= 0) {
  		RTE_LOG(ERR, EAL, "Failed to open group %d\n", iommu_group_num);
- 		return -1;
+		return vfio_group_fd;
  	}
 -- 
 2.29.2
