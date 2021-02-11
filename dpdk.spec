@@ -206,7 +206,7 @@ unset RTE_SDK RTE_INCLUDE RTE_TARGET
 
 # Replace /usr/bin/env python with the correct python binary
 find %{buildroot}%{sdkdir}/ -name "*.py" -exec \
-  sed -i -e 's|#!\s*/usr/bin/env python|#!%{_py_exec}|' {} +
+  sed -i -e 's|#!\s*/usr/bin/env python[^ ]*|#!%{_py_exec}|' {} +
 
 # Create a driver directory with symlinks to all pmds
 mkdir -p %{buildroot}/%{pmddir}
@@ -321,6 +321,7 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %changelog
 * Wed Feb 10 2021 Brian J. Murrell <brian.murrell@intel.com> - 0:19.11.6-1
 - Update to address CVEs
+- Tighten up the setting of python path in shebang
 
 * Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
 - Update to 19.11 to align with the SPDK 20.01.1 release
