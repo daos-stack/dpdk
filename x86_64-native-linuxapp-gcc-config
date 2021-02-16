@@ -1,4 +1,4 @@
-# -*- cfg-sha: 4bfdb5adfc58968af6739d7098aa8a5ea16ae273a6a45571b926cf71826fd4c0
+# -*- cfg-sha: 8fe5a1731ae05418c8010a0d7ed1ab181840165b37d1fb956ea90d0fda7a5f1c
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright(c) 2010-2014 Intel Corporation
 # SPDX-License-Identifier: BSD-3-Clause
@@ -10,7 +10,7 @@ CONFIG_RTE_VER_PREFIX="DPDK"
 # Version information completed when this file is processed for a build
 CONFIG_RTE_VER_YEAR=19
 CONFIG_RTE_VER_MONTH=11
-CONFIG_RTE_VER_MINOR=0
+CONFIG_RTE_VER_MINOR=6
 CONFIG_RTE_VER_SUFFIX=""
 CONFIG_RTE_VER_RELEASE=99
  # RTE_EXEC_ENV values are the directories in mk/exec-env/

@@ -8,7 +8,7 @@
 # define date 20181127
 # define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
 
-%define ver 19.11
+%define ver 19.11.6
 %define rel 1
 
 %define srcname dpdk
@@ -36,8 +36,14 @@ Source502: set_config.sh
 #Source505: ppc_64-power8-linuxapp-gcc-config
 Source506: x86_64-native-linuxapp-gcc-config
 
-# Patches only in dpdk package
-Patch0: v19.11...3fcb1dd39.patch
+# Patches applied for building for spdk
+Patch0: 0001-config-don-t-compile-libs-we-don-t-use.patch
+Patch1: 0002-config-comment-out-options-that-we-want-to-override-.patch
+Patch2: 0003-config-comment-out-vhost.patch
+Patch3: 0004-config-allow-the-shared-library-to-be-built.patch
+Patch4: 0005-config-disable-build-of-NXP-PFE-PMD-Driver-on-ARM.patch
+Patch5: 0006-pci-linux-copy-new-id-for-inserted-device.patch
+Patch6: 0007-VFIO-Fixes-VFIO-sysfs-race-condition.patch
 
 
 Summary: Set of libraries and drivers for fast packet processing
@@ -158,7 +164,7 @@ as L2 and L3 forwarding.
 %endif
 
 %prep
-%autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
+%autosetup -n dpdk-stable-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
 # In case dpdk-devel is installed
@@ -200,7 +206,7 @@ unset RTE_SDK RTE_INCLUDE RTE_TARGET
 
 # Replace /usr/bin/env python with the correct python binary
 find %{buildroot}%{sdkdir}/ -name "*.py" -exec \
-  sed -i -e 's|#!\s*/usr/bin/env python|#!%{_py_exec}|' {} +
+  sed -i -e 's|#!\s*/usr/bin/env python[^ ]*|#!%{_py_exec}|' {} +
 
 # Create a driver directory with symlinks to all pmds
 mkdir -p %{buildroot}/%{pmddir}
@@ -313,6 +319,10 @@ sed -i -e 's:-%{machine_tmpl}-:-%{machine}-:g' %{buildroot}/%{_sysconfdir}/profi
 %endif
 
 %changelog
+* Wed Feb 10 2021 Brian J. Murrell <brian.murrell@intel.com> - 0:19.11.6-1
+- Update to address CVEs
+- Tighten up the setting of python path in shebang
+
 * Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
 - Update to 19.11 to align with the SPDK 20.01.1 release
 
