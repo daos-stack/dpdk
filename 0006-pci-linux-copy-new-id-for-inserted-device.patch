@@ -1,0 +1,48 @@
+From d5bd939db199a85de1392a4a3f28c2591667d02c Mon Sep 17 00:00:00 2001
+From: Jim Harris <james.r.harris@intel.com>
+Date: Thu, 19 Mar 2020 11:01:46 -0700
+Subject: [PATCH 7/8] pci/linux: copy new id for inserted device
+
+When a device is inserted into an existing BDF slot
+that has not been probed, we must overwrite the old
+PCI ID with the ID of the new function. Otherwise
+we may not probe the function with the correct driver,
+if at all.
+
+Signed-off-by: Jim Harris <james.r.harris@intel.com>
+Signed-off-by: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
+Change-Id: If12cc97fe4b19e8e9170c4cc94d9d2cc1ef4b971
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/1380
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/2576
+Reviewed-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Tested-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+---
+ drivers/bus/pci/linux/pci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/bus/pci/linux/pci.c b/drivers/bus/pci/linux/pci.c
+index 740a2cdad..6f98cab3d 100644
+--- a/drivers/bus/pci/linux/pci.c
++++ b/drivers/bus/pci/linux/pci.c
+@@ -351,6 +351,7 @@ pci_scan_one(const char *dirname, const struct rte_pci_addr *addr)
+ 				if (!rte_dev_is_probed(&dev2->device)) {
+ 					dev2->kdrv = dev->kdrv;
+ 					dev2->max_vfs = dev->max_vfs;
++					memcpy(&dev2->id, &dev->id, sizeof(dev2->id));
+ 					pci_name_set(dev2);
+ 					memmove(dev2->mem_resource,
+ 						dev->mem_resource,
+@@ -364,7 +365,8 @@ pci_scan_one(const char *dirname, const struct rte_pci_addr *addr)
+ 					 * need to do anything here unless...
+ 					 **/
+ 					if (dev2->kdrv != dev->kdrv ||
+-						dev2->max_vfs != dev->max_vfs)
++						dev2->max_vfs != dev->max_vfs ||
++						memcmp(&dev2->id, &dev->id, sizeof(dev2->id)))
+ 						/*
+ 						 * This should not happens.
+ 						 * But it is still possible if
+-- 
+2.29.2
+

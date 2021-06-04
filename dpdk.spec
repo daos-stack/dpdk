@@ -8,7 +8,7 @@
 # define date 20181127
 # define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
 
-%define ver 20.11
+%define ver 21.02.0
 %define rel 1
 
 %define srcname dpdk
@@ -31,7 +31,6 @@ Patch0: dpdk-20.11-disable-libraries-we-dont-need.patch
 Patch1: dpdk-20.11-disable-qat_asym-driver.patch
 Patch2: dpdk-20.11-pci-linux-free-the-device-if-no-kernel-driver-configured.patch
 Patch3: dpdk-20.11-disable-qat_asym-driver-in-common-qat.patch
-
 
 Summary: Set of libraries and drivers for fast packet processing
 
@@ -149,7 +148,7 @@ as L2 and L3 forwarding.
 %endif
 
 %prep
-%autosetup -n %{srcname}-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
+%autosetup -n dpdk-stable-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
 %meson --includedir=%{incdir} -Ddrivers_install_subdir=%{pmddir} \
@@ -180,7 +179,7 @@ ls -l %{buildroot}/%{_libdir}/
 rm -f %{buildroot}/%{_libdir}/librte_\*.so\* || true
 # Replace /usr/bin/env python with the correct python binary
 find %{buildroot}%{sdkdir}/ -name "*.py" -exec \
-  sed -i -e 's|#!\s*/usr/bin/env python|#!%{_py_exec}|' {} +
+  sed -i -e 's|#!\s*/usr/bin/env python[^ ]*|#!%{_py_exec}|' {} +
 
 # Create a driver directory with symlinks to all pmds
 mkdir -p %{buildroot}/%{pmddir}
@@ -294,9 +293,13 @@ ls -l %{buildroot}/%{_libdir}/
 %endif
 
 %changelog
-* Tue Feb 02 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:20.11-1
-- Update to 20.11 to align with the SPDK 21.01 release
+* Fri Jun 21 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.02.0-1
+- Update to 21.02.0 to align with the SPDK 21.07 release
 - Use meson and ninja backend for build
+
+* Wed Feb 10 2021 Brian J. Murrell <brian.murrell@intel.com> - 0:19.11.6-1
+- Update to address CVEs
+- Tighten up the setting of python path in shebang
 
 * Fri Apr 03 2020 Tom Nabarro <tom.nabarro@intel.com> - 0:19.11-1
 - Update to 19.11 to align with the SPDK 20.01.1 release
@@ -504,7 +507,7 @@ ls -l %{buildroot}/%{_libdir}/
 - New snapshot
 - Add spec option for enabling vhost-user instead of vhost-cuse
 - Build requires fuse-devel only with vhost-cuse
-- Add virtual provide for vhost user/cuse tracking 
+- Add virtual provide for vhost user/cuse tracking
 
 * Fri Mar 27 2015 Panu Matilainen <pmatilai@redhat.com> - 2.0.0-0.2038.git91a8743e.3
 - Disable vhost-user for now to get vhost-cuse support, argh.
@@ -661,7 +664,7 @@ ls -l %{buildroot}/%{_libdir}/
 - Remove ix86 from ExclusiveArch -- it does not build with above changes
 
 * Thu Jul 10 2014 - Neil Horman <nhorman@tuxdriver.com> - 1.7.0-1.0
-- Update source to official 1.7.0 release 
+- Update source to official 1.7.0 release
 
 * Thu Jul 03 2014 - Neil Horman <nhorman@tuxdriver.com>
 - Fixing up release numbering

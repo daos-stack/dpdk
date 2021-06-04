@@ -1,0 +1,40 @@
+From 3299d21f675347473aef29b2a661e898ac159bc3 Mon Sep 17 00:00:00 2001
+From: Alexey Marchuk <alexeymar@mellanox.com>
+Date: Tue, 14 Jan 2020 06:34:01 +0000
+Subject: [PATCH 5/8] config: disable build of NXP PFE PMD Driver on ARM
+
+Enabling build of this library causes compilation error on ARM:
+/usr/bin/ld: cannot find -lrte_common_dpaax
+collect2: error: ld returned 1 exit status
+/scratch/spdk/dpdk/mk/rte.app.mk:433: recipe for target 'cmdline_test' failed
+NXP PFE PMD drivers requires librte_common_dpaax which is not built by default.
+Passing CONFIG_RTE_LIBRTE_PFE_PMD=n to dpdpk Makefile has no effect since
+this is overwritten by the config file.
+
+Change-Id: I3fc4822804d0e649c838028a670562fba3f08479
+Reviewed-on: https://review.gerrithub.io/c/spdk/dpdk/+/481562 (spdk-19.11)
+Signed-off-by: Alexey Marchuk <alexeymar@mellanox.com>
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/2533
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-by: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
+Tested-by: Ben Walker <benjamin.walker@intel.com>
+---
+ config/common_armv8a_linux | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/common_armv8a_linux b/config/common_armv8a_linux
+index 782877bb2..5b7c57f5f 100644
+--- a/config/common_armv8a_linux
++++ b/config/common_armv8a_linux
+@@ -39,6 +39,6 @@ CONFIG_RTE_LIBRTE_PMD_IOAT_RAWDEV=n
+ #
+ # NXP PFE PMD Driver
+ #
+-CONFIG_RTE_LIBRTE_PFE_PMD=y
++CONFIG_RTE_LIBRTE_PFE_PMD=n
+ 
+ CONFIG_RTE_SCHED_VECTOR=n
+-- 
+2.29.2
+
