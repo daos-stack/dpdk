@@ -8,7 +8,7 @@
 # define date 20181127
 # define shortcommit0 #(c=#{commit0}; echo ${c:0:7})
 
-%define ver 21.02.0
+%define ver 21.02
 %define rel 1
 
 %define srcname dpdk
@@ -27,10 +27,9 @@ Source: http://fast.dpdk.org/rel/dpdk-%{ver}.tar.xz
 Source100: dpdk-snapshot.sh
 
 # Patches that the spdk team applies on top of this dpdk release
-Patch0: dpdk-20.11-disable-libraries-we-dont-need.patch
-Patch1: dpdk-20.11-disable-qat_asym-driver.patch
-Patch2: dpdk-20.11-pci-linux-free-the-device-if-no-kernel-driver-configured.patch
-Patch3: dpdk-20.11-disable-qat_asym-driver-in-common-qat.patch
+Patch0: 0001-build-meson-disable-libraries-we-don-t-need.patch
+Patch1: 0002-build-meson-disable-qat_asym-driver.patch
+Patch2: 0003-pci-linux-free-the-device-if-no-kernel-driver-config.patch
 
 Summary: Set of libraries and drivers for fast packet processing
 
@@ -293,8 +292,8 @@ ls -l %{buildroot}/%{_libdir}/
 %endif
 
 %changelog
-* Fri Jun 21 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.02.0-1
-- Update to 21.02.0 to align with the SPDK 21.07 release
+* Fri Jun 21 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.02-1
+- Update to 21.02 to align with the SPDK 21.07 release
 - Use meson and ninja backend for build
 
 * Wed Feb 10 2021 Brian J. Murrell <brian.murrell@intel.com> - 0:19.11.6-1
