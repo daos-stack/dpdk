@@ -147,7 +147,7 @@ as L2 and L3 forwarding.
 %endif
 
 %prep
-%autosetup -n dpdk-stable-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
+%autosetup -n dpdk-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
 %meson --includedir=%{incdir} -Ddrivers_install_subdir=%{pmddir} \
