@@ -202,7 +202,8 @@ done
 
 %if ! %{with tools}
 rm -rf %{buildroot}%{sdkdir}/usertools
-rm -rf %{buildroot}%{_bindir}/dpdk-devbind.py
+rm -rf %{buildroot}%{_sbindir}/dpdk-devbind
+#rm -rf %{buildroot}%{_bindir}/dpdk-devbind.py
 %endif
 rm -f %{buildroot}%{sdkdir}/usertools/dpdk-setup.sh
 rm -f %{buildroot}%{sdkdir}/usertools/meson.build
@@ -292,7 +293,7 @@ ls -l %{buildroot}/%{_libdir}/
 %endif
 
 %changelog
-* Fri Jun 21 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.02-1
+* Fri Jun 04 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.02-1
 - Update to 21.02 to align with the SPDK 21.07 release
 - Use meson and ninja backend for build
 
