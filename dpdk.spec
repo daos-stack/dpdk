@@ -150,8 +150,9 @@ as L2 and L3 forwarding.
 %autosetup -n dpdk-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
+pip3 install pyelftools
 %meson --includedir=%{incdir} -Ddrivers_install_subdir=%{pmddir} \
-                              -Ddisable_drivers=compress/isal    \
+                              -Ddisable_drivers=compress/isal
 # sadly this results in an error
 #                              -Denable_docs=true
 %meson_build
