@@ -80,7 +80,7 @@ ExclusiveArch: x86_64 aarch64 ppc64le
 %define _py_exec %{?__python2}
 %endif
 
-BuildRequires: gcc, kernel-headers, zlib-devel, meson
+BuildRequires: gcc, kernel-headers, zlib-devel, meson, python3-pyelftools
 %if (0%{?rhel} >= 7)
 BuildRequires:  numactl-devel
 %else
@@ -150,7 +150,6 @@ as L2 and L3 forwarding.
 %autosetup -n dpdk-%{?commit0:%{commit0}}%{!?commit0:%{ver}} -p1
 
 %build
-pip install pyelftools
 %meson --includedir=%{incdir} -Ddrivers_install_subdir=%{pmddir} \
                               -Ddisable_drivers=compress/isal
 # sadly this results in an error
