@@ -26,6 +26,16 @@ Source: http://fast.dpdk.org/rel/dpdk-%{ver}.tar.xz
 # Only needed for creating snapshot tarballs, not used in build itself
 Source100: dpdk-snapshot.sh
 
+Source500: configlib.sh
+Source501: gen_config_group.sh
+Source502: set_config.sh
+
+# Important: source503 is used as the actual copy file
+# @TODO: this causes a warning - fix it?
+#Source504: arm64-armv8a-linuxapp-gcc-config
+#Source505: ppc_64-power8-linuxapp-gcc-config
+Source506: x86_64-native-linuxapp-gcc-config
+
 # Patches that the spdk team applies on top of this dpdk release
 Patch0: 0001-build-meson-disable-libraries-we-don-t-need.patch
 Patch1: 0002-build-meson-disable-qat_asym-driver.patch
@@ -155,6 +165,12 @@ as L2 and L3 forwarding.
 # sadly this results in an error
 #                              -Denable_docs=true
 %meson_build
+
+cp -f %{SOURCE500} %{SOURCE502} %{SOURCE506} .
+%{SOURCE502} %{target}-config "%{target}/.config"
+# DAOS/spdk customizations:
+# disable MLX{4,5} as they don't build with MLNX legacy I/B stack
+sed -i -e '/CONFIG_RTE_LIBRTE_MLX[45]_PMD=/s/y/n/' "%{target}/.config"
 
 %install
 # In case dpdk-devel is installed
