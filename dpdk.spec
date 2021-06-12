@@ -35,7 +35,13 @@ ExclusiveArch: x86_64 i686 aarch64 ppc64le
 
 BuildRequires: gcc
 BuildRequires: kernel-headers, libpcap-devel, doxygen, /usr/bin/sphinx-build, zlib-devel
+%if (0%{?rhel} >= 7)
 BuildRequires: numactl-devel
+%else
+%if (0%{?suse_version} >= 1315)
+BuildRequires: libnuma-devel
+%endif
+%endif
 BuildRequires: rdma-core-devel
 BuildRequires: python3-pyelftools
 
@@ -117,8 +123,7 @@ end
 CFLAGS="$(echo %{optflags} -fcommon)" \
 %meson --includedir=include/dpdk \
        -Ddrivers_install_subdir=dpdk-pmds \
-       -Denable_docs=true \
-       -Dmachine=default \
+       -Ddisable_drivers=compress/isal \
 %if %{with examples}
        -Dexamples=all \
 %endif
@@ -128,6 +133,9 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
   --default-library=static
 %endif
 
+# docs fails on el7 with "ValueError: invalid version number 'these.'"
+#       -Denable_docs=true \
+#       -Dmachine=generic \
 %meson_build
 
 %install
