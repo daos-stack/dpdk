@@ -186,7 +186,6 @@ echo
 
 %files devel
 %dir %{newlibsdir}
-%{sdkdir}
 %{newincldir}/
 %ghost %{sdkdir}/mk/exec-env/bsdapp
 %ghost %{sdkdir}/mk/exec-env/linuxapp
@@ -194,16 +193,18 @@ echo
 %exclude %{_bindir}/dpdk-*.py
 %endif
 %if %{with examples}
+%{sdkdir}/examples/
+%else
 %exclude %{sdkdir}/examples/
 %endif
-%if ! %{with shared}
-%{newlibsdir}/*.a
-%exclude %{newlibsdir}/*.so
-%exclude %{newpmdsdir}/*.so
-%else
+%if %{with shared}
 %{newlibsdir}/*.so
 %{newpmdsdir}/*.so
 %exclude %{newlibsdir}/*.a
+%else
+%{newlibsdir}/*.a
+%exclude %{newlibsdir}/*.so
+%exclude %{newpmdsdir}/*.so
 %endif
 %{newlibsdir}/pkgconfig/libdpdk.pc
 %{newlibsdir}/pkgconfig/libdpdk-libs.pc
