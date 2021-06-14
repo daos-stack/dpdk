@@ -61,13 +61,6 @@ Requires: rdma-core-devel
 This package contains the headers and other files needed for developing
 applications with the Data Plane Development Kit.
 
-%package doc
-Summary: Data Plane Development Kit API documentation
-BuildArch: noarch
-
-%description doc
-API programming documentation for the Data Plane Development Kit.
-
 %if %{with tools}
 %package tools
 Summary: Tools for setting up Data Plane Development Kit environment
@@ -89,8 +82,12 @@ Example applications utilizing the Data Plane Development Kit, such
 as L2 and L3 forwarding.
 %endif
 
+%if (0%{?suse_version} >= 1315)
+%define docdir %{_datadir}/doc/%{name}
+%else
+%define docdir %{_docdir}/%{name}
+%endif
 %define sdkdir  %{_datadir}/%{name}
-%define docdir  %{_docdir}/%{name}
 %define incdir %{_includedir}/%{name}
 %define pmddir %{_libdir}/%{name}-pmds
 
@@ -132,17 +129,15 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %else
   --default-library=static
 %endif
-
 # docs fails on el7 with "ValueError: invalid version number 'these.'"
 #       -Denable_docs=true \
-#       -Dmachine=generic \
 %meson_build
 
 %install
 %meson_install
 
 %files
-# BSD
+%exclude %{docdir}
 %{_bindir}/dpdk-testpmd
 %{_bindir}/dpdk-proc-info
 %if %{with shared}
@@ -150,12 +145,8 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %{pmddir}/*.so.*
 %endif
 
-%files doc
-#BSD
-%{docdir}
-
 %files devel
-#BSD
+%exclude %{docdir}
 %{incdir}/
 %{sdkdir}
 %ghost %{sdkdir}/mk/exec-env/bsdapp
@@ -180,6 +171,7 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 
 %if %{with tools}
 %files tools
+%exclude %{docdir}
 %{_bindir}/dpdk-pdump
 %{_bindir}/dpdk-test
 %{_bindir}/dpdk-test-*
@@ -188,6 +180,7 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 
 %if %{with examples}
 %files examples
+%exclude %{docdir}
 %{_bindir}/dpdk_example_*
 %doc %{sdkdir}/examples
 %endif
