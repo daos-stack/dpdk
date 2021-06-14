@@ -41,4 +41,4 @@
 //@Library(value="pipeline-lib@your_branch") _
 
 packageBuildingPipelineDAOS(['distros': ['centos7', 'centos8', 'leap15',
-                                         'ubuntu20']])
+                                         'ubuntu20.04']])
