@@ -1,4 +1,4 @@
-From 56963a26a45cba28e9a613b4a8cfee75f792564e Mon Sep 17 00:00:00 2001
+From ef142c2d628312e32d9940a1e0ded0145505510f Mon Sep 17 00:00:00 2001
 From: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Date: Mon, 17 Aug 2020 05:03:43 -0400
 Subject: [PATCH 3/3] pci/linux: free the device if no kernel driver configured
@@ -12,15 +12,17 @@ Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Change-Id: I3bf0d4173f1dbfa7be94aacd382350b6acde907e
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/3817 (spdk-20.08)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/5339 (spdk-20.11)
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/6429
-Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/6429 (spdk-21.02)
+Signed-off-by: Krzysztof Karas <krzysztof.karas@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/8137
+Reviewed-by: Aleksey Marchuk <alexeymar@mellanox.com>
 Reviewed-by: Ben Walker <benjamin.walker@intel.com>
 ---
  drivers/bus/pci/linux/pci.c | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/bus/pci/linux/pci.c b/drivers/bus/pci/linux/pci.c
-index 2e1808b902..430938f359 100644
+index 0dc99e9cb2..909502eccf 100644
 --- a/drivers/bus/pci/linux/pci.c
 +++ b/drivers/bus/pci/linux/pci.c
 @@ -332,6 +332,7 @@ pci_scan_one(const char *dirname, const struct rte_pci_addr *addr)

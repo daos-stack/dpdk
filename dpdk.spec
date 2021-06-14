@@ -9,7 +9,7 @@
 %global _vpath_builddir %{_vendor}-%{_target_os}-build
 
 Name: dpdk
-Version: 21.02
+Version: 21.05
 Release: 1%{?dist}
 Epoch: 0
 URL: http://dpdk.org
@@ -25,6 +25,10 @@ Summary: Set of libraries and drivers for fast packet processing
 # kni kernel module which is dual LGPLv2/BSD, and thats not built for fedora.
 #
 License: BSD and LGPLv2 and GPLv2
+
+Patch0: 0001-build-meson-disable-libraries-we-don-t-need.patch
+Patch1: 0002-build-meson-disable-qat_asym-driver.patch
+Patch2: 0003-pci-linux-free-the-device-if-no-kernel-driver-config.patch
 
 #
 # The DPDK is designed to optimize througput of network traffic using, among
@@ -186,8 +190,8 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
-* Mon Jun 21 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.02-1
-- Update to 21.02
+* Mon Jun 21 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.05-1
+- Update to 21.05
 
 * Thu Jan 21 2021 Timothy Redaelli <tredaelli@redhat.com> - 2:20.11-1
 - Update to 20.11

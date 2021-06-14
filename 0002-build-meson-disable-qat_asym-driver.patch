@@ -1,4 +1,4 @@
-From daf36df32d31cd298c1cb44419f67f8676a4f008 Mon Sep 17 00:00:00 2001
+From 8c22e064388c3d46c461ffc7847cae2dfab18ce2 Mon Sep 17 00:00:00 2001
 From: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
 Date: Tue, 30 Jun 2020 11:24:24 +0200
 Subject: [PATCH 2/3] build/meson: disable qat_asym driver
@@ -22,46 +22,51 @@ Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/3517 (spdk-20.05)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/3770 (spdk-20.08)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/5338 (spdk-20.11)
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/6428
-Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/6428 (spdk-21.02)
+Signed-off-by: Krzysztof Karas <krzysztof.karas@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/8136
+Reviewed-by: Aleksey Marchuk <alexeymar@mellanox.com>
 Reviewed-by: Ben Walker <benjamin.walker@intel.com>
 ---
  drivers/common/qat/meson.build | 4 ++--
- drivers/crypto/qat/meson.build | 5 +----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/crypto/qat/meson.build | 3 ---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/common/qat/meson.build b/drivers/common/qat/meson.build
-index 67f7aca974..6d10fcc36a 100644
+index 479a46f9f0..d695f7d166 100644
 --- a/drivers/common/qat/meson.build
 +++ b/drivers/common/qat/meson.build
-@@ -54,10 +54,10 @@ endif
+@@ -64,10 +64,10 @@ endif
  
  if qat_crypto
- 	foreach f: ['qat_sym_pmd.c', 'qat_sym.c', 'qat_sym_session.c',
--			'qat_sym_hw_dp.c', 'qat_asym_pmd.c', 'qat_asym.c']
-+			'qat_sym_hw_dp.c']
- 		sources += files(join_paths(qat_crypto_relpath, f))
- 	endforeach
- 	deps += ['security']
- 	ext_deps += libcrypto
--	cflags += ['-DBUILD_QAT_SYM', '-DBUILD_QAT_ASYM']
-+	cflags += ['-DBUILD_QAT_SYM']
+     foreach f: ['qat_sym_pmd.c', 'qat_sym.c', 'qat_sym_session.c',
+-            'qat_sym_hw_dp.c', 'qat_asym_pmd.c', 'qat_asym.c']
++            'qat_sym_hw_dp.c']
+         sources += files(join_paths(qat_crypto_relpath, f))
+     endforeach
+     deps += ['security']
+     ext_deps += libcrypto
+-    cflags += ['-DBUILD_QAT_SYM', '-DBUILD_QAT_ASYM']
++    cflags += ['-DBUILD_QAT_SYM']
  endif
 diff --git a/drivers/crypto/qat/meson.build b/drivers/crypto/qat/meson.build
-index 92e0ed6565..bad65dc3a3 100644
+index b3b2d17258..195a4f5fb2 100644
 --- a/drivers/crypto/qat/meson.build
 +++ b/drivers/crypto/qat/meson.build
-@@ -15,10 +15,7 @@ if dep.found()
- 	qat_sources += files('qat_sym_pmd.c',
- 			     'qat_sym.c',
- 			     'qat_sym_session.c',
--			     'qat_sym_hw_dp.c',
--			     'qat_asym_pmd.c',
--			     'qat_asym.c')
-+			     'qat_sym_hw_dp.c')
- 	qat_ext_deps += dep
- 	qat_cflags += '-DBUILD_QAT_SYM'
--	qat_cflags += '-DBUILD_QAT_ASYM'
+@@ -13,8 +13,6 @@ qat_deps += 'security'
+ if dep.found()
+     # Add our sources files to the list
+     qat_sources += files(
+-            'qat_asym.c',
+-            'qat_asym_pmd.c',
+             'qat_sym.c',
+             'qat_sym_hw_dp.c',
+             'qat_sym_pmd.c',
+@@ -22,5 +20,4 @@ if dep.found()
+ 	)
+     qat_ext_deps += dep
+     qat_cflags += '-DBUILD_QAT_SYM'
+-    qat_cflags += '-DBUILD_QAT_ASYM'
  endif
 -- 
 2.26.2
