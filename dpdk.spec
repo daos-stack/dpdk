@@ -1,3 +1,10 @@
+# Add option to build as static libraries (--without shared)
+%bcond_without shared
+# Add option to build without examples
+%bcond_with examples
+# Add option to build without tools
+%bcond_without tools
+
 # Avoid architecture-specific name of build-dir to fix per-arch reproducibility with doxygen
 %global _vpath_builddir %{_vendor}-%{_target_os}-build
 
@@ -54,12 +61,38 @@ Requires: rdma-core-devel
 This package contains the headers and other files needed for developing
 applications with the Data Plane Development Kit.
 
-%define _includedir %{_datadir}
-%define _libdir %{_datadir}
+%package doc
+Summary: Data Plane Development Kit API documentation
+BuildArch: noarch
+
+%description doc
+API programming documentation for the Data Plane Development Kit.
+
+%if %{with tools}
+%package tools
+Summary: Tools for setting up Data Plane Development Kit environment
+Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires: kmod pciutils findutils iproute python3-pyelftools
+
+%description tools
+%{summary}
+%endif
+
+%if %{with examples}
+%package examples
+Summary: Data Plane Development Kit example applications
+BuildRequires: libvirt-devel
+BuildRequires: make
+
+%description examples
+Example applications utilizing the Data Plane Development Kit, such
+as L2 and L3 forwarding.
+%endif
+
 %define sdkdir  %{_datadir}/%{name}
 %define docdir  %{_docdir}/%{name}
-%define incdir %{_includedir}/%{name}/include
-%define pmddir %{_libdir}/%{name}/libs/pmds
+%define incdir %{_includedir}/%{name}
+%define pmddir %{_libdir}/%{name}-pmds
 
 %pretrans -p <lua>
 -- This is to clean up directories before links created
@@ -89,13 +122,20 @@ end
 %build
 CFLAGS="$(echo %{optflags} -fcommon)" \
 %meson --includedir=include/dpdk \
+       -Ddrivers_install_subdir=dpdk-pmds \
        -Ddisable_drivers=compress/isal \
+%if %{with examples}
+       -Dexamples=all \
+%endif
+%if %{with shared}
   --default-library=shared
+%else
+  --default-library=static
+%endif
 
 # docs fails on el7 with "ValueError: invalid version number 'these.'"
 #       -Denable_docs=true \
 #       -Dmachine=generic \
-#       -Ddrivers_install_subdir=dpdk-pmds \
 %meson_build
 
 %install
@@ -105,8 +145,14 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 # BSD
 %{_bindir}/dpdk-testpmd
 %{_bindir}/dpdk-proc-info
+%if %{with shared}
 %{_libdir}/*.so.*
 %{pmddir}/*.so.*
+%endif
+
+%files doc
+#BSD
+%{docdir}
 
 %files devel
 #BSD
@@ -114,11 +160,37 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %{sdkdir}
 %ghost %{sdkdir}/mk/exec-env/bsdapp
 %ghost %{sdkdir}/mk/exec-env/linuxapp
+%if %{with tools}
+%exclude %{_bindir}/dpdk-*.py
+%endif
+%if %{with examples}
+%exclude %{sdkdir}/examples/
+%endif
+%if ! %{with shared}
+%{_libdir}/*.a
+%exclude %{_libdir}/*.so
+%exclude %{pmddir}/*.so
+%else
 %{_libdir}/*.so
 %{pmddir}/*.so
 %exclude %{_libdir}/*.a
+%endif
 %{_libdir}/pkgconfig/libdpdk.pc
 %{_libdir}/pkgconfig/libdpdk-libs.pc
+
+%if %{with tools}
+%files tools
+%{_bindir}/dpdk-pdump
+%{_bindir}/dpdk-test
+%{_bindir}/dpdk-test-*
+%{_bindir}/dpdk-*.py
+%endif
+
+%if %{with examples}
+%files examples
+%{_bindir}/dpdk_example_*
+%doc %{sdkdir}/examples
+%endif
 
 %changelog
 * Thu Jan 21 2021 Timothy Redaelli <tredaelli@redhat.com> - 2:20.11-1
