@@ -193,5 +193,8 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
+* Mon Jun 21 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.02-1
+- Update to 21.02
+
 * Thu Jan 21 2021 Timothy Redaelli <tredaelli@redhat.com> - 2:20.11-1
 - Update to 20.11
