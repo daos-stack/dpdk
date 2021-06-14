@@ -82,6 +82,11 @@ Example applications utilizing the Data Plane Development Kit, such
 as L2 and L3 forwarding.
 %endif
 
+%if (0%{?suse_version} >= 1315)
+%define docdir %{_datadir}/doc/%{name}
+%else
+%define docdir %{_docdir}/%{name}
+%endif
 %define sdkdir  %{_datadir}/%{name}
 %define newlibsdir %{_datadir}/%{name}/lib
 %define newpmdsdir %{newlibsdir}/%{name}-pmds
@@ -164,7 +169,7 @@ echo
 
 %files
 %dir %{newlibsdir}
-%exclude %{_docdir}
+%exclude %{docdir}
 %{_bindir}/dpdk-testpmd
 %{_bindir}/dpdk-proc-info
 %if %{with shared}
@@ -174,7 +179,7 @@ echo
 
 %files devel
 %dir %{newlibsdir}
-%exclude %{_docdir}
+%exclude %{docdir}
 %{newincldir}/
 %ghost %{sdkdir}/mk/exec-env/bsdapp
 %ghost %{sdkdir}/mk/exec-env/linuxapp
@@ -200,7 +205,7 @@ echo
 
 %if %{with tools}
 %files tools
-%exclude %{_docdir}
+%exclude %{docdir}
 %{_bindir}/dpdk-pdump
 %{_bindir}/dpdk-test
 %{_bindir}/dpdk-test-*
@@ -209,7 +214,7 @@ echo
 
 %if %{with examples}
 %files examples
-%exclude %{_docdir}
+%exclude %{docdir}
 %{_bindir}/dpdk_example_*
 %doc %{sdkdir}/examples
 %endif
