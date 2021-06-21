@@ -92,9 +92,7 @@ as L2 and L3 forwarding.
 %define sdkdir  %{_datadir}/%{name}
 %define docdir  %{_docdir}/%{name}
 %define incdir %{_includedir}/%{name}
-
-%define newlibsdir %{_datadir}/%{name}/lib
-%define pmddir %{newlibsdir}/%{name}-pmds
+%define pmddir %{_libdir}/%{name}-pmds
 
 %pretrans -p <lua>
 -- This is to clean up directories before links created
@@ -143,42 +141,21 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %install
 %meson_install
 
-echo
-echo "listing buildroot libdir:"
-ls -lah "%{buildroot}%{_libdir}"
-echo
-echo "listing buildroot incdir:"
-ls -lah "%{buildroot}%{_includedir}/%{name}"
-echo
-echo "listing buildroot datadir:"
-ls -lah "%{buildroot}%{_datadir}/%{name}"
-echo
-
-nld="%{buildroot}%{newlibsdir}"
-rpm --eval "moving libdir to new target library directory ${nld}"
-#mkdir -p ${nld}
-#%{buildroot}/%{newlibsdir}                                                  
-mv "%{buildroot}%{_libdir}" "${nld}"
-
-echo
-echo "listing new buildroot libdir:"
-ls -lah "%{buildroot}%{newlibsdir}"
-echo
-
 %files
-%dir %{newlibsdir}
+# BSD
 %{_bindir}/dpdk-testpmd
 %{_bindir}/dpdk-proc-info
 %if %{with shared}
-%{newlibsdir}/*.so.*
+%{_libdir}/*.so.*
 %{pmddir}/*.so.*
 %endif
 
 %files doc
+#BSD
 %{docdir}
 
 %files devel
-%dir %{newlibsdir}
+#BSD
 %{incdir}/
 %{sdkdir}
 %ghost %{sdkdir}/mk/exec-env/bsdapp
@@ -190,16 +167,16 @@ echo
 %exclude %{sdkdir}/examples/
 %endif
 %if ! %{with shared}
-%{newlibsdir}/*.a
-%exclude %{newlibsdir}/*.so
+%{_libdir}/*.a
+%exclude %{_libdir}/*.so
 %exclude %{pmddir}/*.so
 %else
-%{newlibsdir}/*.so
+%{_libdir}/*.so
 %{pmddir}/*.so
-%exclude %{newlibsdir}/*.a
+%exclude %{_libdir}/*.a
 %endif
-%{newlibsdir}/pkgconfig/libdpdk.pc
-%{newlibsdir}/pkgconfig/libdpdk-libs.pc
+%{_libdir}/pkgconfig/libdpdk.pc
+%{_libdir}/pkgconfig/libdpdk-libs.pc
 
 %if %{with tools}
 %files tools
