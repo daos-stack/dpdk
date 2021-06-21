@@ -61,6 +61,13 @@ Requires: rdma-core-devel
 This package contains the headers and other files needed for developing
 applications with the Data Plane Development Kit.
 
+%package doc
+Summary: Data Plane Development Kit API documentation
+BuildArch: noarch
+
+%description doc
+API programming documentation for the Data Plane Development Kit.
+
 %if %{with tools}
 %package tools
 Summary: Tools for setting up Data Plane Development Kit environment
@@ -83,6 +90,8 @@ as L2 and L3 forwarding.
 %endif
 
 %define sdkdir  %{_datadir}/%{name}
+%define docdir  %{_docdir}/%{name}
+
 %define newlibsdir %{_datadir}/%{name}/lib
 %define newpmdsdir %{newlibsdir}/%{name}-pmds
 %define newincldir %{_datadir}/%{name}/include
@@ -125,6 +134,7 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %else
   --default-library=static
 %endif
+
 # docs fails on el7 with "ValueError: invalid version number 'these.'"
 #       -Denable_docs=true \
 #       -Dmachine=generic \
@@ -164,7 +174,6 @@ echo
 
 %files
 %dir %{newlibsdir}
-%exclude %{_docdir}
 %{_bindir}/dpdk-testpmd
 %{_bindir}/dpdk-proc-info
 %if %{with shared}
@@ -172,9 +181,11 @@ echo
 %{newpmdsdir}/*.so.*
 %endif
 
+%files doc
+%{docdir}
+
 %files devel
 %dir %{newlibsdir}
-%exclude %{_docdir}
 %{newincldir}/
 %ghost %{sdkdir}/mk/exec-env/bsdapp
 %ghost %{sdkdir}/mk/exec-env/linuxapp
@@ -200,7 +211,6 @@ echo
 
 %if %{with tools}
 %files tools
-%exclude %{_docdir}
 %{_bindir}/dpdk-pdump
 %{_bindir}/dpdk-test
 %{_bindir}/dpdk-test-*
@@ -209,7 +219,6 @@ echo
 
 %if %{with examples}
 %files examples
-%exclude %{_docdir}
 %{_bindir}/dpdk_example_*
 %doc %{sdkdir}/examples
 %endif
