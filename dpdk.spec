@@ -91,10 +91,10 @@ as L2 and L3 forwarding.
 
 %define sdkdir  %{_datadir}/%{name}
 %define docdir  %{_docdir}/%{name}
+%define incdir %{_includedir}/%{name}
 
 %define newlibsdir %{_datadir}/%{name}/lib
-%define newpmdsdir %{newlibsdir}/%{name}-pmds
-%define newincldir %{_datadir}/%{name}/include
+%define pmddir %{newlibsdir}/%{name}-pmds
 
 %pretrans -p <lua>
 -- This is to clean up directories before links created
@@ -147,7 +147,7 @@ echo
 echo "listing buildroot libdir:"
 ls -lah "%{buildroot}%{_libdir}"
 echo
-echo "listing buildroot includedir:"
+echo "listing buildroot incdir:"
 ls -lah "%{buildroot}%{_includedir}/%{name}"
 echo
 echo "listing buildroot datadir:"
@@ -156,20 +156,13 @@ echo
 
 nld="%{buildroot}%{newlibsdir}"
 rpm --eval "moving libdir to new target library directory ${nld}"
+#mkdir -p ${nld}
+#%{buildroot}/%{newlibsdir}                                                  
 mv "%{buildroot}%{_libdir}" "${nld}"
 
 echo
 echo "listing new buildroot libdir:"
 ls -lah "%{buildroot}%{newlibsdir}"
-echo
-
-nid="%{buildroot}%{newincldir}"
-rpm --eval "moving includedir to new target include directory ${nid}"
-mv "%{buildroot}%{_includedir}/%{name}" "${nid}"
-
-echo
-echo "listing new buildroot includedir:"
-ls -lah "%{buildroot}%{newincldir}"
 echo
 
 %files
@@ -178,7 +171,7 @@ echo
 %{_bindir}/dpdk-proc-info
 %if %{with shared}
 %{newlibsdir}/*.so.*
-%{newpmdsdir}/*.so.*
+%{pmddir}/*.so.*
 %endif
 
 %files doc
@@ -186,8 +179,8 @@ echo
 
 %files devel
 %dir %{newlibsdir}
+%{incdir}/
 %{sdkdir}
-%{newincldir}/
 %ghost %{sdkdir}/mk/exec-env/bsdapp
 %ghost %{sdkdir}/mk/exec-env/linuxapp
 %if %{with tools}
@@ -199,10 +192,10 @@ echo
 %if ! %{with shared}
 %{newlibsdir}/*.a
 %exclude %{newlibsdir}/*.so
-%exclude %{newpmdsdir}/*.so
+%exclude %{pmddir}/*.so
 %else
 %{newlibsdir}/*.so
-%{newpmdsdir}/*.so
+%{pmddir}/*.so
 %exclude %{newlibsdir}/*.a
 %endif
 %{newlibsdir}/pkgconfig/libdpdk.pc
