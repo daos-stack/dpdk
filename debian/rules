@@ -122,7 +122,6 @@ override_dh_auto_install-arch:
 	  fi; \
 	done
 	# Strip RPATH, hard-coded in test/test/meson.build at the moment
-	chrpath --delete $(CURDIR)/debian/tmp/usr/bin/dpdk-test
 	# Only present on ninja install, so fails on arch: all builds
 	rm -f $(CURDIR)/debian/tmp/usr/share/doc/dpdk/_static/css/custom.css
 
