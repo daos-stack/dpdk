@@ -46,6 +46,7 @@ librte_vhost.so.21 librte-vhost21 #MINVER#
  rte_vhost_get_mem_table@DPDK_21 20.11
  rte_vhost_get_mtu@DPDK_21 20.11
  rte_vhost_get_negotiated_features@DPDK_21 20.11
+ rte_vhost_get_negotiated_protocol_features@EXPERIMENTAL 21.05-1
  rte_vhost_get_numa_node@DPDK_21 20.11
  rte_vhost_get_queue_num@DPDK_21 20.11
  rte_vhost_get_vdpa_device@DPDK_21 20.11
