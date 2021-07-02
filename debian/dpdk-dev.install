@@ -1,0 +1,5 @@
+app/test/autotest.py usr/share/dpdk/test/
+app/test/autotest_data.py usr/share/dpdk/test/
+app/test/autotest_runner.py usr/share/dpdk/test/
+app/test/autotest_test_funcs.py usr/share/dpdk/test/
+usr/bin/dpdk-telemetry.py
