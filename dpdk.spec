@@ -125,7 +125,7 @@ end
 CFLAGS="$(echo %{optflags} -fcommon)" \
 %meson --includedir=include/dpdk \
        -Ddrivers_install_subdir=dpdk-pmds \
-       -Ddisable_drivers=compress/isal,compress/mlx5,net/mlx4,net/mlx5 \
+       -Ddisable_drivers=compress/isal,compress/mlx5,net/mlx4,net/mlx5,vdpa/mlx5,common/mlx5,regex/mlx5 \
 %if %{with examples}
        -Dexamples=all \
 %endif
