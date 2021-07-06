@@ -10,7 +10,7 @@
 
 Name: dpdk
 Version: 21.05
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 0
 URL: http://dpdk.org
 Source: https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
@@ -191,6 +191,9 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
+* Tue Jul 06 2021 Johann Lombardi <johann.lombardi@intel.com> - 0:21.05-2
+- Disable mlx4 and mlx5 drivers
+
 * Mon Jun 21 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.05-1
 - Update to 21.05 to align with the SPDK 21.07 release
 - Use meson and ninja backend for build
