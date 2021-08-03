@@ -1,7 +1,7 @@
 From 8c22e064388c3d46c461ffc7847cae2dfab18ce2 Mon Sep 17 00:00:00 2001
 From: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
 Date: Tue, 30 Jun 2020 11:24:24 +0200
-Subject: [PATCH 2/3] build/meson: disable qat_asym driver
+Subject: [PATCH 2/5] build/meson: disable qat_asym driver
 
 QAT docs in DPDK say:
 [...] for crypto, where each QAT VF may expose two crypto devices,
@@ -33,7 +33,7 @@ Reviewed-by: Ben Walker <benjamin.walker@intel.com>
  2 files changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/common/qat/meson.build b/drivers/common/qat/meson.build
-index 479a46f9f0..d695f7d166 100644
+index 479a46f..d695f7d 100644
 --- a/drivers/common/qat/meson.build
 +++ b/drivers/common/qat/meson.build
 @@ -64,10 +64,10 @@ endif
@@ -50,7 +50,7 @@ index 479a46f9f0..d695f7d166 100644
 +    cflags += ['-DBUILD_QAT_SYM']
  endif
 diff --git a/drivers/crypto/qat/meson.build b/drivers/crypto/qat/meson.build
-index b3b2d17258..195a4f5fb2 100644
+index b3b2d17..195a4f5 100644
 --- a/drivers/crypto/qat/meson.build
 +++ b/drivers/crypto/qat/meson.build
 @@ -13,8 +13,6 @@ qat_deps += 'security'
@@ -69,5 +69,5 @@ index b3b2d17258..195a4f5fb2 100644
 -    qat_cflags += '-DBUILD_QAT_ASYM'
  endif
 -- 
-2.26.2
+1.8.3.1
 

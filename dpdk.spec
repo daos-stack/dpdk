@@ -10,7 +10,7 @@
 
 Name: dpdk
 Version: 21.05
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 0
 URL: http://dpdk.org
 Source: https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
@@ -30,6 +30,8 @@ License: BSD and LGPLv2 and GPLv2
 Patch0: 0001-build-meson-disable-libraries-we-don-t-need.patch
 Patch1: 0002-build-meson-disable-qat_asym-driver.patch
 Patch2: 0003-pci-linux-free-the-device-if-no-kernel-driver-config.patch
+Patch3: 0004-ARM64-Cross-Compilation-Support.patch
+Patch4: 0005-meson-mlx5-Suppress-Wunused-value-diagnostic.patch
 
 #
 # The DPDK is designed to optimize througput of network traffic using, among
@@ -191,6 +193,9 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
+* Tue Aug 03 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.05-3
+- Add additional patches to align with commit pinned by SPDK v21.07.
+
 * Tue Jul 06 2021 Johann Lombardi <johann.lombardi@intel.com> - 0:21.05-2
 - Disable mlx4 and mlx5 drivers
 
