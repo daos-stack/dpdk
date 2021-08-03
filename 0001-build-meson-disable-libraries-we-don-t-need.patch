@@ -1,7 +1,7 @@
 From 1469973c4cc5abe29b5c6abb31d5433eaf3e92d7 Mon Sep 17 00:00:00 2001
 From: Darek Stojaczyk <dariusz.stojaczyk@intel.com>
 Date: Fri, 22 May 2020 17:15:28 +0200
-Subject: [PATCH 1/3] build/meson: disable libraries we don't need
+Subject: [PATCH 1/5] build/meson: disable libraries we don't need
 
 Only the following are left, all of which will be built
 unconditionally:
@@ -89,7 +89,7 @@ Reviewed-by: Ben Walker <benjamin.walker@intel.com>
  33 files changed, 69 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/compress/isal/meson.build b/drivers/compress/isal/meson.build
-index 4b3eaa2274..22eb77c685 100644
+index 4b3eaa2..22eb77c 100644
 --- a/drivers/compress/isal/meson.build
 +++ b/drivers/compress/isal/meson.build
 @@ -3,8 +3,8 @@
@@ -104,7 +104,7 @@ index 4b3eaa2274..22eb77c685 100644
  
  deps += 'bus_vdev'
 diff --git a/lib/acl/meson.build b/lib/acl/meson.build
-index fbb1318230..4f44537487 100644
+index fbb1318..4f44537 100644
 --- a/lib/acl/meson.build
 +++ b/lib/acl/meson.build
 @@ -81,3 +81,5 @@ elif dpdk_conf.has('RTE_ARCH_ARM')
@@ -114,7 +114,7 @@ index fbb1318230..4f44537487 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/bbdev/meson.build b/lib/bbdev/meson.build
-index 2969cab26b..7a1832dbc6 100644
+index 2969cab..7a1832d 100644
 --- a/lib/bbdev/meson.build
 +++ b/lib/bbdev/meson.build
 @@ -6,3 +6,5 @@ headers = files('rte_bbdev.h',
@@ -124,7 +124,7 @@ index 2969cab26b..7a1832dbc6 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/bitratestats/meson.build b/lib/bitratestats/meson.build
-index ede7e0a579..081552048c 100644
+index ede7e0a..0815520 100644
 --- a/lib/bitratestats/meson.build
 +++ b/lib/bitratestats/meson.build
 @@ -4,3 +4,5 @@
@@ -134,7 +134,7 @@ index ede7e0a579..081552048c 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/bpf/meson.build b/lib/bpf/meson.build
-index 63cbd60185..35371ba99a 100644
+index 63cbd60..35371ba 100644
 --- a/lib/bpf/meson.build
 +++ b/lib/bpf/meson.build
 @@ -25,3 +25,5 @@ if dep.found()
@@ -144,7 +144,7 @@ index 63cbd60185..35371ba99a 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/cfgfile/meson.build b/lib/cfgfile/meson.build
-index 88eb819856..1f48577180 100644
+index 88eb819..1f48577 100644
 --- a/lib/cfgfile/meson.build
 +++ b/lib/cfgfile/meson.build
 @@ -3,3 +3,5 @@
@@ -154,7 +154,7 @@ index 88eb819856..1f48577180 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/distributor/meson.build b/lib/distributor/meson.build
-index cefe1b9f19..e1617fe389 100644
+index cefe1b9..e1617fe 100644
 --- a/lib/distributor/meson.build
 +++ b/lib/distributor/meson.build
 @@ -9,3 +9,5 @@ else
@@ -164,7 +164,7 @@ index cefe1b9f19..e1617fe389 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/efd/meson.build b/lib/efd/meson.build
-index 07fb1c29a7..e658dfc0a4 100644
+index 07fb1c2..e658dfc 100644
 --- a/lib/efd/meson.build
 +++ b/lib/efd/meson.build
 @@ -4,3 +4,5 @@
@@ -174,7 +174,7 @@ index 07fb1c29a7..e658dfc0a4 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/eventdev/meson.build b/lib/eventdev/meson.build
-index 32abeba794..8d926eb326 100644
+index 32abeba..8d926eb 100644
 --- a/lib/eventdev/meson.build
 +++ b/lib/eventdev/meson.build
 @@ -29,3 +29,5 @@ headers = files(
@@ -184,7 +184,7 @@ index 32abeba794..8d926eb326 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/fib/meson.build b/lib/fib/meson.build
-index 5618c215a7..af3ae7fe53 100644
+index 5618c21..af3ae7f 100644
 --- a/lib/fib/meson.build
 +++ b/lib/fib/meson.build
 @@ -56,3 +56,5 @@ if dpdk_conf.has('RTE_ARCH_X86_64') and binutils_ok.returncode() == 0
@@ -194,7 +194,7 @@ index 5618c215a7..af3ae7fe53 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/flow_classify/meson.build b/lib/flow_classify/meson.build
-index a7a5b3d577..ce1211f6ab 100644
+index a7a5b3d..ce1211f 100644
 --- a/lib/flow_classify/meson.build
 +++ b/lib/flow_classify/meson.build
 @@ -4,3 +4,5 @@
@@ -204,7 +204,7 @@ index a7a5b3d577..ce1211f6ab 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/graph/meson.build b/lib/graph/meson.build
-index 6befb094d2..a038612420 100644
+index 6befb09..a038612 100644
 --- a/lib/graph/meson.build
 +++ b/lib/graph/meson.build
 @@ -12,3 +12,5 @@ sources = files(
@@ -214,7 +214,7 @@ index 6befb094d2..a038612420 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/gro/meson.build b/lib/gro/meson.build
-index e4fa2958bd..07d3219f5f 100644
+index e4fa295..07d3219 100644
 --- a/lib/gro/meson.build
 +++ b/lib/gro/meson.build
 @@ -10,3 +10,5 @@ sources = files(
@@ -224,7 +224,7 @@ index e4fa2958bd..07d3219f5f 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/gso/meson.build b/lib/gso/meson.build
-index 622411df8f..3652e64200 100644
+index 622411d..3652e64 100644
 --- a/lib/gso/meson.build
 +++ b/lib/gso/meson.build
 @@ -11,3 +11,5 @@ sources = files(
@@ -234,7 +234,7 @@ index 622411df8f..3652e64200 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/ip_frag/meson.build b/lib/ip_frag/meson.build
-index ea2de09f75..92d1a3857e 100644
+index ea2de09..92d1a38 100644
 --- a/lib/ip_frag/meson.build
 +++ b/lib/ip_frag/meson.build
 @@ -11,3 +11,5 @@ sources = files(
@@ -244,7 +244,7 @@ index ea2de09f75..92d1a3857e 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/ipsec/meson.build b/lib/ipsec/meson.build
-index 1497f573bb..3b491fe93d 100644
+index 1497f57..3b491fe 100644
 --- a/lib/ipsec/meson.build
 +++ b/lib/ipsec/meson.build
 @@ -7,3 +7,5 @@ headers = files('rte_ipsec.h', 'rte_ipsec_sa.h', 'rte_ipsec_sad.h')
@@ -254,7 +254,7 @@ index 1497f573bb..3b491fe93d 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/jobstats/meson.build b/lib/jobstats/meson.build
-index 391e4f802e..0e7c2af930 100644
+index 391e4f8..0e7c2af 100644
 --- a/lib/jobstats/meson.build
 +++ b/lib/jobstats/meson.build
 @@ -3,3 +3,5 @@
@@ -264,7 +264,7 @@ index 391e4f802e..0e7c2af930 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/kni/meson.build b/lib/kni/meson.build
-index e2e4e44fc6..90631bcce3 100644
+index e2e4e44..90631bc 100644
 --- a/lib/kni/meson.build
 +++ b/lib/kni/meson.build
 @@ -8,3 +8,5 @@ endif
@@ -274,7 +274,7 @@ index e2e4e44fc6..90631bcce3 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/latencystats/meson.build b/lib/latencystats/meson.build
-index 286558dd79..6f8540102e 100644
+index 286558d..6f85401 100644
 --- a/lib/latencystats/meson.build
 +++ b/lib/latencystats/meson.build
 @@ -4,3 +4,5 @@
@@ -284,7 +284,7 @@ index 286558dd79..6f8540102e 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/lpm/meson.build b/lib/lpm/meson.build
-index 5ca54815e4..d6b7f890c9 100644
+index 5ca5481..d6b7f89 100644
 --- a/lib/lpm/meson.build
 +++ b/lib/lpm/meson.build
 @@ -13,3 +13,5 @@ indirect_headers += files(
@@ -294,7 +294,7 @@ index 5ca54815e4..d6b7f890c9 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/member/meson.build b/lib/member/meson.build
-index 0e6b34c406..058584b19c 100644
+index 0e6b34c..058584b 100644
 --- a/lib/member/meson.build
 +++ b/lib/member/meson.build
 @@ -4,3 +4,5 @@
@@ -304,7 +304,7 @@ index 0e6b34c406..058584b19c 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/metrics/meson.build b/lib/metrics/meson.build
-index 3cb43d9ee7..5b34c3c825 100644
+index 3cb43d9..5b34c3c 100644
 --- a/lib/metrics/meson.build
 +++ b/lib/metrics/meson.build
 @@ -11,3 +11,5 @@ if jansson.found()
@@ -314,7 +314,7 @@ index 3cb43d9ee7..5b34c3c825 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/node/meson.build b/lib/node/meson.build
-index 230aa6fa0f..1b05823e27 100644
+index 230aa6f..1b05823 100644
 --- a/lib/node/meson.build
 +++ b/lib/node/meson.build
 @@ -16,3 +16,5 @@ headers = files('rte_node_ip4_api.h', 'rte_node_eth_api.h')
@@ -324,7 +324,7 @@ index 230aa6fa0f..1b05823e27 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/pdump/meson.build b/lib/pdump/meson.build
-index 3a95eabde6..5dfd211552 100644
+index 3a95eab..5dfd211 100644
 --- a/lib/pdump/meson.build
 +++ b/lib/pdump/meson.build
 @@ -4,3 +4,5 @@
@@ -334,7 +334,7 @@ index 3a95eabde6..5dfd211552 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/pipeline/meson.build b/lib/pipeline/meson.build
-index 9132bb517a..eb43707cc0 100644
+index 9132bb5..eb43707 100644
 --- a/lib/pipeline/meson.build
 +++ b/lib/pipeline/meson.build
 @@ -18,3 +18,5 @@ headers = files(
@@ -344,7 +344,7 @@ index 9132bb517a..eb43707cc0 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/port/meson.build b/lib/port/meson.build
-index 289bc47f6e..8d1c64d778 100644
+index 289bc47..8d1c64d 100644
 --- a/lib/port/meson.build
 +++ b/lib/port/meson.build
 @@ -44,3 +44,5 @@ if dpdk_conf.has('RTE_LIB_KNI')
@@ -354,7 +354,7 @@ index 289bc47f6e..8d1c64d778 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/rawdev/meson.build b/lib/rawdev/meson.build
-index 30d363cd2d..f82c2f2529 100644
+index 30d363c..f82c2f2 100644
 --- a/lib/rawdev/meson.build
 +++ b/lib/rawdev/meson.build
 @@ -5,3 +5,5 @@ sources = files('rte_rawdev.c')
@@ -364,7 +364,7 @@ index 30d363cd2d..f82c2f2529 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/regexdev/meson.build b/lib/regexdev/meson.build
-index 7e12d8cd6d..b3ff541d1e 100644
+index 7e12d8c..b3ff541 100644
 --- a/lib/regexdev/meson.build
 +++ b/lib/regexdev/meson.build
 @@ -5,3 +5,5 @@ sources = files('rte_regexdev.c')
@@ -374,7 +374,7 @@ index 7e12d8cd6d..b3ff541d1e 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/rib/meson.build b/lib/rib/meson.build
-index 7bacbb4535..0fcdba0da9 100644
+index 7bacbb4..0fcdba0 100644
 --- a/lib/rib/meson.build
 +++ b/lib/rib/meson.build
 @@ -5,3 +5,5 @@
@@ -384,7 +384,7 @@ index 7bacbb4535..0fcdba0da9 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/sched/meson.build b/lib/sched/meson.build
-index b24f7b8775..b066f6f0e9 100644
+index b24f7b8..b066f6f 100644
 --- a/lib/sched/meson.build
 +++ b/lib/sched/meson.build
 @@ -9,3 +9,5 @@ headers = files(
@@ -394,7 +394,7 @@ index b24f7b8775..b066f6f0e9 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/stack/meson.build b/lib/stack/meson.build
-index 2f53f49677..47e9cc0297 100644
+index 2f53f49..47e9cc0 100644
 --- a/lib/stack/meson.build
 +++ b/lib/stack/meson.build
 @@ -5,8 +5,9 @@ sources = files('rte_stack.c', 'rte_stack_std.c', 'rte_stack_lf.c')
@@ -413,7 +413,7 @@ index 2f53f49677..47e9cc0297 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/lib/table/meson.build b/lib/table/meson.build
-index b7b70b805e..c6af5eed1d 100644
+index b7b70b8..c6af5ee 100644
 --- a/lib/table/meson.build
 +++ b/lib/table/meson.build
 @@ -38,3 +38,5 @@ indirect_headers += files(
@@ -423,7 +423,7 @@ index b7b70b805e..c6af5eed1d 100644
 +build = false
 +reason = 'not needed by SPDK'
 diff --git a/meson.build b/meson.build
-index 12cb6e0e83..ac3e3a10d2 100644
+index 12cb6e0..ac3e3a1 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -65,7 +65,7 @@ subdir('drivers')
@@ -436,5 +436,5 @@ index 12cb6e0e83..ac3e3a10d2 100644
  # build docs
  subdir('doc')
 -- 
-2.26.2
+1.8.3.1
 
