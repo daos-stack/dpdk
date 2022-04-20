@@ -10,7 +10,7 @@
 
 Name: dpdk
 Version: 21.05
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 0
 URL: http://dpdk.org
 Source: https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
@@ -194,6 +194,9 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
+* Wed Apr 20 2022 Wang Shilong <shilong.wang@intel.com> - 0:21.05-5
+- add epel-rpm-macros to centos7 build requirement
+
 * Wed Sep 08 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.05-4
 - Disable ioat driver.
 
