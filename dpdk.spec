@@ -44,6 +44,7 @@ BuildRequires: gcc
 BuildRequires: kernel-headers, libpcap-devel, doxygen, /usr/bin/sphinx-build, zlib-devel
 %if (0%{?rhel} >= 7)
 BuildRequires: numactl-devel
+BuildRequires: epel-rpm-macros
 %else
 %if (0%{?suse_version} >= 1315)
 BuildRequires: libnuma-devel
