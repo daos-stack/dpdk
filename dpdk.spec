@@ -195,7 +195,7 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 
 %changelog
 * Wed Apr 20 2022 Wang Shilong <shilong.wang@intel.com> - 0:21.05-5
-- add epel-rpm-macros to centos7 build requirement
+- add epel-rpm-macros to centos7 build requirement.
 
 * Wed Sep 08 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.05-4
 - Disable ioat driver.
