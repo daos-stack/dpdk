@@ -1,3 +1,8 @@
+dpdk (21.05-3) unstable; urgency=high
+
+  [ Wang Shilong ]
+  * Add epel-rpm-macros to centos7 build requirement.
+
 dpdk (21.05-2) unstable; urgency=high
 
   [ Johann Lombardi ]
