@@ -10,7 +10,7 @@
 
 Name: dpdk
 Version: 21.05
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 0
 URL: http://dpdk.org
 Source: https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
@@ -44,6 +44,7 @@ BuildRequires: gcc
 BuildRequires: kernel-headers, libpcap-devel, doxygen, /usr/bin/sphinx-build, zlib-devel
 %if (0%{?rhel} >= 7)
 BuildRequires: numactl-devel
+BuildRequires: epel-rpm-macros
 %else
 %if (0%{?suse_version} >= 1315)
 BuildRequires: libnuma-devel
@@ -193,6 +194,9 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
+* Wed Apr 20 2022 Wang Shilong <shilong.wang@intel.com> - 0:21.05-5
+- add epel-rpm-macros to centos7 build requirement.
+
 * Wed Sep 08 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.05-4
 - Disable ioat driver.
 
