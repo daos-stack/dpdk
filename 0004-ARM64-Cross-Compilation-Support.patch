@@ -1,7 +1,7 @@
-From 58877c24ba3ab25f04d8fe0160009c30d0b2c4fd Mon Sep 17 00:00:00 2001
+From 8652795b22e7c7ee5639b1ac2b8a6186f8a6d2ed Mon Sep 17 00:00:00 2001
 From: Krishna Kanth Reddy <krish.reddy@samsung.com>
 Date: Wed, 14 Jul 2021 13:03:31 +0530
-Subject: [PATCH 4/5] ARM64: Cross-Compilation Support
+Subject: [PATCH 4/6] ARM64: Cross-Compilation Support
 
 Modified the Configuration file to use the latest ARM Cross-Compiler.
 
@@ -10,21 +10,26 @@ isal_deflate_init, isal_deflate, isal_inflate_init, isal_inflate,
 isal_inflate_stateless, isal_deflate_stateless,
 isal_deflate_set_hufftables in the case of ARM Cross-Compilation.
 
-Signed-off-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
 Change-Id: I0ba89e5640760276646d6b9211585ad116ebf446
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/8778
-Reviewed-by: Aleksey Marchuk <alexeymar@mellanox.com>
-Reviewed-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Signed-off-by: Krishna Kanth Reddy <krish.reddy@samsung.com>
+Signed-off-by: Krzysztof Karas <krzysztof.karas@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/8778 (spdk-21.05)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/9218 (spdk-21.08)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/10450 (spdk-21.11)
 Tested-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12500
+Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
+Reviewed-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Tested-by: SPDK CI Jenkins <sys_sgci@intel.com>
 ---
- config/arm/arm64_armv8_linux_gcc              | 10 +++++-----
- drivers/compress/isal/isal_compress_pmd.c     |  6 +++++-
- drivers/compress/isal/isal_compress_pmd_ops.c |  6 ++++++
- drivers/compress/isal/meson.build             |  4 ++++
- 4 files changed, 20 insertions(+), 6 deletions(-)
+ config/arm/arm64_armv8_linux_gcc  | 10 +++++-----
+ drivers/compress/isal/meson.build |  4 ++++
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/config/arm/arm64_armv8_linux_gcc b/config/arm/arm64_armv8_linux_gcc
-index 5391d35..5d8813e 100644
+index 5391d35389..5d8813ee66 100644
 --- a/config/arm/arm64_armv8_linux_gcc
 +++ b/config/arm/arm64_armv8_linux_gcc
 @@ -1,9 +1,9 @@
@@ -42,83 +47,21 @@ index 5391d35..5d8813e 100644
  pcap-config = ''
  
  [host_machine]
-diff --git a/drivers/compress/isal/isal_compress_pmd.c b/drivers/compress/isal/isal_compress_pmd.c
-index 81b937e..b7ba61c 100644
---- a/drivers/compress/isal/isal_compress_pmd.c
-+++ b/drivers/compress/isal/isal_compress_pmd.c
-@@ -5,6 +5,7 @@
- 
- #include <rte_bus_vdev.h>
- #include <rte_common.h>
-+#include <rte_cpuflags.h>
- #include <rte_malloc.h>
- #include <rte_mbuf.h>
- #include <rte_compressdev_pmd.h>
-@@ -146,6 +147,7 @@
- 				break;
- 			/* Level 3 or higher requested */
- 			default:
-+#ifdef RTE_ARCH_X86
- 				/* Check for AVX512, to use ISA-L level 3 */
- 				if (rte_cpu_get_flag_enabled(
- 						RTE_CPUFLAG_AVX512F)) {
-@@ -161,7 +163,9 @@
- 						RTE_COMP_ISAL_LEVEL_THREE;
- 					priv_xform->level_buffer_size =
- 						ISAL_DEF_LVL3_DEFAULT;
--				} else {
-+				} else
-+#endif
-+				{
- 					ISAL_PMD_LOG(DEBUG, "Requested ISA-L level"
- 						" 3 or above; Level 3 optimized"
- 						" for AVX512 & AVX2 only."
-diff --git a/drivers/compress/isal/isal_compress_pmd_ops.c b/drivers/compress/isal/isal_compress_pmd_ops.c
-index 7d03749..9b42147 100644
---- a/drivers/compress/isal/isal_compress_pmd_ops.c
-+++ b/drivers/compress/isal/isal_compress_pmd_ops.c
-@@ -4,6 +4,7 @@
- #include <isa-l.h>
- 
- #include <rte_common.h>
-+#include <rte_cpuflags.h>
- #include <rte_compressdev_pmd.h>
- #include <rte_malloc.h>
- 
-@@ -139,6 +140,7 @@
- 		/* Check CPU for supported vector instruction and set
- 		 * feature_flags
- 		 */
-+#if defined(RTE_ARCH_X86)
- 		if (rte_cpu_get_flag_enabled(RTE_CPUFLAG_AVX512F))
- 			dev_info->feature_flags |= RTE_COMPDEV_FF_CPU_AVX512;
- 		else if (rte_cpu_get_flag_enabled(RTE_CPUFLAG_AVX2))
-@@ -147,6 +149,10 @@
- 			dev_info->feature_flags |= RTE_COMPDEV_FF_CPU_AVX;
- 		else
- 			dev_info->feature_flags |= RTE_COMPDEV_FF_CPU_SSE;
-+#elif defined(RTE_ARCH_ARM)
-+		if (rte_cpu_get_flag_enabled(RTE_CPUFLAG_NEON))
-+			dev_info->feature_flags |= RTE_COMPDEV_FF_CPU_NEON;
-+#endif
- 	}
- }
- 
 diff --git a/drivers/compress/isal/meson.build b/drivers/compress/isal/meson.build
-index 22eb77c..94342a4 100644
+index 03294c71e7..5daf24d113 100644
 --- a/drivers/compress/isal/meson.build
 +++ b/drivers/compress/isal/meson.build
 @@ -5,6 +5,10 @@ dep = dependency('libisal', required: false, method: 'pkg-config')
  if not dep.found()
- 	build = true
- 	reason = 'missing dependency, "libisal"'
-+	isal_dep = cc.find_library('libisal', required: false)
-+	if isal_dep.found()
-+		ext_deps += isal_dep
-+	endif
+     build = true
+     reason = 'missing dependency, "libisal"'
++    isal_dep = cc.find_library('libisal', required: false)
++    if isal_dep.found()
++        ext_deps += isal_dep
++    endif
  endif
  
  deps += 'bus_vdev'
 -- 
-1.8.3.1
+2.31.1
 

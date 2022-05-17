@@ -1,7 +1,7 @@
-From bad3c0e51d7a34e3188d75d94f15a36c8f5e8301 Mon Sep 17 00:00:00 2001
+From 716915151d7b7dd319b7b2e0d88952a993abeb69 Mon Sep 17 00:00:00 2001
 From: Alexey Marchuk <alexeymar@mellanox.com>
 Date: Thu, 15 Jul 2021 18:39:27 +0300
-Subject: [PATCH 5/5] meson/mlx5: Suppress -Wunused-value diagnostic
+Subject: [PATCH 3/6] meson/mlx5: Suppress -Wunused-value diagnostic
 
 mlx5 common library checks if several symbols/definitions
 are presented in system header files. If some are not
@@ -32,21 +32,28 @@ symbols redefenitions when we compile mlx5_common.
 As a solution for this problem we can suppress
 -Wunused-vaurable using pragma
 
-Signed-off-by: Alexey Marchuk <alexeymar@mellanox.com>
 Change-Id: I03ba5d03f7e53d8e593a9de1deace5140c67d21d
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/8795
-Reviewed-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
-Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Signed-off-by: Alexey Marchuk <alexeymar@mellanox.com>
+Signed-off-by: Krzysztof Karas <krzysztof.karas@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/8795 (spdk-21.05)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/9219 (spdk-21.08)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/10451
 Tested-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12499
+Tested-by: SPDK CI Jenkins <sys_sgci@intel.com>
+Reviewed-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
 ---
  drivers/common/mlx5/linux/meson.build | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/common/mlx5/linux/meson.build b/drivers/common/mlx5/linux/meson.build
-index 007834a..67b9dc3 100644
+index 4c7b53b9bd..f5a4daeb31 100644
 --- a/drivers/common/mlx5/linux/meson.build
 +++ b/drivers/common/mlx5/linux/meson.build
-@@ -194,7 +194,8 @@ has_sym_args = [
+@@ -205,7 +205,8 @@ has_sym_args = [
  ]
  config = configuration_data()
  foreach arg:has_sym_args
@@ -57,5 +64,5 @@ index 007834a..67b9dc3 100644
  foreach arg:has_member_args
      file_prefix = '#include <' + arg[1] + '>'
 -- 
-1.8.3.1
+2.31.1
 

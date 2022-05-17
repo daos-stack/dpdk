@@ -9,8 +9,8 @@
 %global _vpath_builddir %{_vendor}-%{_target_os}-build
 
 Name: dpdk
-Version: 21.05
-Release: 4%{?dist}
+Version: 21.11.1
+Release: 1%{?dist}
 Epoch: 0
 URL: http://dpdk.org
 Source: https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
@@ -27,11 +27,12 @@ Summary: Set of libraries and drivers for fast packet processing
 #
 License: BSD and LGPLv2 and GPLv2
 
-Patch0: 0001-build-meson-disable-libraries-we-don-t-need.patch
-Patch1: 0002-build-meson-disable-qat_asym-driver.patch
-Patch2: 0003-pci-linux-free-the-device-if-no-kernel-driver-config.patch
-Patch3: 0004-ARM64-Cross-Compilation-Support.patch
-Patch4: 0005-meson-mlx5-Suppress-Wunused-value-diagnostic.patch
+Patch1: 0001-crypto-increase-RTE_CRYPTO_MAX_DEVS-to-accomodate-QA.patch
+Patch2: 0002-isal-compile-compress_isal-PMD-without-system-wide-l.patch
+Patch3: 0003-meson-mlx5-Suppress-Wunused-value-diagnostic.patch
+Patch4: 0004-ARM64-Cross-Compilation-Support.patch
+Patch5: 0005-meson-remove-checks-for-optional-libraries.patch
+Patch6: 0006-build-disable-apps-and-usertools.patch
 
 #
 # The DPDK is designed to optimize througput of network traffic using, among
@@ -193,6 +194,10 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
+* Tue May 17 2022 Tom Nabarro <tom.nabarro@intel.com> - 0:21.11.1-1
+- Update DPDK to 21.11.1 to align with the SPDK 22.01.1 release.
+- Add additional patches to align with commit pinned by SPDK 22.01.1.
+
 * Wed Sep 08 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.05-4
 - Disable ioat driver.
 

@@ -1,0 +1,43 @@
+From 94b83ac2a440f7f7fd16f402040bc2421e173c38 Mon Sep 17 00:00:00 2001
+From: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Date: Wed, 1 Dec 2021 11:39:08 +0100
+Subject: [PATCH 5/6] meson: remove checks for optional libraries
+
+Very few libraries in DPDK are marked as optional.
+For SPDK when most of the drivers are disabled,
+the requirements are much lower.
+
+By removing the check for optional libraries,
+it is possible to pass a narrow set of actually required
+libraries.
+
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Change-Id: I60fbc7307a4f33482025a3b3c00948c091d236ff
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/10540
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12501
+Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
+Tested-by: SPDK CI Jenkins <sys_sgci@intel.com>
+---
+ lib/meson.build | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/lib/meson.build b/lib/meson.build
+index fbaa6ef7c2..c167824524 100644
+--- a/lib/meson.build
++++ b/lib/meson.build
+@@ -83,10 +83,6 @@ disabled_libs = []
+ opt_disabled_libs = run_command(list_dir_globs, get_option('disable_libs'),
+         check: true).stdout().split()
+ foreach l:opt_disabled_libs
+-    if not optional_libs.contains(l)
+-        warning('Cannot disable mandatory library "@0@"'.format(l))
+-        continue
+-    endif
+     disabled_libs += l
+ endforeach
+ 
+-- 
+2.31.1
+
