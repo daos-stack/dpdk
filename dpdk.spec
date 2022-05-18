@@ -122,7 +122,7 @@ for i,path in ipairs(directories) do
   end
 end
 %prep
-%setup -q -n dpdk-stable-%{version}
+%autosetup -n %{name}-stable-%{version} -p1
 
 %build
 CFLAGS="$(echo %{optflags} -fcommon)" \
