@@ -137,8 +137,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %else
   --default-library=static
 %endif
-# docs fails on el7 with "ValueError: invalid version number 'these.'"
-#       -Denable_docs=true \
 %meson_build
 
 %install
@@ -148,6 +146,7 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %exclude %{docdir}
 %{_bindir}/dpdk-testpmd
 %{_bindir}/dpdk-proc-info
+%{_bindir}/dpdk-dumpcap
 %if %{with shared}
 %{_libdir}/*.so.*
 %{pmddir}/*.so.*
