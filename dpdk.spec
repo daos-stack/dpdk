@@ -2,8 +2,6 @@
 %bcond_without shared
 # Add option to build without examples
 %bcond_with examples
-# Add option to build without tools
-%bcond_without tools
 
 # Avoid architecture-specific name of build-dir to fix per-arch reproducibility with doxygen
 %global _vpath_builddir %{_vendor}-%{_target_os}-build
@@ -68,16 +66,6 @@ Requires: rdma-core-devel
 %description devel
 This package contains the headers and other files needed for developing
 applications with the Data Plane Development Kit.
-
-%if %{with tools}
-%package tools
-Summary: Tools for setting up Data Plane Development Kit environment
-Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: kmod pciutils findutils iproute python3-pyelftools
-
-%description tools
-%{summary}
-%endif
 
 %if %{with examples}
 %package examples
@@ -156,9 +144,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %{sdkdir}
 %ghost %{sdkdir}/mk/exec-env/bsdapp
 %ghost %{sdkdir}/mk/exec-env/linuxapp
-%if %{with tools}
-%exclude %{_bindir}/dpdk-*.py
-%endif
 %if ! %{with shared}
 %{_libdir}/*.a
 %exclude %{_libdir}/*.so
@@ -170,15 +155,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 %{_libdir}/pkgconfig/libdpdk.pc
 %{_libdir}/pkgconfig/libdpdk-libs.pc
-
-%if %{with tools}
-%files tools
-%exclude %{docdir}
-%{_bindir}/dpdk-pdump
-%{_bindir}/dpdk-test
-%{_bindir}/dpdk-test-*
-%{_bindir}/dpdk-*.py
-%endif
 
 %if %{with examples}
 %files examples
