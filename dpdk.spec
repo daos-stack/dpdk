@@ -142,9 +142,8 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %exclude %{docdir}
 %{incdir}/
 %exclude %{sdkdir}/examples/
+%exclude %{sdkdir}/mk/exec-env/
 %{sdkdir}
-%ghost %{sdkdir}/mk/exec-env/bsdapp
-%ghost %{sdkdir}/mk/exec-env/linuxapp
 %if ! %{with shared}
 %{_libdir}/*.a
 %exclude %{_libdir}/*.so
