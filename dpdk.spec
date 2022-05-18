@@ -146,7 +146,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %exclude %{docdir}
 %{_bindir}/dpdk-testpmd
 %{_bindir}/dpdk-proc-info
-%{_bindir}/dpdk-dumpcap
 %if %{with shared}
 %{_libdir}/*.so.*
 %{pmddir}/*.so.*
@@ -155,14 +154,12 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %files devel
 %exclude %{docdir}
 %{incdir}/
+%exclude %{sdkdir}/examples/
 %{sdkdir}
 %ghost %{sdkdir}/mk/exec-env/bsdapp
 %ghost %{sdkdir}/mk/exec-env/linuxapp
 %if %{with tools}
 %exclude %{_bindir}/dpdk-*.py
-%endif
-%if %{with examples}
-%exclude %{sdkdir}/examples/
 %endif
 %if ! %{with shared}
 %{_libdir}/*.a
@@ -179,6 +176,7 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %if %{with tools}
 %files tools
 %exclude %{docdir}
+%{_bindir}/dpdk-dumpcap
 %{_bindir}/dpdk-pdump
 %{_bindir}/dpdk-test
 %{_bindir}/dpdk-test-*
