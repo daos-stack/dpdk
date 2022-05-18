@@ -144,8 +144,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 
 %files
 %exclude %{docdir}
-%{_bindir}/dpdk-testpmd
-%{_bindir}/dpdk-proc-info
 %if %{with shared}
 %{_libdir}/*.so.*
 %{pmddir}/*.so.*
@@ -176,7 +174,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %if %{with tools}
 %files tools
 %exclude %{docdir}
-%{_bindir}/dpdk-dumpcap
 %{_bindir}/dpdk-pdump
 %{_bindir}/dpdk-test
 %{_bindir}/dpdk-test-*
