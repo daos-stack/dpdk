@@ -27,12 +27,12 @@ Summary: Set of libraries and drivers for fast packet processing
 #
 License: BSD and LGPLv2 and GPLv2
 
-Patch1: 0001-crypto-increase-RTE_CRYPTO_MAX_DEVS-to-accomodate-QA.patch
-Patch2: 0002-isal-compile-compress_isal-PMD-without-system-wide-l.patch
-Patch3: 0003-meson-mlx5-Suppress-Wunused-value-diagnostic.patch
-Patch4: 0004-ARM64-Cross-Compilation-Support.patch
-Patch5: 0005-meson-remove-checks-for-optional-libraries.patch
-Patch6: 0006-build-disable-apps-and-usertools.patch
+Patch0: 0001-crypto-increase-RTE_CRYPTO_MAX_DEVS-to-accomodate-QA.patch
+Patch1: 0002-isal-compile-compress_isal-PMD-without-system-wide-l.patch
+Patch2: 0003-meson-mlx5-Suppress-Wunused-value-diagnostic.patch
+Patch3: 0004-ARM64-Cross-Compilation-Support.patch
+Patch4: 0005-meson-remove-checks-for-optional-libraries.patch
+Patch5: 0006-build-disable-apps-and-usertools.patch
 
 #
 # The DPDK is designed to optimize througput of network traffic using, among
