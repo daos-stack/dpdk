@@ -85,7 +85,8 @@ override_dh_auto_configure:
 		--default-library=shared \
 		-Dper_library_versions=false \
 		-Dinclude_subdir_arch=../$(DEB_HOST_MULTIARCH)/dpdk \
-		-Dmachine=$(RTE_MACHINE)
+		-Ddisable_drivers=compress/isal,compress/mlx5,net/mlx4,net/mlx5,vdpa/mlx5,common/mlx5,regex/mlx5,raw/ioat \
+		-Dmachine=generic
 
 override_dh_auto_build-indep:
 ifeq (y,$(BUILD_DOCS))
