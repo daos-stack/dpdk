@@ -2,3 +2,9 @@
 from Config import *
 
 addFilter('no-documentation')
+
+# https://github.com/rpm-software-management/rpmlint/issues/879
+addFilter('dpdk-devel.x86_64: W: missing-dependency-on dpdk*/dpdk-libs/libdpdk* =')
+
+# https://github.com/rpm-software-management/rpmlint/issues/856
+addFilter(r'dpdk.x86_64: W: incoherent-version-in-changelog .* \[\'.*\.suse\.lp[0-9]*\', \'.*\.suse\.lp[0-9]*\'\]')
