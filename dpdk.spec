@@ -171,7 +171,7 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
-* Tue May 17 2022 Tom Nabarro <tom.nabarro@intel.com> - 0:21.11.1-1
+* Mon Jul 11 2022 Tom Nabarro <tom.nabarro@intel.com> - 0:21.11.1-1
 - Update DPDK to 21.11.1 to align with the SPDK 22.01.1 release.
 - Add additional patches to align with commit pinned by SPDK 22.01.1.
 

@@ -4,7 +4,7 @@ dpdk (21.11.1-1) unstable; urgency=high
   * Update DPDK to 21.11.1 to align with the SPDK 22.01.1 release.
   * Add additional patches to align with commit pinned by SPDK 22.01.1.
 
- -- Tom Nabarro <tom.nabarro@intel.com>  Tue, 17 May 2022 10:50:11 -0400
+ -- Tom Nabarro <tom.nabarro@intel.com>  Mon, 11 Jul 2022 10:50:11 -0400
 
 
 dpdk (21.05-2) unstable; urgency=high
