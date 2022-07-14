@@ -1,0 +1,43 @@
+From 078817b677a16cd13317ecee0521182676eccba9 Mon Sep 17 00:00:00 2001
+From: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Date: Tue, 18 Jan 2022 14:50:37 +0100
+Subject: [PATCH 1/6] crypto: increase RTE_CRYPTO_MAX_DEVS to accomodate QAT
+ SYM and ASYM VFs
+
+In SPDK Jenkins CI the QAT devices only support 16VFs.
+Per DPDK QAT documentation this could exceed the value of
+RTE_CRYPTO_MAX_DEVS.
+
+Ideally this should be configured by SPDK when building submodule,
+but for now workaround #2258.
+
+Additionally make compress_isal PMD work without the system-wide libisal.
+SPDK provides isa-l submodule with -I and -L.
+
+Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+Change-Id: Ic9e22155564b2d1e6f685bac0f958836da4fc13b
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/11139
+Reviewed-by: Jim Harris <james.r.harris@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12497
+Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
+---
+ config/rte_config.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/rte_config.h b/config/rte_config.h
+index cab4390a97..020b9dadbc 100644
+--- a/config/rte_config.h
++++ b/config/rte_config.h
+@@ -59,7 +59,7 @@
+ #define RTE_MAX_MULTI_HOST_CTRLS 4
+ 
+ /* cryptodev defines */
+-#define RTE_CRYPTO_MAX_DEVS 64
++#define RTE_CRYPTO_MAX_DEVS 128
+ #define RTE_CRYPTODEV_NAME_LEN 64
+ #define RTE_CRYPTO_CALLBACKS 1
+ 
+-- 
+2.31.1
+

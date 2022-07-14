@@ -2,15 +2,13 @@
 %bcond_without shared
 # Add option to build without examples
 %bcond_with examples
-# Add option to build without tools
-%bcond_without tools
 
 # Avoid architecture-specific name of build-dir to fix per-arch reproducibility with doxygen
 %global _vpath_builddir %{_vendor}-%{_target_os}-build
 
 Name: dpdk
-Version: 21.05
-Release: 4%{?dist}
+Version: 21.11.1
+Release: 1%{?dist}
 Epoch: 0
 URL: http://dpdk.org
 Source: https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
@@ -27,11 +25,12 @@ Summary: Set of libraries and drivers for fast packet processing
 #
 License: BSD and LGPLv2 and GPLv2
 
-Patch0: 0001-build-meson-disable-libraries-we-don-t-need.patch
-Patch1: 0002-build-meson-disable-qat_asym-driver.patch
-Patch2: 0003-pci-linux-free-the-device-if-no-kernel-driver-config.patch
+Patch0: 0001-crypto-increase-RTE_CRYPTO_MAX_DEVS-to-accomodate-QA.patch
+Patch1: 0002-isal-compile-compress_isal-PMD-without-system-wide-l.patch
+Patch2: 0003-meson-mlx5-Suppress-Wunused-value-diagnostic.patch
 Patch3: 0004-ARM64-Cross-Compilation-Support.patch
-Patch4: 0005-meson-mlx5-Suppress-Wunused-value-diagnostic.patch
+Patch4: 0005-meson-remove-checks-for-optional-libraries.patch
+Patch5: 0006-build-disable-apps-and-usertools.patch
 
 #
 # The DPDK is designed to optimize througput of network traffic using, among
@@ -67,16 +66,6 @@ Requires: rdma-core-devel
 %description devel
 This package contains the headers and other files needed for developing
 applications with the Data Plane Development Kit.
-
-%if %{with tools}
-%package tools
-Summary: Tools for setting up Data Plane Development Kit environment
-Requires: %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
-Requires: kmod pciutils findutils iproute python3-pyelftools
-
-%description tools
-%{summary}
-%endif
 
 %if %{with examples}
 %package examples
@@ -120,14 +109,22 @@ for i,path in ipairs(directories) do
     end
   end
 end
+
+%if (0%{?suse_version} > 0)
+%global __debug_package 1
+%global _debuginfo_subpackages 0
+%debug_package
+%endif
+
 %prep
-%setup -q -n dpdk-%{version}
+%autosetup -n %{name}-stable-%{version} -p1
 
 %build
 CFLAGS="$(echo %{optflags} -fcommon)" \
 %meson --includedir=include/dpdk \
        -Ddrivers_install_subdir=dpdk-pmds \
        -Ddisable_drivers=compress/isal,compress/mlx5,net/mlx4,net/mlx5,vdpa/mlx5,common/mlx5,regex/mlx5,raw/ioat \
+       -Dmachine=generic \
 %if %{with examples}
        -Dexamples=all \
 %endif
@@ -136,8 +133,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %else
   --default-library=static
 %endif
-# docs fails on el7 with "ValueError: invalid version number 'these.'"
-#       -Denable_docs=true \
 %meson_build
 
 %install
@@ -145,8 +140,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 
 %files
 %exclude %{docdir}
-%{_bindir}/dpdk-testpmd
-%{_bindir}/dpdk-proc-info
 %if %{with shared}
 %{_libdir}/*.so.*
 %{pmddir}/*.so.*
@@ -155,15 +148,9 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %files devel
 %exclude %{docdir}
 %{incdir}/
-%{sdkdir}
-%ghost %{sdkdir}/mk/exec-env/bsdapp
-%ghost %{sdkdir}/mk/exec-env/linuxapp
-%if %{with tools}
-%exclude %{_bindir}/dpdk-*.py
-%endif
-%if %{with examples}
 %exclude %{sdkdir}/examples/
-%endif
+%exclude %{sdkdir}/mk/exec-env/
+%{sdkdir}
 %if ! %{with shared}
 %{_libdir}/*.a
 %exclude %{_libdir}/*.so
@@ -176,15 +163,6 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %{_libdir}/pkgconfig/libdpdk.pc
 %{_libdir}/pkgconfig/libdpdk-libs.pc
 
-%if %{with tools}
-%files tools
-%exclude %{docdir}
-%{_bindir}/dpdk-pdump
-%{_bindir}/dpdk-test
-%{_bindir}/dpdk-test-*
-%{_bindir}/dpdk-*.py
-%endif
-
 %if %{with examples}
 %files examples
 %exclude %{docdir}
@@ -193,6 +171,10 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
+* Mon Jul 11 2022 Tom Nabarro <tom.nabarro@intel.com> - 0:21.11.1-1
+- Update DPDK to 21.11.1 to align with the SPDK 22.01.1 release.
+- Add additional patches to align with commit pinned by SPDK 22.01.1.
+
 * Wed Sep 08 2021 Tom Nabarro <tom.nabarro@intel.com> - 0:21.05-4
 - Disable ioat driver.
 
