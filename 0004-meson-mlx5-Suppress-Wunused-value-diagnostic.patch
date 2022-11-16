@@ -1,7 +1,7 @@
-From 716915151d7b7dd319b7b2e0d88952a993abeb69 Mon Sep 17 00:00:00 2001
+From eab31108581a20f6909e6a802962e5c43360e28e Mon Sep 17 00:00:00 2001
 From: Alexey Marchuk <alexeymar@mellanox.com>
 Date: Thu, 15 Jul 2021 18:39:27 +0300
-Subject: [PATCH 3/6] meson/mlx5: Suppress -Wunused-value diagnostic
+Subject: [PATCH 4/7] meson/mlx5: Suppress -Wunused-value diagnostic
 
 mlx5 common library checks if several symbols/definitions
 are presented in system header files. If some are not
@@ -37,14 +37,13 @@ Signed-off-by: Alexey Marchuk <alexeymar@mellanox.com>
 Signed-off-by: Krzysztof Karas <krzysztof.karas@intel.com>
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/8795 (spdk-21.05)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/9219 (spdk-21.08)
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/10451
-Tested-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
-Reviewed-by: Jim Harris <james.r.harris@intel.com>
-Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/10451 (spdk-21.11)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12499
+(spdk-21.11.1)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/14310
 Tested-by: SPDK CI Jenkins <sys_sgci@intel.com>
-Reviewed-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
 ---
  drivers/common/mlx5/linux/meson.build | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)

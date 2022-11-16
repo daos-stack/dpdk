@@ -1,7 +1,7 @@
-From 8652795b22e7c7ee5639b1ac2b8a6186f8a6d2ed Mon Sep 17 00:00:00 2001
+From 3712ca572d659dc6033899ea1cfc6ed7ba306bf4 Mon Sep 17 00:00:00 2001
 From: Krishna Kanth Reddy <krish.reddy@samsung.com>
 Date: Wed, 14 Jul 2021 13:03:31 +0530
-Subject: [PATCH 4/6] ARM64: Cross-Compilation Support
+Subject: [PATCH 5/7] ARM64: Cross-Compilation Support
 
 Modified the Configuration file to use the latest ARM Cross-Compiler.
 
@@ -16,31 +16,30 @@ Signed-off-by: Krzysztof Karas <krzysztof.karas@intel.com>
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/8778 (spdk-21.05)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/9218 (spdk-21.08)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/10450 (spdk-21.11)
-Tested-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
-Reviewed-by: Jim Harris <james.r.harris@intel.com>
-Reviewed-by: Ben Walker <benjamin.walker@intel.com>
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12500
-Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
-Reviewed-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
+(spdk-21.11.1)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/14311
 Tested-by: SPDK CI Jenkins <sys_sgci@intel.com>
+Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
 ---
  config/arm/arm64_armv8_linux_gcc  | 10 +++++-----
  drivers/compress/isal/meson.build |  4 ++++
  2 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/config/arm/arm64_armv8_linux_gcc b/config/arm/arm64_armv8_linux_gcc
-index 5391d35389..5d8813ee66 100644
+index 5c32f6b9ca..4f56798fae 100644
 --- a/config/arm/arm64_armv8_linux_gcc
 +++ b/config/arm/arm64_armv8_linux_gcc
 @@ -1,9 +1,9 @@
  [binaries]
 -c = 'aarch64-linux-gnu-gcc'
--cpp = 'aarch64-linux-gnu-cpp'
+-cpp = 'aarch64-linux-gnu-g++'
 -ar = 'aarch64-linux-gnu-gcc-ar'
 -strip = 'aarch64-linux-gnu-strip'
 -pkgconfig = 'aarch64-linux-gnu-pkg-config'
 +c = 'aarch64-none-linux-gnu-gcc'
-+cpp = 'aarch64-none-linux-gnu-cpp'
++cpp = 'aarch64-none-linux-gnu-g++'
 +ar = 'aarch64-none-linux-gnu-gcc-ar'
 +strip = 'aarch64-none-linux-gnu-strip'
 +pkgconfig = 'aarch64-none-linux-gnu-pkg-config'
