@@ -1,7 +1,7 @@
-From 94b83ac2a440f7f7fd16f402040bc2421e173c38 Mon Sep 17 00:00:00 2001
+From 0559a0eff6f7c1c10e4adf28a73a8e079b82c8b1 Mon Sep 17 00:00:00 2001
 From: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Date: Wed, 1 Dec 2021 11:39:08 +0100
-Subject: [PATCH 5/6] meson: remove checks for optional libraries
+Subject: [PATCH 6/7] meson: remove checks for optional libraries
 
 Very few libraries in DPDK are marked as optional.
 For SPDK when most of the drivers are disabled,
@@ -13,12 +13,13 @@ libraries.
 
 Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Change-Id: I60fbc7307a4f33482025a3b3c00948c091d236ff
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/10540
-Reviewed-by: Jim Harris <james.r.harris@intel.com>
-Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/10540 (spdk-21.11)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12501
-Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
+(spdk-21.11.1)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/14312
 Tested-by: SPDK CI Jenkins <sys_sgci@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
 ---
  lib/meson.build | 4 ----
  1 file changed, 4 deletions(-)

@@ -1,7 +1,7 @@
-From e981f07a3b01b99c9efddd4ae5cce764a677dba7 Mon Sep 17 00:00:00 2001
+From 744e58cca9556e59c65d3993115c6f034d57c4f2 Mon Sep 17 00:00:00 2001
 From: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Date: Wed, 1 Dec 2021 13:49:30 +0100
-Subject: [PATCH 6/6] build: disable apps and usertools
+Subject: [PATCH 7/7] build: disable apps and usertools
 
 There is no way to disable DPDK apps or usertools
 via meson. Disabling tests is possible and already done,
@@ -12,11 +12,13 @@ increasing build time and size (~2.5G).
 
 Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Change-Id: I7362360cc43289207724d470ac46c9ddfb7b9105
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/11239
-Tested-by: SPDK CI Jenkins <sys_sgci@intel.com>
-Reviewed-by: Jim Harris <james.r.harris@intel.com>
-Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/11239 (spdk-21.11)
 Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12502
+(spdk-21.11.1)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/14313
+Tested-by: SPDK CI Jenkins <sys_sgci@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
+Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
 ---
  meson.build | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)

@@ -1,18 +1,18 @@
-From dac5ce7793024118f97fecfeea2144e9a7a0e1bc Mon Sep 17 00:00:00 2001
+From 7aacaea225efc2e99369c7319090a4dc87702564 Mon Sep 17 00:00:00 2001
 From: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Date: Thu, 20 Jan 2022 16:36:55 +0100
-Subject: [PATCH 2/6] isal: compile compress_isal PMD without system-wide
+Subject: [PATCH 2/7] isal: compile compress_isal PMD without system-wide
  libisal
 
 SPDK provides isa-l submodule with -I and -L.
 
 Signed-off-by: Tomasz Zawadzki <tomasz.zawadzki@intel.com>
 Change-Id: I99924fc161a876ef017b9cdeeee52e2aed30d8ec
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/11180
-Reviewed-by: Jim Harris <james.r.harris@intel.com>
-Reviewed-by: Ben Walker <benjamin.walker@intel.com>
-Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12498
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/11180 (spdk-21.11)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/12498 (spdk-21.11.1)
+Reviewed-on: https://review.spdk.io/gerrit/c/spdk/dpdk/+/14309
 Reviewed-by: Konrad Sztyber <konrad.sztyber@intel.com>
+Reviewed-by: Ben Walker <benjamin.walker@intel.com>
 ---
  drivers/compress/isal/meson.build | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
