@@ -8,3 +8,5 @@ addFilter(r'dpdk-devel\.x86_64: W: missing-dependency-on dpdk\*\/dpdk-libs\/libd
 
 # https://github.com/rpm-software-management/rpmlint/issues/856
 addFilter(r'dpdk\.x86_64: W: incoherent-version-in-changelog .* \[\'.*\.suse\.lp[0-9]*\', \'.*\.suse\.lp[0-9]*\'\]')
+
+addFilter(r'dpdk\.x86_64: W: library-not-linked-against-libc \/usr\/lib64\/librte_meter.so\.[0-9.]+')
