@@ -8,13 +8,12 @@
 
 Name: dpdk
 Version: 21.11.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 0
 URL: http://dpdk.org
 Source: https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
 
 BuildRequires: meson
-
 
 Summary: Set of libraries and drivers for fast packet processing
 
@@ -63,6 +62,7 @@ Requires: %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release} python3
 Provides: %{name}-static = %{?epoch:%{epoch}:}%{version}-%{release}
 %endif
 Requires: rdma-core-devel
+Provides: %{name}-daos-devel = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description devel
 This package contains the headers and other files needed for developing
@@ -172,6 +172,10 @@ CFLAGS="$(echo %{optflags} -fcommon)" \
 %endif
 
 %changelog
+* Thu Jun 22 2023 Brian J. Murrell <brian.murrell@intel.com> - 0:21.11.2-2
+- Add a Provides: dpdk-daos-devel to prevent getting a distro
+  supplied package
+
 * Thu Nov 24 2022 Tom Nabarro <tom.nabarro@intel.com> - 0:21.11.2-1
 - Update DPDK to 21.11.2 to align with the SPDK 22.01.2 release.
 - Add additional patches to align with commit pinned by SPDK 22.01.2.
